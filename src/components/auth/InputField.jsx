@@ -13,11 +13,11 @@ const InputField = React.forwardRef(({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="flex flex-col w-full text-left gap-2">
+    <div className="flex flex-col w-full text-left gap-1.5">
       {/* Label */}
       <label 
         htmlFor={name}
-        className="text-[12px] font-bold tracking-[2px] text-slate-400 uppercase select-none"
+        className="text-[11px] sm:text-[12px] font-bold tracking-[2px] text-slate-400 uppercase select-none"
       >
         {label}
       </label>
@@ -29,12 +29,12 @@ const InputField = React.forwardRef(({
           <motion.div 
             animate={{ 
               color: error ? '#FF4D4D' : isFocused ? '#3366FF' : '#94A3B8',
-              scale: isFocused ? 1.1 : 1,
+              scale: isFocused ? 1.05 : 1,
             }}
             transition={{ duration: 0.2 }}
-            className="absolute left-5 top-1/2 -translate-y-1/2 z-10 pointer-events-none"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none"
           >
-            <Icon size={20} strokeWidth={2.2} />
+            <Icon size={18} strokeWidth={2.2} />
           </motion.div>
         )}
 
@@ -51,7 +51,7 @@ const InputField = React.forwardRef(({
             if (props.onBlur) props.onBlur(e);
           }}
           className={`
-            w-full h-[60px] pl-[54px] pr-5 rounded-[18px] bg-[#222839] text-white placeholder-white/60
+            w-full h-[50px] sm:h-[54px] pl-[46px] pr-4 rounded-[16px] bg-[#222839] text-white text-sm sm:text-base placeholder-white/50
             border-2 transition-all duration-300 outline-none select-text
             ${error 
               ? 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
@@ -67,16 +67,16 @@ const InputField = React.forwardRef(({
       </div>
 
       {/* Error message */}
-      <div className="h-5 overflow-hidden relative">
+      <div className="min-h-[18px] overflow-hidden relative">
         <AnimatePresence>
           {error && (
             <motion.p
               id={`${name}-error`}
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="text-[13px] font-medium text-red-500 select-none"
+              className="text-[12px] font-medium text-red-500 select-none"
             >
               {error.message}
             </motion.p>

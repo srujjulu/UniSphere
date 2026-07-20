@@ -56,17 +56,17 @@ const LoginPage = () => {
       {/* College Logo Card */}
       <motion.div 
         style={logoStyle}
-        className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-[24px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] flex items-center justify-center cursor-pointer p-4 mb-6 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-[22px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] flex items-center justify-center cursor-pointer p-3.5 mb-4 sm:mb-6 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
       >
         <CmrLogo />
       </motion.div>
 
       {/* College Name Spacing */}
-      <div className="flex flex-col items-center gap-1 mb-4 select-none">
-        <span className="text-[12px] md:text-[13px] font-semibold tracking-[3px] text-white uppercase">
+      <div className="flex flex-col items-center gap-1 mb-3 sm:mb-4 select-none">
+        <span className="text-[11px] sm:text-[12px] lg:text-[13px] font-semibold tracking-[3px] text-white uppercase">
           CMR Technical Campus
         </span>
-        <span className="text-[10px] md:text-[11px] font-medium tracking-[2px] text-[#FF8C32] uppercase">
+        <span className="text-[9px] sm:text-[10px] lg:text-[11px] font-medium tracking-[2px] text-[#FF8C32] uppercase">
           Explore To Invent
         </span>
       </div>
@@ -74,14 +74,14 @@ const LoginPage = () => {
       {/* Hero Heading */}
       <motion.h1 
         style={headingStyle}
-        className="text-[40px] sm:text-[46px] md:text-[58px] lg:text-[72px] leading-[0.95] font-extrabold text-white mb-4 tracking-tighter flex flex-col items-center"
+        className="text-[36px] sm:text-[44px] lg:text-[56px] xl:text-[68px] leading-[0.95] font-extrabold text-white mb-3 sm:mb-4 tracking-tighter flex flex-col items-center"
       >
         <span>Campus</span>
         <span className="bg-gradient-to-r from-[#FF8C32] to-[#FF5E36] bg-clip-text text-transparent pb-1">Clubs</span>
       </motion.h1>
 
       {/* Description */}
-      <p className="text-[#94A3B8] text-sm md:text-[15px] leading-[1.7] max-w-[380px] sm:max-w-[420px] mx-auto mb-8 font-normal">
+      <p className="text-[#94A3B8] text-xs sm:text-sm lg:text-[15px] leading-[1.6] max-w-[340px] sm:max-w-[420px] mx-auto mb-6 sm:mb-8 font-normal px-2">
         Five unique clubs. Countless opportunities. One campus. Join the community that shapes future leaders.
       </p>
 
@@ -121,7 +121,7 @@ const LoginPage = () => {
         variants={formWrapperVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-4 sm:gap-5 lg:gap-6"
       >
         {/* Auth Tabs */}
         <motion.div variants={formItemVariants}>
@@ -130,10 +130,10 @@ const LoginPage = () => {
 
         {/* Welcome Headers */}
         <motion.div variants={formItemVariants} className="text-left select-none">
-          <h2 className="text-3xl md:text-[44px] leading-[1.1] font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-[40px] leading-[1.15] font-extrabold text-white tracking-tight">
             {activeTab === 'signin' ? 'Welcome back' : 'Create account'}
           </h2>
-          <p className="text-base md:text-[17px] text-[#94A3B8] font-normal mt-2.5">
+          <p className="text-sm sm:text-base text-[#94A3B8] font-normal mt-1.5 sm:mt-2">
             {activeTab === 'signin' 
               ? 'Sign in to explore your clubs' 
               : 'Join the campus club community today'}

@@ -67,7 +67,7 @@ const SocialLogin = () => {
             type="button"
             whileHover={{ scale: 1.03, y: -2, backgroundColor: '#222839' }}
             whileTap={{ scale: 0.98 }}
-            className="h-[52px] rounded-2xl bg-[#1A2030] flex items-center justify-center gap-2 border border-slate-800 hover:border-slate-700 cursor-pointer focus:outline-none focus-ring text-sm font-semibold text-slate-300 hover:text-white"
+            className="h-[46px] sm:h-[48px] rounded-2xl bg-[#1A2030] flex items-center justify-center gap-2 border border-slate-800 hover:border-slate-700 cursor-pointer focus:outline-none focus-ring text-xs sm:text-sm font-semibold text-slate-300 hover:text-white"
           >
             {p.icon}
             <span className="hidden sm:inline">{p.name}</span>
