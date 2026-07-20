@@ -38,12 +38,12 @@ const AuthLayout = ({ children, leftPanelContent }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Left Branding Panel (55% desktop, 60% tablet, collapses to top on mobile) */}
+      {/* Left Branding Panel */}
       <motion.div
         initial={{ opacity: 0, x: -60 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full h-[32vh] min-h-[220px] md:w-[60%] md:h-full lg:w-[55%] relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-900 md:border-b-0 md:border-r border-slate-800/40 select-none"
+        className="w-full h-auto py-8 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:h-full relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-800/60 lg:border-b-0 lg:border-r select-none"
       >
         {/* Animated Blueprint Grid */}
         <div className="blueprint-grid absolute inset-0 z-0" />
@@ -64,14 +64,14 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         </div>
       </motion.div>
 
-      {/* Right Form Card Panel (45% desktop, 40% tablet, full on mobile) */}
+      {/* Right Form Card Panel */}
       <motion.div
         initial={{ opacity: 0, x: 60 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full flex-1 md:w-[40%] md:h-full lg:w-[45%] h-[68vh] relative flex flex-col px-6 sm:px-12 md:px-8 lg:px-16 overflow-y-auto"
+        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:h-full relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto"
       >
-        <div className="w-full max-w-[500px] mx-auto my-auto py-8 flex flex-col justify-center min-h-0">
+        <div className="w-full max-w-[460px] mx-auto my-auto py-6 sm:py-8 lg:py-10">
           {children}
         </div>
       </motion.div>

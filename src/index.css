@@ -106,11 +106,26 @@ button, input, a {
   outline-offset: 4px;
 }
 
-/* Scrollbar styling - hidden as we prevent vertical scroll but helpful just in case */
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 6px;
+  height: 6px;
 }
+
+::-webkit-scrollbar-track {
+  background: rgba(11, 17, 32, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(51, 102, 255, 0.5);
+}
+
 * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
 }

@@ -94,7 +94,7 @@ const LoginForm = ({ onSuccess }) => {
       initial="hidden"
       animate="visible"
       onSubmit={handleSubmit(onSubmit, onError)}
-      className="w-full flex flex-col gap-6"
+      className="w-full flex flex-col gap-4 sm:gap-5"
       noValidate
     >
       {/* Root Server Error Alert */}
