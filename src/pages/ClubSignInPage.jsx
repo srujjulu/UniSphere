@@ -7,11 +7,8 @@ import {
   Lock, 
   LogIn, 
   CheckCircle2, 
-  Sparkles, 
   AlertCircle,
-  GraduationCap,
-  KeyRound,
-  UserCheck
+  GraduationCap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
@@ -29,46 +26,36 @@ const clubThemes = {
     bgGradient: 'from-[#4A0010] via-[#881337] to-[#E11D48]',
     cardBg: 'bg-white text-slate-900 border-rose-200',
     titleColor: 'text-[#E11D48]',
-    badgeBg: 'bg-rose-50 text-[#E11D48]',
     buttonBg: 'bg-[#881337] hover:bg-[#6B0D2B] text-white',
-    inputFocus: 'focus:border-[#E11D48] focus:ring-rose-500/20',
-    tag: 'CMRTC Cultural & Performing Arts Portal'
+    inputFocus: 'focus:border-[#E11D48] focus:ring-rose-500/20'
   },
   codeholics: {
     bgGradient: 'from-[#0A0A12] via-[#120D1D] to-[#1F0707]',
     cardBg: 'bg-[#140F21] text-white border-red-500/30',
     titleColor: 'text-[#EF4444]',
-    badgeBg: 'bg-red-950/80 text-[#EF4444] border border-red-500/30',
     buttonBg: 'bg-[#B91C1C] hover:bg-[#991B1B] text-white shadow-[0_0_20px_rgba(185,28,28,0.4)]',
-    inputFocus: 'focus:border-[#EF4444] focus:ring-red-500/20',
-    tag: 'CMRTC Developer & Hackers Portal'
+    inputFocus: 'focus:border-[#EF4444] focus:ring-red-500/20'
   },
   ncc: {
     bgGradient: 'from-[#081226] via-[#0D234C] to-[#0284C7]',
     cardBg: 'bg-[#0B1A36] text-white border-amber-500/30',
     titleColor: 'text-[#F59E0B]',
-    badgeBg: 'bg-blue-950/90 text-[#38BDF8] border border-amber-500/40',
     buttonBg: 'bg-[#1E3A8A] hover:bg-[#172554] text-amber-300 border border-amber-500/40',
-    inputFocus: 'focus:border-[#F59E0B] focus:ring-amber-500/20',
-    tag: 'CMRTC NCC Cadet Portal'
+    inputFocus: 'focus:border-[#F59E0B] focus:ring-amber-500/20'
   },
   photography: {
     bgGradient: 'from-[#090717] via-[#2E1065] to-[#581C87]',
     cardBg: 'bg-[#1D1036] text-white border-purple-500/30',
     titleColor: 'text-[#C084FC]',
-    badgeBg: 'bg-purple-950/80 text-[#A855F7] border border-purple-500/30',
     buttonBg: 'bg-[#6B21A8] hover:bg-[#581C87] text-white',
-    inputFocus: 'focus:border-[#C084FC] focus:ring-purple-500/20',
-    tag: 'CMRTC Film & Cinema Student Portal'
+    inputFocus: 'focus:border-[#C084FC] focus:ring-purple-500/20'
   },
   lexis: {
     bgGradient: 'from-[#021F17] via-[#064E3B] to-[#0D5C46]',
     cardBg: 'bg-[#053024] text-white border-emerald-500/30',
     titleColor: 'text-[#34D399]',
-    badgeBg: 'bg-emerald-950/80 text-[#C084FC] border border-purple-400/30',
     buttonBg: 'bg-[#047857] hover:bg-[#065F46] text-white',
-    inputFocus: 'focus:border-[#34D399] focus:ring-emerald-500/20',
-    tag: 'CMRTC Literary & MUN Speaker Portal'
+    inputFocus: 'focus:border-[#34D399] focus:ring-emerald-500/20'
   }
 };
 
@@ -87,6 +74,17 @@ const getClubLogo = (clubId) => {
     default:
       return <CodeClubLogo />;
   }
+};
+
+// Roll Number Validation Helper (01-100 or AA-AZ, BA-BZ, CA-CZ, DA-DZ, EA-EZ, FA-FZ)
+const validateCmrtcRollNumber = (rollStr) => {
+  if (!rollStr) return false;
+  const cleanStr = rollStr.trim().toLowerCase();
+  
+  // Format: College Prefix (\d{3}[a-z]\d[a-z]\d{2}) + Suffix ((01-100) or (AA-FZ))
+  const rollRegex = /^(\d{3}[a-z]\d[a-z]\d{2})((?:0[1-9]|[1-9][0-9]|100)|(?:[a-f][a-z]))$/i;
+  
+  return rollRegex.test(cleanStr);
 };
 
 const ClubSignInPage = () => {
@@ -111,13 +109,6 @@ const ClubSignInPage = () => {
     }, 4000);
   };
 
-  // Auto-fill helper for quick testing
-  const handleAutoFill = () => {
-    setEmail('237r1a05ba@cmrtc.ac.in');
-    setPassword('237r1a05ba');
-    setErrorMsg('');
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -138,20 +129,35 @@ const ClubSignInPage = () => {
     // Extract roll number prefix before @
     const rollPart = cleanEmail.split('@')[0];
 
-    // Check roll number email format: e.g. 237r1a05ba@cmrtc.ac.in or any student roll email
-    if (cleanPassword === rollPart || cleanPassword.length >= 6) {
-      setIsSuccess(true);
-      setSignedInStudent(rollPart.toUpperCase());
-      addToast(`Successfully signed into ${clubData.name}! 🎉`, 'success');
-      
-      confetti({
-        particleCount: 140,
-        spread: 90,
-        origin: { y: 0.7 }
-      });
-    } else {
-      setErrorMsg(`Invalid credentials. Password must match your Roll Number (${rollPart})`);
+    // Check college email domain
+    if (!cleanEmail.includes('@cmrtc') && !cleanEmail.includes('@cmr')) {
+      setErrorMsg('Please enter a valid CMRTC college email (e.g. 237r1a0501@cmrtc.ac.in or 237r1a05BA@cmrtc.ac.in)');
+      return;
     }
+
+    // Validate roll number format (01-100 or AA-FZ)
+    const isRollValid = validateCmrtcRollNumber(rollPart);
+    if (!isRollValid) {
+      setErrorMsg(`Invalid Roll Number format. Suffix must be 01-100 or AA-FZ (e.g. 237r1a0501, 237r1a05BA, or 237r1a05DZ)`);
+      return;
+    }
+
+    // Validate password matches roll number
+    if (cleanPassword !== rollPart) {
+      setErrorMsg(`Incorrect password. Password must match your Roll Number (${rollPart.toUpperCase()})`);
+      return;
+    }
+
+    // Authentication Success
+    setIsSuccess(true);
+    setSignedInStudent(rollPart.toUpperCase());
+    addToast(`Successfully signed into ${clubData.name}! 🎉`, 'success');
+    
+    confetti({
+      particleCount: 140,
+      spread: 90,
+      origin: { y: 0.7 }
+    });
   };
 
   return (
@@ -198,16 +204,6 @@ const ClubSignInPage = () => {
               Enter your college email & roll number password
             </p>
           </div>
-
-          {/* Quick Auto-Fill Banner */}
-          <button
-            type="button"
-            onClick={handleAutoFill}
-            className="w-full mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all"
-          >
-            <Sparkles size={14} className="text-yellow-400" />
-            <span>Click to Auto-Fill Sample (237r1a05ba@cmrtc.ac.in)</span>
-          </button>
 
           {/* Success State */}
           {isSuccess ? (
@@ -289,7 +285,7 @@ const ClubSignInPage = () => {
                   />
                 </div>
                 <p className="text-[11px] text-slate-400 font-medium pl-1">
-                  Default password is your Roll Number (e.g. <code className="text-amber-300 font-mono">237r1a05ba</code>)
+                  Password is your Roll Number (e.g. <code className="text-amber-300 font-mono">237r1a05ba</code>)
                 </p>
               </div>
 
