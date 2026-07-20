@@ -197,7 +197,7 @@ const AkritiClubPage = () => {
         >
           {/* Sign In Button */}
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/club/akriti/signin')}
             className="bg-white text-[#ED1C24] hover:bg-red-50 font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer border border-white/80 active:scale-95"
           >
             <LogIn size={20} />

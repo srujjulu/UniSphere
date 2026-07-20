@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ClubPage from './pages/ClubPage';
+import ClubSignInPage from './pages/ClubSignInPage';
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ function AppRoutes() {
 
       {/* 3rd Page: Individual Dedicated Page for Each Club */}
       <Route path="/club/:clubId" element={<ClubPage />} />
+      <Route path="/club/:clubId/signin" element={<ClubSignInPage />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />

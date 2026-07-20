@@ -332,7 +332,7 @@ const ClubPage = () => {
         >
           {/* Sign In Button */}
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate(`/club/${clubData.id}/signin`)}
             className={`${theme.signBtnBg} font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95`}
           >
             <LogIn size={20} />
