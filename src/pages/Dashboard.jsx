@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { Search } from 'lucide-react';
 
@@ -15,6 +16,7 @@ import Toast from '../components/ui/Toast';
 import { mockClubs } from '../utils/mockClubs';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   // Loading & State
   const [initialLoading, setInitialLoading] = useState(true);
   const [joinedClubIds, setJoinedClubIds] = useState([]);
@@ -50,33 +52,9 @@ const Dashboard = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Join action simulation
+  // Navigation to dedicated club page
   const handleJoinToggle = (clubId) => {
-    const targetClub = mockClubs.find((c) => c.id === clubId);
-    if (!targetClub) return;
-
-    setJoiningClubId(clubId);
-    
-    // Simulate server write delay
-    setTimeout(() => {
-      setJoinedClubIds((prev) => {
-        const isJoined = prev.includes(clubId);
-        if (isJoined) {
-          addToast(`You left ${targetClub.name}`, 'info');
-          return prev.filter((id) => id !== clubId);
-        } else {
-          addToast(`Welcome to ${targetClub.name}!`, 'success');
-          // Fire confetti particle trigger!
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.8 }
-          });
-          return [...prev, clubId];
-        }
-      });
-      setJoiningClubId(null);
-    }, 1000);
+    navigate(`/club/${clubId}`);
   };
 
   // Filter & Sort Logic

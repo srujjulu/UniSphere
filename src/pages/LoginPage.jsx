@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/auth/AuthLayout';
 import AuthTabs from '../components/auth/AuthTabs';
 import LoginForm from '../components/auth/LoginForm';
@@ -17,38 +18,21 @@ import {
 import useAuth from '../hooks/useAuth';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('signin');
   const { user, logout } = useAuth();
 
-  // If user is already authenticated (Success state navigation flow)
+  // If user is already authenticated, redirect straight to /dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, navigate]);
+
   if (user) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-[#0B1120] text-center p-6 select-none">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", duration: 0.6 }}
-          className="bg-[#1A2030] p-10 rounded-[32px] border border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.3)] max-w-md w-full"
-        >
-          <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 text-emerald-400">
-            <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Welcome to Campus!</h2>
-          <p className="text-slate-400 mb-6 text-sm">You are signed in as <span className="text-slate-300 font-semibold">{user.email}</span></p>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={logout}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-red-500 to-[#FF8C32] text-white font-bold cursor-pointer transition-shadow shadow-[0_4px_15px_rgba(239,68,68,0.2)] hover:shadow-[0_4px_20px_rgba(239,68,68,0.3)]"
-          >
-            Sign Out
-          </motion.button>
-        </motion.div>
-      </div>
-    );
+    return null;
   }
+
 
   // Left Panel Rendering with subtle Parallax
   const renderLeftPanel = ({ logoStyle, headingStyle }) => (
@@ -151,7 +135,7 @@ const LoginPage = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
-                <LoginForm />
+                <LoginForm onSuccess={() => navigate('/dashboard')} />
               </motion.div>
             ) : (
               <motion.div
@@ -161,7 +145,7 @@ const LoginPage = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.25 }}
               >
-                <RegisterForm onSuccess={() => setActiveTab('signin')} />
+                <RegisterForm onSuccess={() => navigate('/dashboard')} />
               </motion.div>
             )}
           </AnimatePresence>
