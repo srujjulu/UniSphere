@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Terminal, Camera, BookOpen, Shield } from 'lucide-react';
+import { Sparkles, Terminal, Camera, BookOpen, Shield, Heart } from 'lucide-react';
 
 const categoryConfigs = {
   Cultural: {
@@ -21,6 +21,10 @@ const categoryConfigs = {
   Defence: {
     colorClass: 'text-[#4F8BFF] border-[#4F8BFF]/30 bg-[#4F8BFF]/10 hover:bg-[#4F8BFF]/15',
     icon: Shield,
+  },
+  Service: {
+    colorClass: 'text-[#D32F2F] border-[#D32F2F]/30 bg-[#D32F2F]/10 hover:bg-[#D32F2F]/15',
+    icon: Heart,
   }
 };
 

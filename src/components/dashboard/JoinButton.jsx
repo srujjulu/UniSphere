@@ -8,6 +8,7 @@ const categoryGradients = {
   Photography: 'from-violet-500 to-purple-600 shadow-violet-500/20 hover:shadow-violet-500/40 border-violet-500/20 focus-ring',
   Literary: 'from-emerald-500 to-green-600 shadow-emerald-500/20 hover:shadow-emerald-500/40 border-emerald-500/20 focus-ring',
   Defence: 'from-[#4F8BFF] to-blue-600 shadow-[#4F8BFF]/20 hover:shadow-[#4F8BFF]/40 border-[#4F8BFF]/20 focus-ring',
+  Service: 'from-[#D32F2F] to-[#B71C1C] shadow-red-600/20 hover:shadow-red-600/40 border-red-600/20 focus-ring',
 };
 
 const JoinButton = ({ 

@@ -22,7 +22,7 @@ const AnimatedCounter = ({ value, duration = 1.2 }) => {
   return <span>{count.toLocaleString()}</span>;
 };
 
-const StatsBar = () => {
+const StatsBar = ({ totalVisits }) => {
   // Stat items definitions
   const stats = [
     { 
@@ -33,12 +33,12 @@ const StatsBar = () => {
     },
     { 
       label: 'Total visits', 
-      value: 3882, 
+      value: totalVisits !== undefined ? totalVisits : 5904, 
       color: 'text-[#4F8BFF]' 
     },
     { 
       label: 'Clubs', 
-      value: 5, 
+      value: 6, 
       color: 'text-[#FF8A2A]' 
     }
   ];

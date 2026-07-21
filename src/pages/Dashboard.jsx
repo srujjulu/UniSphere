@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { Search } from 'lucide-react';
 
@@ -12,14 +13,18 @@ import ClubDetailsModal from '../components/dashboard/ClubDetailsModal';
 import SearchInput from '../components/ui/SearchInput';
 import Skeleton from '../components/ui/Skeleton';
 import Toast from '../components/ui/Toast';
-import { mockClubs } from '../utils/mockClubs';
+import { mockClubs, getStoredClubs, incrementClubViews } from '../utils/mockClubs';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   // Loading & State
   const [initialLoading, setInitialLoading] = useState(true);
   const [joinedClubIds, setJoinedClubIds] = useState([]);
   const [joiningClubId, setJoiningClubId] = useState(null);
   
+  // Clubs List State with view count persistence
+  const [clubsList, setClubsList] = useState(getStoredClubs);
+
   // Modal & Toast lists
   const [selectedClub, setSelectedClub] = useState(null);
   const [toasts, setToasts] = useState([]);
@@ -28,6 +33,16 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('Popular');
+
+  // Sync stored clubs when returning to dashboard
+  useEffect(() => {
+    setClubsList(getStoredClubs());
+  }, []);
+
+  // Compute Total Visits across all clubs dynamically
+  const totalVisits = useMemo(() => {
+    return clubsList.reduce((sum, c) => sum + (c.views || 0), 0);
+  }, [clubsList]);
 
   // Trigger loading state simulator
   useEffect(() => {
@@ -50,38 +65,27 @@ const Dashboard = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Join action simulation
+  // Navigation to dedicated club page & increment views count
   const handleJoinToggle = (clubId) => {
-    const targetClub = mockClubs.find((c) => c.id === clubId);
-    if (!targetClub) return;
+    const newViews = incrementClubViews(clubId);
+    setClubsList((prev) =>
+      prev.map((c) => (c.id === clubId ? { ...c, views: newViews } : c))
+    );
+    navigate(`/club/${clubId}`);
+  };
 
-    setJoiningClubId(clubId);
-    
-    // Simulate server write delay
-    setTimeout(() => {
-      setJoinedClubIds((prev) => {
-        const isJoined = prev.includes(clubId);
-        if (isJoined) {
-          addToast(`You left ${targetClub.name}`, 'info');
-          return prev.filter((id) => id !== clubId);
-        } else {
-          addToast(`Welcome to ${targetClub.name}!`, 'success');
-          // Fire confetti particle trigger!
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.8 }
-          });
-          return [...prev, clubId];
-        }
-      });
-      setJoiningClubId(null);
-    }, 1000);
+  // Handle More details click & increment views
+  const handleMoreClick = (club) => {
+    const newViews = incrementClubViews(club.id);
+    setClubsList((prev) =>
+      prev.map((c) => (c.id === club.id ? { ...c, views: newViews } : c))
+    );
+    setSelectedClub({ ...club, views: newViews });
   };
 
   // Filter & Sort Logic
   const filteredAndSortedClubs = useMemo(() => {
-    let result = [...mockClubs];
+    let result = [...clubsList];
 
     // Filter by Category
     if (activeCategory !== 'All') {
@@ -114,7 +118,7 @@ const Dashboard = () => {
     });
 
     return result;
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [clubsList, activeCategory, searchQuery, sortBy]);
 
   const handleResetFilters = () => {
     setSearchQuery('');
@@ -137,7 +141,7 @@ const Dashboard = () => {
         <HeroSection />
 
         {/* glass counter metrics */}
-        <StatsBar />
+        <StatsBar totalVisits={totalVisits} />
 
         {/* Search controls */}
         <motion.div
@@ -166,7 +170,7 @@ const Dashboard = () => {
               joinedClubIds={joinedClubIds}
               joiningClubId={joiningClubId}
               onJoinToggle={handleJoinToggle}
-              onMoreClick={(club) => setSelectedClub(club)}
+              onMoreClick={handleMoreClick}
             />
           ) : (
             /* Empty Search States */

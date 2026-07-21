@@ -6,35 +6,39 @@ import JoinButton from './JoinButton';
 import MoreButton from './MoreButton';
 import { 
   CmrLogo, 
+  AkritiLogo,
   CodeClubLogo, 
   PhotoClubLogo, 
   EcoClubLogo, 
-  SportsClubLogo, 
-  DesignClubLogo 
+  DesignClubLogo,
+  NssLogo 
 } from '../../utils/clubLogos';
 
 const clubLogoSvgs = {
-  akriti: <SportsClubLogo />, // Red accent representation
-  lexis: <EcoClubLogo />, // Green accent representation
-  photography: <PhotoClubLogo />, // Purple accent representation
-  ncc: <DesignClubLogo />, // Blue accent representation
-  codeholics: <CodeClubLogo /> // Orange accent representation
+  akriti: <AkritiLogo />,
+  lexis: <EcoClubLogo />,
+  photography: <PhotoClubLogo />,
+  ncc: <DesignClubLogo />,
+  codeholics: <CodeClubLogo />,
+  nss: <NssLogo />
 };
 
-const categoryAccents = {
-  Cultural: 'bg-red-500 shadow-[0_2px_10px_rgba(239,68,68,0.5)]',
-  Technical: 'bg-[#FF8A2A] shadow-[0_2px_10px_rgba(255,138,42,0.5)]',
-  Photography: 'bg-violet-500 shadow-[0_2px_10px_rgba(139,92,246,0.5)]',
-  Literary: 'bg-emerald-500 shadow-[0_2px_10px_rgba(34,197,94,0.5)]',
-  Defence: 'bg-[#4F8BFF] shadow-[0_2px_10px_rgba(79,139,255,0.5)]',
+const clubAccents = {
+  akriti: 'bg-gradient-to-r from-[#881337] to-[#E11D48] shadow-[0_2px_12px_rgba(225,29,72,0.6)]',
+  codeholics: 'bg-gradient-to-r from-[#DC2626] to-[#475569] shadow-[0_2px_12px_rgba(220,38,38,0.6)]',
+  ncc: 'bg-gradient-to-r from-[#DC2626] via-[#1E3A8A] to-[#0284C7] shadow-[0_2px_12px_rgba(30,58,138,0.6)]',
+  photography: 'bg-gradient-to-r from-[#A855F7] via-[#EF4444] to-[#3B82F6] shadow-[0_2px_12px_rgba(168,85,247,0.6)]',
+  lexis: 'bg-gradient-to-r from-[#15803D] via-[#10B981] to-[#C084FC] shadow-[0_2px_12px_rgba(21,128,61,0.6)]',
+  nss: 'bg-gradient-to-r from-[#1E3A5F] via-[#D32F2F] to-[#1E3A5F] shadow-[0_2px_12px_rgba(211,47,47,0.6)]'
 };
 
-const cardBorderHover = {
-  Cultural: 'hover:border-red-500/35',
-  Technical: 'hover:border-[#FF8A2A]/35',
-  Photography: 'hover:border-violet-500/35',
-  Literary: 'hover:border-emerald-500/35',
-  Defence: 'hover:border-[#4F8BFF]/35',
+const clubBorderHovers = {
+  akriti: 'hover:border-rose-500/40 hover:shadow-[0_20px_40px_rgba(225,29,72,0.25)]',
+  codeholics: 'hover:border-red-500/40 hover:shadow-[0_20px_40px_rgba(220,38,38,0.25)]',
+  ncc: 'hover:border-blue-500/40 hover:shadow-[0_20px_40px_rgba(30,58,138,0.25)]',
+  photography: 'hover:border-purple-500/40 hover:shadow-[0_20px_40px_rgba(168,85,247,0.25)]',
+  lexis: 'hover:border-emerald-500/40 hover:shadow-[0_20px_40px_rgba(21,128,61,0.25)]',
+  nss: 'hover:border-red-600/40 hover:shadow-[0_20px_40px_rgba(211,47,47,0.25)]'
 };
 
 // Sub-component for animating card stat counters once on mount
@@ -107,8 +111,8 @@ const ClubCard = ({
   };
 
   const logoSvg = clubLogoSvgs[club.id] || <CodeClubLogo />;
-  const borderHoverClass = cardBorderHover[club.category] || cardBorderHover.Technical;
-  const accentClass = categoryAccents[club.category] || categoryAccents.Technical;
+  const borderHoverClass = clubBorderHovers[club.id] || clubBorderHovers.codeholics;
+  const accentClass = clubAccents[club.id] || clubAccents.codeholics;
 
   return (
     <motion.div
@@ -149,8 +153,9 @@ const ClubCard = ({
         <div className="flex justify-between items-start">
           {/* Logo Card */}
           <motion.div
-            whileHover={{ scale: 1.08, rotate: 3 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
+            whileHover={{ scale: 1.12, rotate: 3 }}
             className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md cursor-pointer p-2"
           >
             {logoSvg}

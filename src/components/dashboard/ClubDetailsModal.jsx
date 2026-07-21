@@ -40,6 +40,7 @@ const ClubDetailsModal = ({
     Photography: ['bg-violet-500/10 border-violet-500/20', 'bg-purple-500/10 border-purple-500/20', 'bg-fuchsia-500/10 border-fuchsia-500/20'],
     Literary: ['bg-emerald-500/10 border-emerald-500/20', 'bg-green-500/10 border-green-500/20', 'bg-teal-500/10 border-teal-500/20'],
     Defence: ['bg-[#4F8BFF]/10 border-[#4F8BFF]/20', 'bg-blue-500/10 border-blue-500/20', 'bg-indigo-500/10 border-indigo-500/20'],
+    Service: ['bg-red-500/10 border-red-500/20', 'bg-blue-900/10 border-blue-900/20', 'bg-red-600/10 border-red-600/20'],
   };
 
   const currentGalleryColors = galleryColors[club.category] || galleryColors.Technical;
