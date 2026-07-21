@@ -109,8 +109,20 @@ const AkritiClubPage = () => {
         {/* Top Logo Container Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            y: [0, -12, 0] 
+          }}
+          transition={{ 
+            duration: 0.6, 
+            ease: [0.16, 1, 0.3, 1],
+            y: {
+              repeat: Infinity,
+              duration: 3,
+              ease: "easeInOut"
+            }
+          }}
           className="bg-white rounded-3xl p-5 shadow-2xl mb-8 border border-red-100 flex items-center justify-center w-56 h-36 transform hover:scale-105 transition-transform duration-300"
         >
           <AkritiLogo />
@@ -204,26 +216,13 @@ const AkritiClubPage = () => {
             <span>Sign In</span>
           </button>
 
-          {/* Join Now Button */}
+          {/* Sign Up Button */}
           <button
-            onClick={handleJoinToggle}
-            className={`font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95 ${
-              isJoined 
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
-                : 'bg-[#7A000A] hover:bg-[#600007] text-white'
-            }`}
+            onClick={() => navigate('/club/akriti/signup')}
+            className="bg-[#7A000A] hover:bg-[#600007] text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95"
           >
-            {isJoined ? (
-              <>
-                <CheckCircle2 size={20} />
-                <span>Joined Club</span>
-              </>
-            ) : (
-              <>
-                <UserPlus size={20} />
-                <span>Join Now</span>
-              </>
-            )}
+            <UserPlus size={20} />
+            <span>Sign Up</span>
           </button>
         </motion.div>
       </main>

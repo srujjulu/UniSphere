@@ -9,29 +9,30 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 600));
     setLoading(false);
 
-    if (email === 'admin@cmr.edu.in' && password === 'password123') {
-      setUser({ email, name: 'Admin User' });
+    if (email && password && password.length >= 4) {
+      const name = email.split('@')[0].toUpperCase();
+      setUser({ email, name });
       return { success: true };
     } else {
-      return { success: false, message: 'Invalid email or password. Use: admin@cmr.edu.in / password123' };
+      return { success: false, message: 'Please enter a valid email and password.' };
     }
   };
 
   const register = async (email, password) => {
     setLoading(true);
     // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 600));
     setLoading(false);
 
-    // Simulate registration
-    if (email.endsWith('@cmr.edu.in')) {
-      setUser({ email, name: email.split('@')[0] });
+    if (email && password && password.length >= 4) {
+      const name = email.split('@')[0].toUpperCase();
+      setUser({ email, name });
       return { success: true };
     } else {
-      return { success: false, message: 'Registration is restricted to @cmr.edu.in email addresses.' };
+      return { success: false, message: 'Please enter a valid email and password.' };
     }
   };
 

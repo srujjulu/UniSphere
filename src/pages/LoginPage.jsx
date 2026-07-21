@@ -13,7 +13,8 @@ import {
   PhotoClubLogo, 
   EcoClubLogo, 
   SportsClubLogo, 
-  DesignClubLogo 
+  DesignClubLogo,
+  NssLogo 
 } from '../utils/clubLogos';
 import useAuth from '../hooks/useAuth';
 
@@ -66,16 +67,17 @@ const LoginPage = () => {
 
       {/* Description */}
       <p className="text-[#94A3B8] text-xs sm:text-sm lg:text-[15px] leading-[1.6] max-w-[340px] sm:max-w-[420px] mx-auto mb-6 sm:mb-8 font-normal px-2">
-        Five unique clubs. Countless opportunities. One campus. Join the community that shapes future leaders.
+        Six unique clubs. Countless opportunities. One campus. Join the community that shapes future leaders.
       </p>
 
       {/* Club Logos Row */}
       <div className="flex gap-3 sm:gap-4 items-center justify-center flex-wrap mt-2">
-        <ClubLogo name="Code Club" svg={<CodeClubLogo />} />
-        <ClubLogo name="Photo Club" svg={<PhotoClubLogo />} />
-        <ClubLogo name="Eco Club" svg={<EcoClubLogo />} />
-        <ClubLogo name="Sports Club" svg={<SportsClubLogo />} />
-        <ClubLogo name="Design Club" svg={<DesignClubLogo />} />
+        <ClubLogo name="Code Club" svg={<CodeClubLogo />} index={0} />
+        <ClubLogo name="Photo Club" svg={<PhotoClubLogo />} index={1} />
+        <ClubLogo name="Eco Club" svg={<EcoClubLogo />} index={2} />
+        <ClubLogo name="Sports Club" svg={<SportsClubLogo />} index={3} />
+        <ClubLogo name="Design Club" svg={<DesignClubLogo />} index={4} />
+        <ClubLogo name="NSS Club" svg={<NssLogo />} index={5} />
       </div>
     </>
   );

@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { CmrLogo } from '../../utils/clubLogos';
 import { LogOut, Users } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [onlineCount, setOnlineCount] = useState(34);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   // Fluctuating live users count simulation
   useEffect(() => {
@@ -83,7 +90,7 @@ const Navbar = () => {
 
         {/* Logout Button with Slide Underline */}
         <button
-          onClick={logout}
+          onClick={handleLogout}
           onMouseEnter={() => setIsLogoutHovered(true)}
           onMouseLeave={() => setIsLogoutHovered(false)}
           className="text-sm font-semibold text-slate-400 hover:text-[#FF8C32] relative flex items-center gap-1.5 focus:outline-none focus-ring rounded px-1 transition-colors duration-300 cursor-pointer"

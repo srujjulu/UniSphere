@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, ChevronDown } from 'lucide-react';
 
-const categories = ['All', 'Cultural', 'Technical', 'Photography', 'Literary', 'Defence'];
+const categories = ['All', 'Cultural', 'Technical', 'Photography', 'Literary', 'Defence', 'Service'];
 
 const SearchInput = ({ 
   searchQuery, 

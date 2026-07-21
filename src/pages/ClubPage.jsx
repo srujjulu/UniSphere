@@ -20,7 +20,8 @@ import {
   Eye,
   UserCheck,
   Compass,
-  Layers
+  Layers,
+  Heart
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
@@ -31,7 +32,8 @@ import {
   CodeClubLogo, 
   PhotoClubLogo, 
   EcoClubLogo, 
-  DesignClubLogo 
+  DesignClubLogo,
+  NssLogo 
 } from '../utils/clubLogos';
 
 // Custom logo-matched theme configurations for every club
@@ -135,6 +137,26 @@ const clubThemes = {
       { icon: Award, label: 'MUN & Debates', desc: 'Inter-college speech & debate championships' },
       { icon: Calendar, label: 'Poetry Slams', desc: 'Word-Smith open mic & creative jams' }
     ]
+  },
+  nss: {
+    bgGradient: 'from-[#0A1628] via-[#1E3A5F] to-[#2C1810]',
+    badgeGlow: 'shadow-[0_0_60px_rgba(211,47,47,0.4)]',
+    cardBg: 'bg-[#0F1E35]/85 border-red-600/30 backdrop-blur-xl',
+    cardText: 'text-[#EF5350]',
+    cardDesc: 'text-slate-200',
+    iconBadgeBg: 'bg-blue-950/90 text-[#EF5350] border border-red-500/40',
+    joinBtnBg: 'bg-[#D32F2F] hover:bg-[#B71C1C] text-white shadow-[0_0_20px_rgba(211,47,47,0.5)]',
+    signBtnBg: 'bg-white text-[#D32F2F] hover:bg-slate-100 border-white',
+    tag: 'National Service Scheme • Not Me But You',
+    tagBg: 'bg-red-950/60 border-red-500/40 text-red-300',
+    heroSubtitle: 'SERVE THE NATION',
+    title: 'NSS CMRTC UNIT',
+    description: 'The National Service Scheme (NSS) unit at CMRTC develops students through community service. NSS volunteers engage in blood donation camps, Swachh Bharat drives, village adoption programs, tree plantation campaigns, and disaster relief awareness.',
+    features: [
+      { icon: Heart, label: '180+ Volunteers', desc: 'Dedicated community service workers' },
+      { icon: Award, label: 'Special Camps', desc: 'Annual 7-day village adoption camps' },
+      { icon: Calendar, label: 'Social Drives', desc: 'Blood donation, Swachh Bharat & tree plantation' }
+    ]
   }
 };
 
@@ -151,6 +173,8 @@ const getClubLogo = (clubId) => {
       return <EcoClubLogo />;
     case 'ncc':
       return <DesignClubLogo />;
+    case 'nss':
+      return <NssLogo />;
     default:
       return <CodeClubLogo />;
   }
@@ -223,8 +247,20 @@ const ClubPage = () => {
         {/* Official Logo Container Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            y: [0, -12, 0] 
+          }}
+          transition={{ 
+            duration: 0.6, 
+            ease: [0.16, 1, 0.3, 1],
+            y: {
+              repeat: Infinity,
+              duration: 3,
+              ease: "easeInOut"
+            }
+          }}
           className={`bg-white rounded-3xl p-5 ${theme.badgeGlow} mb-8 border border-white/40 flex items-center justify-center w-52 h-36 transform hover:scale-105 transition-transform duration-300 cursor-pointer`}
         >
           <div className="w-24 h-24 flex items-center justify-center">
@@ -339,26 +375,13 @@ const ClubPage = () => {
             <span>Sign In</span>
           </button>
 
-          {/* Join Now Button */}
+          {/* Sign Up Button */}
           <button
-            onClick={handleJoinToggle}
-            className={`font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95 ${
-              isJoined 
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-[0_0_20px_rgba(5,150,105,0.5)]' 
-                : `${theme.joinBtnBg}`
-            }`}
+            onClick={() => navigate(`/club/${clubData.id}/signup`)}
+            className={`${theme.joinBtnBg} font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95`}
           >
-            {isJoined ? (
-              <>
-                <CheckCircle2 size={20} />
-                <span>Joined Club</span>
-              </>
-            ) : (
-              <>
-                <UserPlus size={20} />
-                <span>Join Now</span>
-              </>
-            )}
+            <UserPlus size={20} />
+            <span>Sign Up</span>
           </button>
         </motion.div>
       </main>

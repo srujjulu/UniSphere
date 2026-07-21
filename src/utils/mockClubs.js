@@ -78,5 +78,78 @@ export const mockClubs = [
       { id: 'e10', title: 'Advanced React v19 Masterclass', date: 'Oct 01, 2026' }
     ],
     membersCount: 350
+  },
+  {
+    id: 'nss',
+    name: 'NSS',
+    subtitle: 'National Service Scheme',
+    category: 'Service', // Accent: Deep Blue / Red
+    views: 978,
+    established: 2017,
+    facultyCoordinator: 'Dr. M. Ramesh Babu',
+    studentLead: 'Priya Venkatesh',
+    description: 'The National Service Scheme (NSS) unit at CMRTC develops students through community service. NSS volunteers engage in blood donation camps, Swachh Bharat drives, village adoption programs, tree plantation campaigns, and disaster relief awareness.',
+    events: [
+      { id: 'e11', title: 'Swachh Bharat Campus Drive', date: 'Aug 20, 2026' },
+      { id: 'e12', title: 'NSS Annual Special Camp', date: 'Dec 15-21, 2026' }
+    ],
+    membersCount: 180
   }
 ];
+
+export const getStoredClubs = () => {
+  if (typeof window === 'undefined') return mockClubs;
+  const stored = localStorage.getItem('cmrtc_clubs_views');
+  if (stored) {
+    try {
+      const parsedViews = JSON.parse(stored);
+      return mockClubs.map((club) => ({
+        ...club,
+        views: parsedViews[club.id] !== undefined ? parsedViews[club.id] : club.views,
+      }));
+    } catch (e) {
+      return mockClubs;
+    }
+  }
+  return mockClubs;
+};
+
+export const incrementClubViews = (clubId) => {
+  if (typeof window === 'undefined') return 0;
+
+  // Check if this user/device has already viewed/joined this club
+  let viewedList = [];
+  try {
+    const viewedStored = localStorage.getItem('cmrtc_user_viewed_clubs');
+    if (viewedStored) viewedList = JSON.parse(viewedStored);
+  } catch (e) {}
+
+  const currentClub = mockClubs.find((c) => c.id === clubId);
+  const storedViews = localStorage.getItem('cmrtc_clubs_views');
+  let viewsObj = {};
+  if (storedViews) {
+    try { viewsObj = JSON.parse(storedViews); } catch (e) {}
+  }
+
+  const baseViews = currentClub ? currentClub.views : 0;
+  const currentViews = viewsObj[clubId] !== undefined ? viewsObj[clubId] : baseViews;
+
+  // If user already viewed this club, don't increment again
+  if (viewedList.includes(clubId)) {
+    return currentViews;
+  }
+
+  // Unique new visitor for this club!
+  const newViews = currentViews + 1;
+  viewsObj[clubId] = newViews;
+  localStorage.setItem('cmrtc_clubs_views', JSON.stringify(viewsObj));
+
+  // Mark this club as viewed by current user
+  viewedList.push(clubId);
+  localStorage.setItem('cmrtc_user_viewed_clubs', JSON.stringify(viewedList));
+
+  if (currentClub) {
+    currentClub.views = newViews;
+  }
+  return newViews;
+};

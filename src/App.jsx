@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ClubPage from './pages/ClubPage';
 import ClubSignInPage from './pages/ClubSignInPage';
+import ClubSignUpPage from './pages/ClubSignUpPage';
+import ClubMemberDashboardPage from './pages/ClubMemberDashboardPage';
 
 function AppRoutes() {
   const { user } = useAuth();
@@ -15,11 +17,14 @@ function AppRoutes() {
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
 
       {/* 2nd Page: All Clubs Dashboard */}
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/" replace />} />
 
       {/* 3rd Page: Individual Dedicated Page for Each Club */}
       <Route path="/club/:clubId" element={<ClubPage />} />
       <Route path="/club/:clubId/signin" element={<ClubSignInPage />} />
+      <Route path="/club/:clubId/signup" element={<ClubSignUpPage />} />
+      <Route path="/club/:clubId/register" element={<ClubSignUpPage />} />
+      <Route path="/club/:clubId/member-dashboard" element={<ClubMemberDashboardPage />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} replace />} />

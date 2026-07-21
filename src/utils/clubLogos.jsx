@@ -130,6 +130,62 @@ export const DesignClubLogo = () => (
   </svg>
 );
 
+// 6. NSS (National Service Scheme) Logo
+export const NssLogo = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Outer dark blue circle */}
+    <circle cx="100" cy="100" r="95" fill="#1E3A5F" />
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#FFFFFF" strokeWidth="2" />
+    
+    {/* Inner white circle */}
+    <circle cx="100" cy="100" r="60" fill="#FFFFFF" />
+    
+    {/* Red wheel — central hub */}
+    <circle cx="100" cy="100" r="12" fill="#D32F2F" />
+    <circle cx="100" cy="100" r="8" fill="#FFFFFF" />
+    <circle cx="100" cy="100" r="4" fill="#D32F2F" />
+    
+    {/* Red wheel spokes (8 spokes) */}
+    {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
+      <line
+        key={angle}
+        x1="100"
+        y1="100"
+        x2={100 + 50 * Math.cos((angle * Math.PI) / 180)}
+        y2={100 + 50 * Math.sin((angle * Math.PI) / 180)}
+        stroke="#D32F2F"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    ))}
+    
+    {/* Red outer wheel rim */}
+    <circle cx="100" cy="100" r="50" fill="none" stroke="#D32F2F" strokeWidth="4" />
+    
+    {/* Curved petals between spokes */}
+    {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((angle) => {
+      const r = 32;
+      const x = 100 + r * Math.cos((angle * Math.PI) / 180);
+      const y = 100 + r * Math.sin((angle * Math.PI) / 180);
+      return (
+        <circle key={angle} cx={x} cy={y} r="8" fill="#D32F2F" opacity="0.25" />
+      );
+    })}
+
+    {/* Top arc text — Hindi */}
+    <path id="nssTopArc" d="M 30,100 A 70,70 0 0,1 170,100" fill="none" />
+    <text fontSize="14" fontWeight="800" fontFamily="sans-serif" fill="#FFFFFF" textAnchor="middle">
+      <textPath href="#nssTopArc" startOffset="50%">राष्ट्रीय सेवा योजना</textPath>
+    </text>
+
+    {/* Bottom arc text — English */}
+    <path id="nssBottomArc" d="M 170,108 A 70,70 0 0,1 30,108" fill="none" />
+    <text fontSize="11" fontWeight="800" fontFamily="sans-serif" fill="#FFFFFF" textAnchor="middle" letterSpacing="2">
+      <textPath href="#nssBottomArc" startOffset="50%">NATIONAL SERVICE SCHEME</textPath>
+    </text>
+  </svg>
+);
+
 // Alias exports for clarity
 export const LexisClubLogo = EcoClubLogo;
 export const NccLogo = DesignClubLogo;

@@ -18,7 +18,8 @@ import {
   CodeClubLogo, 
   PhotoClubLogo, 
   EcoClubLogo, 
-  DesignClubLogo 
+  DesignClubLogo,
+  NssLogo 
 } from '../utils/clubLogos';
 
 const clubThemes = {
@@ -56,6 +57,13 @@ const clubThemes = {
     titleColor: 'text-[#34D399]',
     buttonBg: 'bg-[#047857] hover:bg-[#065F46] text-white',
     inputFocus: 'focus:border-[#34D399] focus:ring-emerald-500/20'
+  },
+  nss: {
+    bgGradient: 'from-[#0A1628] via-[#1E3A5F] to-[#2C1810]',
+    cardBg: 'bg-[#0F1E35] text-white border-red-600/30',
+    titleColor: 'text-[#EF5350]',
+    buttonBg: 'bg-[#D32F2F] hover:bg-[#B71C1C] text-white shadow-[0_0_20px_rgba(211,47,47,0.4)]',
+    inputFocus: 'focus:border-[#EF5350] focus:ring-red-500/20'
   }
 };
 
@@ -71,6 +79,8 @@ const getClubLogo = (clubId) => {
       return <EcoClubLogo />;
     case 'ncc':
       return <DesignClubLogo />;
+    case 'nss':
+      return <NssLogo />;
     default:
       return <CodeClubLogo />;
   }
@@ -113,16 +123,21 @@ const ClubSignInPage = () => {
     e.preventDefault();
     setErrorMsg('');
 
-    const cleanEmail = email.trim().toLowerCase();
+    let cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim().toLowerCase();
 
     if (!cleanEmail) {
-      setErrorMsg('Please enter your CMRTC college email address');
+      setErrorMsg('Please enter your Roll Number or CMRTC college email address');
       return;
     }
 
+    // Auto-append domain if user enters just the Roll Number (e.g. 237r1a05ba)
+    if (!cleanEmail.includes('@')) {
+      cleanEmail = `${cleanEmail}@cmrtc.ac.in`;
+    }
+
     if (!cleanPassword) {
-      setErrorMsg('Please enter your roll number password');
+      setErrorMsg('Please enter your Roll Number password');
       return;
     }
 
@@ -189,11 +204,15 @@ const ClubSignInPage = () => {
           className={`w-full rounded-[32px] p-8 shadow-2xl ${theme.cardBg} border backdrop-blur-xl relative`}
         >
           {/* Top Logo Badge */}
-          <div className="w-24 h-24 bg-white rounded-2xl p-3 shadow-lg mx-auto mb-6 flex items-center justify-center border border-slate-100">
+          <motion.div 
+            animate={{ y: [0, -8, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            className="w-24 h-24 bg-white rounded-2xl p-3 shadow-lg mx-auto mb-6 flex items-center justify-center border border-slate-100"
+          >
             <div className="w-16 h-16 flex items-center justify-center">
               {getClubLogo(clubData.id)}
             </div>
-          </div>
+          </motion.div>
 
           {/* Heading */}
           <div className="text-center mb-6">
@@ -222,10 +241,10 @@ const ClubSignInPage = () => {
 
               <div className="pt-4 space-y-2">
                 <button
-                  onClick={() => navigate(`/club/${clubData.id}`)}
-                  className={`w-full py-3.5 rounded-xl ${theme.buttonBg} font-bold text-sm cursor-pointer shadow-md transition-all`}
+                  onClick={() => navigate(`/club/${clubData.id}/member-dashboard`)}
+                  className={`w-full py-3.5 rounded-xl ${theme.buttonBg} font-bold text-sm cursor-pointer shadow-md transition-all active:scale-95`}
                 >
-                  Return to {clubData.name} Page &rarr;
+                  Go to {clubData.name} Member Dashboard &rarr;
                 </button>
                 <button
                   onClick={() => navigate('/dashboard')}
@@ -297,6 +316,20 @@ const ClubSignInPage = () => {
                 <LogIn size={18} />
                 <span>Sign In to {clubData.name}</span>
               </button>
+
+              {/* Don't have an account link */}
+              <div className="text-center pt-2">
+                <p className="text-xs font-medium text-slate-400">
+                  Don't have an account yet?{' '}
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/club/${clubData.id}/signup`)}
+                    className={`font-bold underline cursor-pointer hover:text-white ${theme.titleColor}`}
+                  >
+                    Sign Up
+                  </button>
+                </p>
+              </div>
             </form>
           )}
         </motion.div>
