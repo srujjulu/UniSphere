@@ -33,17 +33,20 @@ const Navbar = () => {
 
   return (
     <nav className="h-[72px] w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-white/5 backdrop-blur-xl bg-[#090E1B]/60 sticky top-0 z-50">
-      {/* Left side: College Logo & Portal Title */}
-      <div className="flex items-center gap-3">
+      {/* Left side: UniSphere Logo & Portal Title */}
+      <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
         <motion.div 
           whileHover={{ scale: 1.05, boxShadow: "0 10px 20px rgba(0,0,0,0.3)" }}
-          className="w-10 h-10 rounded-xl bg-white flex items-center justify-center cursor-pointer p-1.5"
+          className="w-11 h-11 rounded-xl bg-white flex items-center justify-center p-1 shadow-md border border-white/20 overflow-hidden"
         >
-          <CmrLogo />
+          <img src="/UniSphere.png" alt="UniSphere Logo" className="w-full h-full object-contain" />
         </motion.div>
         <div className="flex flex-col text-left leading-none">
-          <span className="text-[14px] font-extrabold tracking-wide text-white uppercase font-display">CMR Campus</span>
-          <span className="text-[11px] font-semibold text-[#FF8C32] tracking-wider uppercase">Clubs Portal</span>
+          <span className="text-[15px] font-black tracking-wide text-white uppercase font-display flex items-center gap-1.5">
+            <span>UniSphere</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold border border-blue-500/30">PORTAL</span>
+          </span>
+          <span className="text-[11px] font-semibold text-[#FF8C32] tracking-wider uppercase">CMRTC Clubs Portal</span>
         </div>
       </div>
 

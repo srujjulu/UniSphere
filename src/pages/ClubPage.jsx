@@ -184,11 +184,6 @@ const ClubPage = () => {
   const { clubId } = useParams();
   const navigate = useNavigate();
 
-  // Akriti custom bespoke page
-  if (clubId === 'akriti') {
-    return <AkritiClubPage />;
-  }
-
   const clubData = mockClubs.find((c) => c.id === clubId) || mockClubs[0];
   const theme = clubThemes[clubId] || clubThemes.codeholics;
 

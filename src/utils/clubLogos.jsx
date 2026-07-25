@@ -1,22 +1,8 @@
 import React from 'react';
 
-// CMR Technical Campus Main Logo
+// CMR Technical Campus Main Logo (tc.jpeg)
 export const CmrLogo = () => (
-  <svg 
-    className="w-full h-full" 
-    viewBox="0 0 100 100" 
-    fill="none" 
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect width="100" height="100" rx="20" fill="white" />
-    <path d="M50 20C40 38 48 50 50 55C52 50 60 38 50 20Z" fill="#F97316" />
-    <path d="M50 30C36 43 40 54 44 57C48 53 46 43 50 30Z" fill="#EAB308" />
-    <path d="M50 30C64 43 60 54 56 57C52 53 54 43 50 30Z" fill="#22C55E" />
-    <path d="M50 40C30 48 32 58 37 60C44 57 40 49 50 40Z" fill="#3B82F6" />
-    <path d="M50 40C70 48 68 58 63 60C56 57 60 49 50 40Z" fill="#A855F7" />
-    <text x="50" y="76" fill="#0B1120" fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif" textAnchor="middle">CMR</text>
-    <text x="50" y="86" fill="#F97316" fontSize="7" fontWeight="700" fontFamily="Inter, sans-serif" textAnchor="middle" letterSpacing="0.5">CAMPUS</text>
-  </svg>
+  <img src="/tc.jpeg" alt="CMR Technical Campus Logo" className="w-full h-full object-contain" />
 );
 
 // 1. Akriti Club Logo (Visual Arts & Drama)

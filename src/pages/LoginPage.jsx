@@ -41,7 +41,7 @@ const LoginPage = () => {
       {/* College Logo Card */}
       <motion.div 
         style={logoStyle}
-        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-[22px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] flex items-center justify-center cursor-pointer p-3.5 mb-4 sm:mb-6 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-[22px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] flex items-center justify-center cursor-pointer p-2 mb-4 sm:mb-6 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] overflow-hidden"
       >
         <CmrLogo />
       </motion.div>

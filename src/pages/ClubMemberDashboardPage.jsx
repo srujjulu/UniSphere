@@ -55,6 +55,14 @@ import {
   NssLogo 
 } from '../utils/clubLogos';
 import Toast from '../components/ui/Toast';
+import MoviePromotionsModal from '../components/dashboard/MoviePromotionsModal';
+import CoreMembersModal from '../components/dashboard/CoreMembersModal';
+import SponsorsModal from '../components/dashboard/SponsorsModal';
+import HackathonsModal from '../components/dashboard/HackathonsModal';
+import PhotoWalksModal from '../components/dashboard/PhotoWalksModal';
+import MunDebatesModal from '../components/dashboard/MunDebatesModal';
+import BloodDrivesModal from '../components/dashboard/BloodDrivesModal';
+import ParadeDrillsModal from '../components/dashboard/ParadeDrillsModal';
 
 // Club Member Dashboard Themes & Data Config
 const dashboardClubConfigs = {
@@ -252,10 +260,55 @@ const ClubMemberDashboardPage = () => {
   const navigate = useNavigate();
 
   const clubData = mockClubs.find((c) => c.id === clubId) || mockClubs[0];
-  const config = dashboardClubConfigs[clubId] || dashboardClubConfigs.akriti;
+  const rawConfig = dashboardClubConfigs[clubId];
+  const config = rawConfig || {
+    name: `${clubData.name} Club`,
+    bannerGradient: 'bg-gradient-to-r from-[#ED1C24] via-[#E11D48] to-[#FF5E62]',
+    primaryColor: '#ED1C24',
+    accentBorder: 'border-red-200',
+    accentBg: 'bg-red-50',
+    accentText: 'text-[#ED1C24]',
+    tagBg: 'bg-red-500/10 text-[#ED1C24]',
+    subtitle: `Ready to showcase your talent? Explore upcoming events, connect with fellow members, and be part of ${clubData.name}'s vibrant community.`,
+    talentLabel: clubData.subtitle || 'Student Member',
+    talentIcon: Music,
+    actionPills: [
+      { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p2', label: 'Club Activities', icon: Sparkles },
+      { id: 'p3', label: 'Core Members', icon: Users },
+      { id: 'p4', label: 'Our Sponsors', icon: Award }
+    ],
+    events: (clubData.events && clubData.events.length > 0)
+      ? clubData.events.map((e, idx) => ({
+          id: e.id || `e${idx}`,
+          title: e.title,
+          date: e.date,
+          tag: 'Campus Event',
+          status: idx === 0 ? 'Registration Open' : idx === 1 ? 'Confirmed' : 'Coming Soon',
+          statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700'
+        }))
+      : [
+          { id: 'e1', title: `${clubData.name} Annual Meet`, date: 'December 15, 2026', tag: 'Annual Event', status: 'Registration Open', statusColor: 'bg-[#ED1C24] text-white' },
+          { id: 'e2', title: 'Interactive Workshop', date: 'December 10, 2026', tag: 'Training Session', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white' },
+          { id: 'e3', title: 'Community Showcase', date: 'January 20, 2027', tag: 'Celebration', status: 'Coming Soon', statusColor: 'bg-rose-700 text-white' }
+        ],
+    activities: [
+      { id: 'a1', text: `Registered for ${clubData.name} events`, time: '2 hours ago' },
+      { id: 'a2', text: 'Completed profile setup', time: '1 day ago' },
+      { id: 'a3', text: `Joined ${clubData.name} Club`, time: '1 day ago' }
+    ]
+  };
   const TalentIcon = config.talentIcon || Music;
 
   const [activeTab, setActiveTab] = useState('Overview');
+  const [isMoviePromotionsOpen, setIsMoviePromotionsOpen] = useState(false);
+  const [isCoreMembersOpen, setIsCoreMembersOpen] = useState(false);
+  const [isSponsorsOpen, setIsSponsorsOpen] = useState(false);
+  const [isHackathonsOpen, setIsHackathonsOpen] = useState(false);
+  const [isPhotoWalksOpen, setIsPhotoWalksOpen] = useState(false);
+  const [isMunDebatesOpen, setIsMunDebatesOpen] = useState(false);
+  const [isBloodDrivesOpen, setIsBloodDrivesOpen] = useState(false);
+  const [isParadeDrillsOpen, setIsParadeDrillsOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
 
   const addToast = (msg, type = 'info') => {
@@ -281,8 +334,8 @@ const ClubMemberDashboardPage = () => {
             <h1 className="text-base font-extrabold text-slate-900 tracking-tight leading-none">
               {config.name}
             </h1>
-            <p className="text-[11px] font-semibold text-slate-400 mt-0.5">
-              Member Dashboard
+            <p className="text-[11px] font-semibold text-[#ED1C24] mt-0.5 flex items-center gap-1">
+              <span>UniSphere Member Dashboard</span>
             </p>
           </div>
         </div>
@@ -356,7 +409,30 @@ const ClubMemberDashboardPage = () => {
               return (
                 <button
                   key={pill.id}
-                  onClick={() => addToast(`Opening ${pill.label}...`, 'success')}
+                  onClick={() => {
+                    const lbl = pill.label.toLowerCase();
+                    if (lbl.includes('parade') || lbl.includes('drill')) {
+                      setIsParadeDrillsOpen(true);
+                    } else if (lbl.includes('blood') || lbl.includes('drive')) {
+                      setIsBloodDrivesOpen(true);
+                    } else if (lbl.includes('mun') || lbl.includes('debate')) {
+                      setIsMunDebatesOpen(true);
+                    } else if (lbl.includes('walk') || lbl.includes('photo')) {
+                      setIsPhotoWalksOpen(true);
+                    } else if (lbl.includes('hackathon') || lbl.includes('sprint') || lbl.includes('code')) {
+                      setIsHackathonsOpen(true);
+                    } else if (lbl.includes('movie') || lbl.includes('promotion')) {
+                      setIsMoviePromotionsOpen(true);
+                    } else if (lbl.includes('sponsor') || lbl.includes('partner')) {
+                      setIsSponsorsOpen(true);
+                    } else if (lbl.includes('core') || lbl.includes('member') || lbl.includes('cadet') || lbl.includes('volunteer') || lbl.includes('crew') || lbl.includes('developer') || lbl.includes('board')) {
+                      setIsCoreMembersOpen(true);
+                    } else if (lbl.includes('event')) {
+                      setActiveTab('Events');
+                    } else {
+                      setIsParadeDrillsOpen(true);
+                    }
+                  }}
                   className="bg-white/15 hover:bg-white/25 border border-white/20 backdrop-blur-md px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95"
                 >
                   <IconComp size={15} />
@@ -498,7 +574,7 @@ const ClubMemberDashboardPage = () => {
               {/* View All Events Button */}
               <button
                 onClick={() => setActiveTab('Events')}
-                className="w-full py-3 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 cursor-pointer transition-all"
+                className="w-full py-3 rounded-xl bg-white border border-red-500/80 text-[#ED1C24] font-extrabold text-xs hover:bg-red-50 cursor-pointer transition-all active:scale-95"
               >
                 View All Events
               </button>
@@ -563,25 +639,25 @@ const ClubMemberDashboardPage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Milestone 1 */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/60 flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                <Star size={20} />
+            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200/60 flex flex-col items-center justify-center text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 border border-amber-200 flex items-center justify-center shadow-sm">
+                <Star size={24} />
               </div>
               <p className="text-xs font-bold text-slate-800">New Member</p>
             </div>
 
             {/* Milestone 2 */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/60 flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                <Calendar size={20} />
+            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200/60 flex flex-col items-center justify-center text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-500 border border-blue-200 flex items-center justify-center shadow-sm">
+                <Calendar size={24} />
               </div>
               <p className="text-xs font-bold text-slate-800">First Event</p>
             </div>
 
             {/* Milestone 3 */}
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/60 flex flex-col items-center text-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <TrendingUp size={20} />
+            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200/60 flex flex-col items-center justify-center text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 border border-emerald-200 flex items-center justify-center shadow-sm">
+                <TrendingUp size={24} />
               </div>
               <p className="text-xs font-bold text-slate-800">Rising Star</p>
             </div>
@@ -592,9 +668,68 @@ const ClubMemberDashboardPage = () => {
 
       {/* Footer */}
       <footer className="w-full py-6 text-center text-xs font-medium text-slate-400 space-y-1 mt-8 border-t border-slate-200">
-        <p>Powered by <span className="text-slate-600 font-bold">Ennavar Saketh</span></p>
-        <p>&copy; {new Date().getFullYear()} {config.name}, CMRTC. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} {config.name} • UniSphere Portal, CMRTC. All rights reserved.</p>
       </footer>
+
+      {/* Movie Promotions Seat Booking Modal */}
+      <MoviePromotionsModal
+        isOpen={isMoviePromotionsOpen}
+        onClose={() => setIsMoviePromotionsOpen(false)}
+        clubName={config.name}
+        onBookSuccess={(seats, movie) => {
+          addToast(`Successfully booked ${seats.length} seat(s) (${seats.join(', ')}) for ${movie}! 🎟️`, 'success');
+        }}
+      />
+
+      {/* Core Team Members Modal */}
+      <CoreMembersModal
+        isOpen={isCoreMembersOpen}
+        onClose={() => setIsCoreMembersOpen(false)}
+        clubName={config.name}
+      />
+
+      {/* Our Valued Sponsors Modal */}
+      <SponsorsModal
+        isOpen={isSponsorsOpen}
+        onClose={() => setIsSponsorsOpen(false)}
+        clubName={config.name}
+        clubId={clubData.id}
+      />
+
+      {/* Hackathons & Tech Sprints Modal */}
+      <HackathonsModal
+        isOpen={isHackathonsOpen}
+        onClose={() => setIsHackathonsOpen(false)}
+        clubName={config.name}
+      />
+
+      {/* Photo Walks & Gala Modal */}
+      <PhotoWalksModal
+        isOpen={isPhotoWalksOpen}
+        onClose={() => setIsPhotoWalksOpen(false)}
+        clubName={config.name}
+      />
+
+      {/* MUN Debates & Public Speaking Modal */}
+      <MunDebatesModal
+        isOpen={isMunDebatesOpen}
+        onClose={() => setIsMunDebatesOpen(false)}
+        clubName={config.name}
+      />
+
+      {/* Blood Donation Drives & Health Camps Modal */}
+      <BloodDrivesModal
+        isOpen={isBloodDrivesOpen}
+        onClose={() => setIsBloodDrivesOpen(false)}
+        clubName={config.name}
+      />
+
+      {/* NCC Parade Drills & Training Camps Modal */}
+      <ParadeDrillsModal
+        isOpen={isParadeDrillsOpen}
+        onClose={() => setIsParadeDrillsOpen(false)}
+        clubName={config.name}
+      />
     </div>
   );
 };

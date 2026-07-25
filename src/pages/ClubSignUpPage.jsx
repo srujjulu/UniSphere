@@ -37,51 +37,51 @@ const clubThemes = {
   },
   codeholics: {
     bgGradient: 'from-[#0A0A12] via-[#120D1D] to-[#1F0707]',
-    cardBg: 'bg-[#140F21] text-white border-red-500/30',
+    cardBg: 'bg-white text-slate-900 border-slate-100',
     titleColor: 'text-[#EF4444]',
-    subtitleColor: 'text-slate-400',
-    buttonBg: 'bg-[#B91C1C] hover:bg-[#991B1B] text-white shadow-[0_0_20px_rgba(185,28,28,0.4)]',
-    inputBg: 'bg-[#1A142A] border-red-500/20 text-white placeholder-slate-500 focus:border-[#EF4444] focus:bg-[#1F1832]',
+    subtitleColor: 'text-slate-500',
+    buttonBg: 'bg-[#B91C1C] hover:bg-[#991B1B] text-white shadow-[0_4px_15px_rgba(185,28,28,0.4)]',
+    inputBg: 'bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-[#EF4444] focus:bg-white',
     accentText: 'Create your account and build futuristic tech',
     talents: ['Web Development', 'AI & Machine Learning', 'Competitive Coding', 'Cybersecurity', 'App Development', 'UI/UX Design']
   },
   ncc: {
     bgGradient: 'from-[#081226] via-[#0D234C] to-[#0284C7]',
-    cardBg: 'bg-[#0B1A36] text-white border-amber-500/30',
-    titleColor: 'text-[#F59E0B]',
-    subtitleColor: 'text-slate-300',
-    buttonBg: 'bg-[#1E3A8A] hover:bg-[#172554] text-amber-300 border border-amber-500/40 shadow-[0_0_20px_rgba(30,58,138,0.5)]',
-    inputBg: 'bg-[#122446] border-amber-500/20 text-white placeholder-slate-400 focus:border-[#F59E0B] focus:bg-[#172D56]',
+    cardBg: 'bg-white text-slate-900 border-slate-100',
+    titleColor: 'text-[#1E3A8A]',
+    subtitleColor: 'text-slate-500',
+    buttonBg: 'bg-[#1E3A8A] hover:bg-[#172554] text-amber-300 shadow-md',
+    inputBg: 'bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-[#1E3A8A] focus:bg-white',
     accentText: 'Create your account and serve with discipline',
     talents: ['Drill & Parade', 'Weapons Training', 'Trekking & Adventure', 'Social Service', 'Cultural Performance', 'Sports & Fitness']
   },
   photography: {
     bgGradient: 'from-[#090717] via-[#2E1065] to-[#581C87]',
-    cardBg: 'bg-[#1D1036] text-white border-purple-500/30',
-    titleColor: 'text-[#C084FC]',
-    subtitleColor: 'text-slate-400',
-    buttonBg: 'bg-[#6B21A8] hover:bg-[#581C87] text-white shadow-[0_0_20px_rgba(107,33,168,0.5)]',
-    inputBg: 'bg-[#271647] border-purple-500/20 text-white placeholder-slate-400 focus:border-[#C084FC] focus:bg-[#2F1B56]',
+    cardBg: 'bg-white text-slate-900 border-slate-100',
+    titleColor: 'text-[#6B21A8]',
+    subtitleColor: 'text-slate-500',
+    buttonBg: 'bg-[#6B21A8] hover:bg-[#581C87] text-white shadow-md',
+    inputBg: 'bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-[#6B21A8] focus:bg-white',
     accentText: 'Create your account and capture visual stories',
     talents: ['DSLR Photography', 'Mobile Photography', 'Cinematography', 'Video Editing', 'Lighting & Production', 'Photo Editing (Lightroom/Photoshop)']
   },
   lexis: {
     bgGradient: 'from-[#021F17] via-[#064E3B] to-[#0D5C46]',
-    cardBg: 'bg-[#053024] text-white border-emerald-500/30',
-    titleColor: 'text-[#34D399]',
-    subtitleColor: 'text-slate-300',
-    buttonBg: 'bg-[#047857] hover:bg-[#065F46] text-white shadow-[0_0_20px_rgba(4,120,87,0.5)]',
-    inputBg: 'bg-[#0A3D2F] border-emerald-500/20 text-white placeholder-slate-400 focus:border-[#34D399] focus:bg-[#0F4A39]',
+    cardBg: 'bg-white text-slate-900 border-slate-100',
+    titleColor: 'text-[#047857]',
+    subtitleColor: 'text-slate-500',
+    buttonBg: 'bg-[#047857] hover:bg-[#065F46] text-white shadow-md',
+    inputBg: 'bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-[#047857] focus:bg-white',
     accentText: 'Create your account and raise your voice',
     talents: ['Debating & Public Speaking', 'Model UN (MUN)', 'Poetry & Spoken Word', 'Creative Writing', 'Anchoring & Hosting', 'Journalism & Content']
   },
   nss: {
     bgGradient: 'from-[#0A1628] via-[#1E3A5F] to-[#2C1810]',
-    cardBg: 'bg-[#0F1E35] text-white border-red-600/30',
-    titleColor: 'text-[#EF5350]',
-    subtitleColor: 'text-slate-300',
-    buttonBg: 'bg-[#D32F2F] hover:bg-[#B71C1C] text-white shadow-[0_0_20px_rgba(211,47,47,0.4)]',
-    inputBg: 'bg-[#162A48] border-red-500/20 text-white placeholder-slate-400 focus:border-[#EF5350] focus:bg-[#1C3356]',
+    cardBg: 'bg-white text-slate-900 border-slate-100',
+    titleColor: 'text-[#D32F2F]',
+    subtitleColor: 'text-slate-500',
+    buttonBg: 'bg-[#D32F2F] hover:bg-[#B71C1C] text-white shadow-md',
+    inputBg: 'bg-[#F8FAFC] border-slate-200 text-slate-900 placeholder-slate-400 focus:border-[#D32F2F] focus:bg-white',
     accentText: 'Create your account and serve the community',
     talents: ['Blood Donation Drives', 'Swachh Bharat Campaigns', 'Village Adoption Program', 'Tree Plantation Drive', 'Disaster Awareness', 'Youth Leadership']
   }
@@ -173,13 +173,15 @@ const ClubSignUpPage = () => {
     }
 
     // Success registration
-    setIsSuccess(true);
     addToast(`Successfully registered for ${clubData.name}! 🎉`, 'success');
     confetti({
       particleCount: 140,
       spread: 90,
       origin: { y: 0.6 }
     });
+
+    // Direct redirect to Club Member Dashboard
+    navigate(`/club/${clubData.id}/member-dashboard`);
   };
 
   return (
@@ -198,7 +200,7 @@ const ClubSignUpPage = () => {
 
         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold text-white/90 border border-white/15">
           <GraduationCap size={16} className="text-yellow-300" />
-          <span>CMRTC Club Registration</span>
+          <span>UniSphere • CMRTC Club Registration</span>
         </div>
       </header>
 
@@ -210,13 +212,16 @@ const ClubSignUpPage = () => {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className={`w-full rounded-[32px] p-7 md:p-9 shadow-2xl ${theme.cardBg} border backdrop-blur-xl relative`}
         >
-          {/* Floating Top Logo Badge */}
+          {/* Floating Top UniSphere & Club Logo Badge */}
           <motion.div 
-            animate={{ y: [0, -8, 0] }}
+            animate={{ y: [0, -6, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-            className="w-24 h-24 bg-white rounded-2xl p-3 shadow-xl mx-auto mb-5 flex items-center justify-center border border-slate-100"
+            className="flex items-center justify-center gap-3 mb-5"
           >
-            <div className="w-16 h-16 flex items-center justify-center">
+            <div className="w-16 h-16 bg-white rounded-2xl p-2 shadow-xl flex items-center justify-center border border-slate-100 overflow-hidden">
+              <img src="/UniSphere.png" alt="UniSphere Logo" className="w-full h-full object-contain" />
+            </div>
+            <div className="w-16 h-16 bg-white rounded-2xl p-2.5 shadow-xl flex items-center justify-center border border-slate-100">
               {getClubLogo(clubData.id)}
             </div>
           </motion.div>
@@ -424,7 +429,7 @@ const ClubSignUpPage = () => {
 
       {/* Footer */}
       <footer className="w-full py-4 text-center text-xs font-medium text-white/70">
-        &copy; {new Date().getFullYear()} CMR Technical Campus. All rights reserved.
+        &copy; {new Date().getFullYear()} UniSphere Portal • CMR Technical Campus. All rights reserved.
       </footer>
     </div>
   );
