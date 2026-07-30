@@ -3,7 +3,14 @@ import React, { createContext, useState, useContext } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('cmrtc_auth_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
 
   const login = async (email, password) => {
@@ -14,7 +21,11 @@ export const AuthProvider = ({ children }) => {
 
     if (email && password && password.length >= 4) {
       const name = email.split('@')[0].toUpperCase();
-      setUser({ email, name });
+      const userData = { email, name };
+      setUser(userData);
+      try {
+        localStorage.setItem('cmrtc_auth_user', JSON.stringify(userData));
+      } catch {}
       return { success: true };
     } else {
       return { success: false, message: 'Please enter a valid email and password.' };
@@ -29,7 +40,11 @@ export const AuthProvider = ({ children }) => {
 
     if (email && password && password.length >= 4) {
       const name = email.split('@')[0].toUpperCase();
-      setUser({ email, name });
+      const userData = { email, name };
+      setUser(userData);
+      try {
+        localStorage.setItem('cmrtc_auth_user', JSON.stringify(userData));
+      } catch {}
       return { success: true };
     } else {
       return { success: false, message: 'Please enter a valid email and password.' };
@@ -38,6 +53,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    try {
+      localStorage.removeItem('cmrtc_auth_user');
+    } catch {}
   };
 
   return (

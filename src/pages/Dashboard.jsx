@@ -18,6 +18,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   // Loading & State
   const [initialLoading, setInitialLoading] = useState(true);
+  const [joinedClubIds] = useState([]);
+  const [joiningClubId] = useState(null);
   
   // Clubs List State with view count persistence
   const [clubsList, setClubsList] = useState(getStoredClubs);
