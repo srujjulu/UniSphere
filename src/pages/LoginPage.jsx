@@ -21,7 +21,7 @@ import useAuth from '../hooks/useAuth';
 const LoginPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('signin');
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   // If user is already authenticated, redirect straight to /dashboard
   useEffect(() => {

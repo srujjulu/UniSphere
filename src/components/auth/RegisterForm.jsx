@@ -61,7 +61,7 @@ const RegisterForm = ({ onSuccess }) => {
     }
   };
 
-  const onError = (formErrors) => {
+  const onError = () => {
     setSubmitStatus('error');
     setPasswordShake(true);
     

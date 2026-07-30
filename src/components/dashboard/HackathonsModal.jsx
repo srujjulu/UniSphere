@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Code, Terminal, Trophy, Calendar, Users, Cpu, Sparkles, CheckCircle2, Rocket } from 'lucide-react';
+import { X, Code, Trophy, Calendar, Users, CheckCircle2, Rocket } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const defaultHackathons = [

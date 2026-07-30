@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Globe, MessageSquare, BookOpen, Award, CheckCircle2, Flag, UserCheck } from 'lucide-react';
+import { X, Globe, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const defaultMunEvents = [

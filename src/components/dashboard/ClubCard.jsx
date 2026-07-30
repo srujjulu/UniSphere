@@ -5,7 +5,6 @@ import ClubCategoryBadge from './ClubCategoryBadge';
 import JoinButton from './JoinButton';
 import MoreButton from './MoreButton';
 import { 
-  CmrLogo, 
   AkritiLogo,
   CodeClubLogo, 
   PhotoClubLogo, 

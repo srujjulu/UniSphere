@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Film, Calendar, Clock, Ticket, CheckCircle2 } from 'lucide-react';
+import { X, Film, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
@@ -9,7 +9,7 @@ const seatNumbers = Array.from({ length: 20 }, (_, i) => i + 1);
 // All seats available by default
 const occupiedSeats = [];
 
-const MoviePromotionsModal = ({ isOpen, onClose, clubName = 'AKRITI Club', onBookSuccess }) => {
+const MoviePromotionsModal = ({ isOpen, onClose, onBookSuccess }) => {
   const [movieName, setMovieName] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');

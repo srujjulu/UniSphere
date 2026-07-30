@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Award, Handshake, Heart, Sparkles, Mail } from 'lucide-react';
+import { X, Award, Handshake, Mail } from 'lucide-react';
 
 const clubSponsorsMap = {
   akriti: [

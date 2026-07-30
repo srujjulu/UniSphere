@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Users, Shield, Award, Star } from 'lucide-react';
+import { X, Users } from 'lucide-react';
 
 const defaultCoreMembers = [
   { id: 'm1', name: 'M. Rajender', role: 'Faculty Advisor', category: 'Advisor' },

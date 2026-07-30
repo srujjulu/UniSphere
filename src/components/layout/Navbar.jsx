@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { CmrLogo } from '../../utils/clubLogos';
-import { LogOut, Users } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();

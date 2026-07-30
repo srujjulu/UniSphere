@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Camera, Film, MapPin, Calendar, CheckCircle2, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { X, Camera, MapPin, Calendar, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const defaultPhotoEvents = [

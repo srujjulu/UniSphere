@@ -9,10 +9,8 @@ import {
   UserPlus, 
   MapPin, 
   ArrowLeft,
-  CheckCircle2,
   Sparkles
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
 
 // Akriti Custom Branding Logo SVG
@@ -57,31 +55,9 @@ const AkritiLogo = () => (
 
 const AkritiClubPage = () => {
   const navigate = useNavigate();
-  const [isJoined, setIsJoined] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  const addToast = (message, type = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
-  };
 
-  const handleJoinToggle = () => {
-    if (isJoined) {
-      setIsJoined(false);
-      addToast('You have left Akriti Club', 'info');
-    } else {
-      setIsJoined(true);
-      addToast('Welcome to Akriti Club! 🎉', 'success');
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.7 }
-      });
-    }
-  };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#E60023] via-[#F41C38] to-[#FF5E62] text-white flex flex-col justify-between relative overflow-x-hidden font-sans">

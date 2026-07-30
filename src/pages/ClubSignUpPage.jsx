@@ -122,7 +122,6 @@ const ClubSignUpPage = () => {
   const [agreedTerms, setAgreedTerms] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
   const [toasts, setToasts] = useState([]);
 
   const addToast = (message, type = 'success') => {

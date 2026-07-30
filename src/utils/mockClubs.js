@@ -107,7 +107,7 @@ export const getStoredClubs = () => {
         ...club,
         views: parsedViews[club.id] !== undefined ? parsedViews[club.id] : club.views,
       }));
-    } catch (e) {
+    } catch {
       return mockClubs;
     }
   }
@@ -122,13 +122,13 @@ export const incrementClubViews = (clubId) => {
   try {
     const viewedStored = localStorage.getItem('cmrtc_user_viewed_clubs');
     if (viewedStored) viewedList = JSON.parse(viewedStored);
-  } catch (e) {}
+  } catch {}
 
   const currentClub = mockClubs.find((c) => c.id === clubId);
   const storedViews = localStorage.getItem('cmrtc_clubs_views');
   let viewsObj = {};
   if (storedViews) {
-    try { viewsObj = JSON.parse(storedViews); } catch (e) {}
+    try { viewsObj = JSON.parse(storedViews); } catch {}
   }
 
   const baseViews = currentClub ? currentClub.views : 0;

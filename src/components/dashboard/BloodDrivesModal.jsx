@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, Droplets, ShieldCheck, Calendar, MapPin, CheckCircle2, UserCheck, Activity } from 'lucide-react';
+import { X, Heart, Droplets, Calendar, MapPin, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const defaultBloodEvents = [

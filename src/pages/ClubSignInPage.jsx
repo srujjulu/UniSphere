@@ -6,7 +6,6 @@ import {
   Mail, 
   Lock, 
   LogIn, 
-  CheckCircle2, 
   AlertCircle,
   GraduationCap
 } from 'lucide-react';
@@ -86,16 +85,7 @@ const getClubLogo = (clubId) => {
   }
 };
 
-// Roll Number Validation Helper (01-100 or AA-AZ, BA-BZ, CA-CZ, DA-DZ, EA-EZ, FA-FZ)
-const validateCmrtcRollNumber = (rollStr) => {
-  if (!rollStr) return false;
-  const cleanStr = rollStr.trim().toLowerCase();
-  
-  // Format: College Prefix (\d{3}[a-z]\d[a-z]\d{2}) + Suffix ((01-100) or (AA-FZ))
-  const rollRegex = /^(\d{3}[a-z]\d[a-z]\d{2})((?:0[1-9]|[1-9][0-9]|100)|(?:[a-f][a-z]))$/i;
-  
-  return rollRegex.test(cleanStr);
-};
+
 
 const ClubSignInPage = () => {
   const { clubId } = useParams();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Calendar, 
@@ -11,13 +11,10 @@ import {
   Star, 
   Award, 
   TrendingUp, 
-  CheckCircle2, 
   Settings, 
   Mail, 
   LogOut, 
   Sparkles, 
-  ArrowLeft,
-  ChevronRight,
   Code,
   Camera,
   BookOpen,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import confetti from 'canvas-confetti';
 import { Search } from 'lucide-react';
 
 import DashboardLayout from '../components/layout/DashboardLayout';
@@ -13,14 +12,12 @@ import ClubDetailsModal from '../components/dashboard/ClubDetailsModal';
 import SearchInput from '../components/ui/SearchInput';
 import Skeleton from '../components/ui/Skeleton';
 import Toast from '../components/ui/Toast';
-import { mockClubs, getStoredClubs, incrementClubViews } from '../utils/mockClubs';
+import { getStoredClubs, incrementClubViews } from '../utils/mockClubs';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   // Loading & State
   const [initialLoading, setInitialLoading] = useState(true);
-  const [joinedClubIds, setJoinedClubIds] = useState([]);
-  const [joiningClubId, setJoiningClubId] = useState(null);
   
   // Clubs List State with view count persistence
   const [clubsList, setClubsList] = useState(getStoredClubs);
@@ -50,16 +47,7 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Toast controls
-  const addToast = (message, type = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    
-    // Auto-remove toast after 4s
-    setTimeout(() => {
-      removeToast(id);
-    }, 4000);
-  };
+
 
   const removeToast = (id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));

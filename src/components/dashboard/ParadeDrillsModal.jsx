@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Shield, ShieldAlert, Award, Calendar, MapPin, CheckCircle2, UserCheck, Flag } from 'lucide-react';
+import { X, Shield, Calendar, MapPin, CheckCircle2, Flag } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const defaultDrillEvents = [

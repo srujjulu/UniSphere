@@ -9,23 +9,17 @@ import {
   UserPlus, 
   MapPin, 
   ArrowLeft,
-  CheckCircle2,
   Sparkles,
   Code,
   Shield,
   Camera,
   BookOpen,
   Award,
-  Clock,
   Eye,
   UserCheck,
-  Compass,
-  Layers,
   Heart
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
-import AkritiClubPage from './AkritiClubPage';
 import { mockClubs } from '../utils/mockClubs';
 import { 
   AkritiLogo,
@@ -187,31 +181,9 @@ const ClubPage = () => {
   const clubData = mockClubs.find((c) => c.id === clubId) || mockClubs[0];
   const theme = clubThemes[clubId] || clubThemes.codeholics;
 
-  const [isJoined, setIsJoined] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  const addToast = (message, type = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
-  };
 
-  const handleJoinToggle = () => {
-    if (isJoined) {
-      setIsJoined(false);
-      addToast(`You have left ${clubData.name}`, 'info');
-    } else {
-      setIsJoined(true);
-      addToast(`Welcome to ${clubData.name}! 🎉`, 'success');
-      confetti({
-        particleCount: 130,
-        spread: 85,
-        origin: { y: 0.7 }
-      });
-    }
-  };
 
   return (
     <div className={`min-h-screen w-full bg-gradient-to-br ${theme.bgGradient} text-white flex flex-col justify-between relative overflow-x-hidden font-sans select-none`}>
