@@ -42,6 +42,7 @@ const menuByRole = {
   student: [
     { id: 'home', label: 'Home Dashboard', icon: Home },
     { id: 'my-portfolio', label: 'My Portfolio', icon: Briefcase },
+    { id: 'my-certificates', label: 'My Certificates', icon: Award },
     { id: 'my-clubs', label: 'My Clubs', icon: Compass },
     { id: 'join-club', label: 'Join Club', icon: UserPlus },
     { id: 'membership-payment', label: 'Membership Status & Payment', icon: CreditCard },

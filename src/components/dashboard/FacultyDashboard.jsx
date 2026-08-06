@@ -16,6 +16,7 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
+import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 
 const pendingMajorEvents = [
   { id: 'fe1', title: 'Pegasus 2026 Annual Cultural Fest', club: 'AKRITI Club', budget: '₹1,50,000', venue: 'CMR Auditorium', status: 'pending' },
@@ -26,9 +27,22 @@ const FacultyDashboard = () => {
   const [activeSection, setActiveSection] = useState('approve-events');
   const [eventApprovals, setEventApprovals] = useState(pendingMajorEvents);
   const [memberRequests, setMemberRequests] = useState(getStoredRequests);
+  const [certificates, setCertificates] = useState(getStoredCertificates);
   const [facultyClubFilter, setFacultyClubFilter] = useState('all');
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
+
+  const handleVerifyCert = (certId, title) => {
+    verifyCertificate(certId, 'Dr. Suresh Kumar (Faculty Coordinator)');
+    setCertificates(getStoredCertificates());
+    triggerToast(`Verified Certificate: "${title}"! ✅ Official seal attached.`);
+  };
+
+  const handleRevokeCert = (certId, title) => {
+    revokeCertificate(certId);
+    setCertificates(getStoredCertificates());
+    triggerToast(`Returned Certificate "${title}" for revision. ❌`);
+  };
 
   const filteredFacultyRequests = memberRequests.filter(
     r => (facultyClubFilter === 'all' || r.clubId === facultyClubFilter) && r.status === 'pending'
@@ -143,6 +157,59 @@ const FacultyDashboard = () => {
                 ))}
               </div>
             )}
+
+            {/* Certificate Verification Queue Section */}
+            <div className="pt-6 border-t border-slate-800 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-lg font-black text-white flex items-center gap-2">
+                    <Award size={18} className="text-amber-400" />
+                    <span>Event Certificate Verification Queue ({certificates.filter(c => c.status === 'pending_verification').length})</span>
+                  </h4>
+                  <p className="text-xs text-slate-400">Review certificates uploaded by club core teams and attach official digital sign-off.</p>
+                </div>
+              </div>
+
+              {certificates.filter(c => c.status === 'pending_verification').length === 0 ? (
+                <div className="p-4 rounded-2xl bg-slate-800/40 text-center text-xs text-slate-400">
+                  All uploaded event certificates have been verified by faculty coordinators!
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {certificates.filter(c => c.status === 'pending_verification').map((cert) => (
+                    <div key={cert.id} className="p-4 rounded-2xl bg-slate-800/90 border border-slate-700 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            {cert.clubName}
+                          </span>
+                          <span className="text-xs font-mono font-bold text-amber-400">{cert.studentRoll}</span>
+                        </div>
+                        <h4 className="text-base font-extrabold text-white">{cert.title}</h4>
+                        <p className="text-xs text-slate-400">Event: <strong className="text-slate-200">{cert.eventName}</strong> • Recipient: <strong className="text-slate-200">{cert.studentName}</strong></p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleVerifyCert(cert.id, cert.title)}
+                          className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md"
+                        >
+                          <Check size={16} />
+                          <span>Verify Certificate ✅</span>
+                        </button>
+                        <button
+                          onClick={() => handleRevokeCert(cert.id, cert.title)}
+                          className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md"
+                        >
+                          <X size={16} />
+                          <span>Return ❌</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

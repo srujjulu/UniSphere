@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { 
   Crown, 
   Layers, 
@@ -15,11 +13,14 @@ import {
   RefreshCw, 
   Sparkles, 
   CheckCircle2,
-  Lock
+  Lock,
+  Award,
+  Download
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import { mockClubs } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
+import { getStoredCertificates } from '../../utils/mockCertificates';
 
 const initialUserList = [
   { id: 'u1', name: 'Ananya Sharma', email: 'ananya@cmr.edu.in', role: 'student', rollNo: '227R1A05A1' },
@@ -32,6 +33,7 @@ const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('manage-all-clubs');
   const [users, setUsers] = useState(initialUserList);
   const [clubs, setClubs] = useState(mockClubs);
+  const [allCertificates, setAllCertificates] = useState(getStoredCertificates);
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
 
@@ -237,6 +239,46 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* Section: Reports & All Certificates Registry */}
+        {(activeSection === 'reports' || activeSection === 'system-settings') && (
+          <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-black text-white flex items-center gap-2">
+                  <Award size={20} className="text-amber-400" />
+                  <span>College-Wide Uploaded Certificates Registry ({allCertificates.length})</span>
+                </h3>
+                <p className="text-xs text-slate-400">View and audit all digital certificates issued by core coordinators and verified by faculty.</p>
+              </div>
+              <button
+                onClick={() => triggerToast('Exported Certificate Registry Audit Report CSV 📊')}
+                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs cursor-pointer shadow-md flex items-center gap-1.5"
+              >
+                <Download size={14} />
+                <span>Export Audit CSV</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {allCertificates.map((cert) => (
+                <div key={cert.id} className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      {cert.clubName}
+                    </span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${cert.status === 'verified' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-300'}`}>
+                      {cert.status === 'verified' ? 'Verified ✅' : 'Pending Verification ⏳'}
+                    </span>
+                  </div>
+                  <h4 className="text-sm font-extrabold text-white">{cert.title}</h4>
+                  <p className="text-xs text-slate-400">Event: <strong className="text-slate-200">{cert.eventName}</strong> • Recipient: <strong className="text-amber-400">{cert.studentRoll}</strong> ({cert.studentName})</p>
+                  <p className="text-[11px] font-mono text-slate-500">ID: {cert.credentialId} • Issued: {cert.issueDate}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}

@@ -25,6 +25,7 @@ import InfluencerSheetModal from './InfluencerSheetModal';
 import { useAuth } from '../../context/AuthContext';
 import { mockClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
+import { saveCertificate } from '../../utils/mockCertificates';
 
 const mockEventsList = [
   { id: 'ev1', title: 'CMR HackFest 2026', date: 'Sept 05-07, 2026', seats: '150/200', budget: '₹25,000' },
@@ -42,6 +43,37 @@ const CoreTeamDashboard = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
+
+  // Certificate Upload Form State
+  const [certEventName, setCertEventName] = useState('CMR HackFest 2026');
+  const [certTitle, setCertTitle] = useState('Certificate of Excellence');
+  const [certStudentRoll, setCertStudentRoll] = useState('237R1A05BA');
+  const [certStudentName, setCertStudentName] = useState('Student Member');
+  const [certDescription, setCertDescription] = useState('Awarded for outstanding event participation and achievement.');
+
+  const handleUploadCertificate = (e) => {
+    e.preventDefault();
+    if (!certTitle.trim() || !certEventName.trim()) return;
+
+    const newCert = {
+      id: `cert-${Date.now()}`,
+      title: certTitle.trim(),
+      eventName: certEventName.trim(),
+      issueDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      clubId: activeClub.id,
+      clubName: activeClub.name,
+      studentRoll: certStudentRoll.trim().toUpperCase(),
+      studentName: certStudentName.trim(),
+      status: 'pending_verification',
+      verifiedBy: 'Pending Faculty Oversight',
+      credentialId: `CMRTC-2026-${activeClub.id.toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`,
+      description: certDescription.trim()
+    };
+
+    saveCertificate(newCert);
+    setCertTitle('');
+    triggerToast(`Uploaded & Issued Certificate for ${newCert.studentRoll}! 📄 Sent to Faculty Verification queue.`);
+  };
 
   // Filter requests for currently selected club or all clubs
   const memberRequests = allMemberRequests.filter(
@@ -340,6 +372,87 @@ const CoreTeamDashboard = () => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Upload Certificate PDF Form */}
+            <div className="pt-6 border-t border-slate-800 space-y-4 text-left">
+              <div className="flex items-center gap-2">
+                <Award size={20} className="text-amber-400" />
+                <h4 className="text-lg font-black text-white">Upload Certificate PDF After Event Completion</h4>
+              </div>
+              <p className="text-xs text-slate-400">Issue official event certificates for participants & winners. Certificates will be sent to Faculty Verification queue and automatically appear in the Student Dashboard.</p>
+
+              <form onSubmit={handleUploadCertificate} className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/60 p-5 rounded-2xl border border-slate-700">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Select Completed Event</label>
+                  <select
+                    value={certEventName}
+                    onChange={(e) => setCertEventName(e.target.value)}
+                    className="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none"
+                  >
+                    <option value="CMR HackFest 2026">CMR HackFest 2026</option>
+                    <option value="Pegasus 2026 Cultural Fest">Pegasus 2026 Cultural Fest</option>
+                    <option value="Word-Smith Parliamentary Debate">Word-Smith Parliamentary Debate</option>
+                    <option value="Swachh Bharat Cleanliness Drive">Swachh Bharat Cleanliness Drive</option>
+                    <option value="F9 Insta-Walk Photowalk">F9 Insta-Walk Photowalk</option>
+                    <option value="NCC Parade Drills">NCC Parade Drills</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Certificate Title / Category</label>
+                  <input
+                    type="text"
+                    value={certTitle}
+                    onChange={(e) => setCertTitle(e.target.value)}
+                    placeholder="e.g. Certificate of Excellence / Winner"
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Student Roll Number (or 'ALL')</label>
+                  <input
+                    type="text"
+                    value={certStudentRoll}
+                    onChange={(e) => setCertStudentRoll(e.target.value)}
+                    placeholder="e.g. 237R1A05BA or ALL"
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-amber-300 outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Student Full Name</label>
+                  <input
+                    type="text"
+                    value={certStudentName}
+                    onChange={(e) => setCertStudentName(e.target.value)}
+                    placeholder="e.g. Student Member"
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Citation / Achievement Description</label>
+                  <input
+                    type="text"
+                    value={certDescription}
+                    onChange={(e) => setCertDescription(e.target.value)}
+                    placeholder="Short description of achievement..."
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="md:col-span-2 flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs uppercase cursor-pointer shadow-lg flex items-center gap-2 active:scale-95"
+                  >
+                    <Upload size={16} />
+                    <span>Upload & Issue Certificate PDF</span>
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
