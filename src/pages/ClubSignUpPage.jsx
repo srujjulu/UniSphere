@@ -10,11 +10,15 @@ import {
   Lock, 
   CheckCircle2, 
   AlertCircle,
-  GraduationCap
+  GraduationCap,
+  Camera,
+  Video,
+  Hash
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
 import { mockClubs } from '../utils/mockClubs';
+import { saveInfluencer } from '../utils/mockInfluencers';
 import { 
   AkritiLogo,
   CodeClubLogo, 
@@ -114,9 +118,12 @@ const ClubSignUpPage = () => {
   const theme = clubThemes[clubId] || clubThemes.codeholics;
 
   const [fullName, setFullName] = useState('');
+  const [rollNo, setRollNo] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [talent, setTalent] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [youtube, setYoutube] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreedTerms, setAgreedTerms] = useState(false);
@@ -136,8 +143,13 @@ const ClubSignUpPage = () => {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!fullName.trim()) {
-      setErrorMsg('Please enter your full name');
+    if (!fullName.trim() || fullName.trim().length < 2) {
+      setErrorMsg('Please enter your valid full name (min. 2 characters)');
+      return;
+    }
+
+    if (!rollNo.trim() || rollNo.trim().length < 6) {
+      setErrorMsg('Please enter your valid Student Roll Number / ID');
       return;
     }
 
@@ -146,13 +158,24 @@ const ClubSignUpPage = () => {
       return;
     }
 
-    if (!phone.trim()) {
-      setErrorMsg('Please enter your phone number');
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      setErrorMsg('Please enter a valid 10-digit phone number');
       return;
     }
 
     if (!talent) {
       setErrorMsg('Please select your talent/interest');
+      return;
+    }
+
+    if (!instagram.trim()) {
+      setErrorMsg('Instagram Handle (@username) is mandatory for campus event auditions');
+      return;
+    }
+
+    if (!youtube.trim()) {
+      setErrorMsg('YouTube Profile / Handle is mandatory for campus promotions');
       return;
     }
 
@@ -170,6 +193,27 @@ const ClubSignUpPage = () => {
       setErrorMsg('Please agree to the terms and conditions');
       return;
     }
+
+    const formattedInsta = instagram.startsWith('@') ? instagram : `@${instagram}`;
+    const formattedYt = youtube.startsWith('@') ? youtube : `@${youtube}`;
+
+    // Register student to Campus Influencers Sheet
+    saveInfluencer({
+      id: `inf-${Date.now()}`,
+      name: fullName.trim(),
+      rollNo: rollNo.trim().toUpperCase(),
+      branch: 'CMR Student',
+      clubId: clubData.id,
+      domain: talent,
+      instagram: formattedInsta,
+      instagramUrl: `https://instagram.com/${formattedInsta.replace('@', '')}`,
+      youtube: formattedYt,
+      youtubeUrl: `https://youtube.com/${formattedYt.replace('@', '')}`,
+      followers: '3.5K',
+      subscribers: '1.8K',
+      status: 'Available for Auditions',
+      bio: `Registered student member for ${clubData.name} specializing in ${talent}.`
+    });
 
     // Success registration
     addToast(`Successfully registered for ${clubData.name}! 🎉`, 'success');
@@ -284,7 +328,7 @@ const ClubSignUpPage = () => {
               {/* Full Name */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">
-                  Full Name
+                  Full Name *
                 </label>
                 <div className="relative">
                   <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
@@ -298,10 +342,27 @@ const ClubSignUpPage = () => {
                 </div>
               </div>
 
+              {/* Student Roll Number / ID */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">
+                  Student Roll Number / ID *
+                </label>
+                <div className="relative">
+                  <Hash size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={rollNo}
+                    onChange={(e) => setRollNo(e.target.value)}
+                    placeholder="e.g. 227R1A0501"
+                    className={`w-full h-12 pl-10 pr-4 rounded-xl border text-sm font-medium outline-none transition-all ${theme.inputBg}`}
+                  />
+                </div>
+              </div>
+
               {/* Email */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">
-                  Email
+                  Email *
                 </label>
                 <div className="relative">
                   <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
@@ -309,7 +370,7 @@ const ClubSignUpPage = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@example.com"
+                    placeholder="your.email@cmr.edu.in"
                     className={`w-full h-12 pl-10 pr-4 rounded-xl border text-sm font-medium outline-none transition-all ${theme.inputBg}`}
                   />
                 </div>
@@ -318,7 +379,7 @@ const ClubSignUpPage = () => {
               {/* Phone Number */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">
-                  Phone Number
+                  Phone Number *
                 </label>
                 <div className="relative">
                   <Phone size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
@@ -326,7 +387,7 @@ const ClubSignUpPage = () => {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Enter your phone number"
+                    placeholder="Enter 10-digit phone number"
                     className={`w-full h-12 pl-10 pr-4 rounded-xl border text-sm font-medium outline-none transition-all ${theme.inputBg}`}
                   />
                 </div>
@@ -335,7 +396,7 @@ const ClubSignUpPage = () => {
               {/* Your Talent / Interest */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80">
-                  Your Talent / Domain
+                  Your Talent / Domain *
                 </label>
                 <div className="relative">
                   <Sparkles size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
@@ -349,6 +410,42 @@ const ClubSignUpPage = () => {
                       <option key={t} value={t} className="bg-slate-900 text-white">{t}</option>
                     ))}
                   </select>
+                </div>
+              </div>
+
+              {/* Instagram Handle (Mandatory) */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80 flex items-center justify-between">
+                  <span>Instagram Handle (@username) *</span>
+                  <span className="text-[10px] text-pink-500 lowercase font-mono">For auditions & events call</span>
+                </label>
+                <div className="relative">
+                  <Camera size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={instagram}
+                    onChange={(e) => setInstagram(e.target.value)}
+                    placeholder="@your_insta_handle"
+                    className={`w-full h-12 pl-10 pr-4 rounded-xl border text-sm font-medium outline-none transition-all ${theme.inputBg}`}
+                  />
+                </div>
+              </div>
+
+              {/* YouTube Channel (Mandatory) */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 opacity-80 flex items-center justify-between">
+                  <span>YouTube Channel / Handle *</span>
+                  <span className="text-[10px] text-red-500 lowercase font-mono">For campus promotions</span>
+                </label>
+                <div className="relative">
+                  <Video size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={youtube}
+                    onChange={(e) => setYoutube(e.target.value)}
+                    placeholder="@your_channel_handle"
+                    className={`w-full h-12 pl-10 pr-4 rounded-xl border text-sm font-medium outline-none transition-all ${theme.inputBg}`}
+                  />
                 </div>
               </div>
 

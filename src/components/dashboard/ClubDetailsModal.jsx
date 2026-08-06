@@ -102,10 +102,26 @@ const ClubDetailsModal = ({
 
               {/* Description */}
               <div className="text-left flex flex-col gap-2">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400">About the Club</h4>
+                <h4 className="text-sm font-bold uppercase tracking-wider text-pink-400">About the Club</h4>
                 <p className="text-slate-300 text-[15px] leading-[1.65] font-normal">
                   {club.description}
                 </p>
+              </div>
+
+              {/* Vision & Mission Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 space-y-1">
+                  <h4 className="text-xs font-black uppercase text-blue-400 tracking-wider">🎯 Vision</h4>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                    To build an empowering campus ecosystem where students develop industry-leading technical skills, artistic excellence, and leadership values.
+                  </p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 space-y-1">
+                  <h4 className="text-xs font-black uppercase text-emerald-400 tracking-wider">🚀 Mission</h4>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                    Organize regular workshops, hackathons, cultural festivals, and community service projects that foster collaboration and career readiness.
+                  </p>
+                </div>
               </div>
 
               {/* Coordinator Details Grid */}

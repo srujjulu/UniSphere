@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
-import { Mail } from 'lucide-react';
+import { Mail, Shield, UserCheck, GraduationCap, Crown, Sparkles } from 'lucide-react';
 import InputField from './InputField';
 import PasswordField from './PasswordField';
 import SubmitButton from './SubmitButton';
@@ -11,7 +11,7 @@ import useAuth from '../../hooks/useAuth';
 
 const loginSchema = z.object({
   email: z.string()
-    .min(1, { message: 'Email is required' })
+    .min(1, { message: 'College Email is required' })
     .email({ message: 'Invalid email address' }),
   password: z.string()
     .min(4, { message: 'Password must be at least 4 characters' }),
@@ -27,13 +27,23 @@ const LoginForm = ({ onSuccess }) => {
   const { 
     register, 
     handleSubmit, 
+    setValue,
     formState: { errors }, 
     setError,
     clearErrors
   } = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    },
     mode: 'onChange',
   });
+
+  const handleQuickDemo = (email, pass) => {
+    setValue('email', email);
+    setValue('password', pass);
+  };
 
   const onSubmit = async (data) => {
     clearErrors('root.serverError');
@@ -44,14 +54,13 @@ const LoginForm = ({ onSuccess }) => {
     if (result.success) {
       setSubmitStatus('success');
       if (onSuccess) {
-        setTimeout(onSuccess, 800);
+        setTimeout(onSuccess, 600);
       }
     } else {
       setSubmitStatus('error');
       setPasswordShake(true);
       setError('root.serverError', { type: 'manual', message: result.message });
       
-      // Reset button & input shake after animation completes
       setTimeout(() => {
         setSubmitStatus('idle');
         setPasswordShake(false);
@@ -69,22 +78,21 @@ const LoginForm = ({ onSuccess }) => {
     }, 500);
   };
 
-  // Stagger variants for premium loading
   const containerVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.06
+        staggerChildren: 0.05
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
+    hidden: { opacity: 0, y: 12 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] } 
+      transition: { duration: 0.35, ease: [0.25, 1, 0.5, 1] } 
     }
   };
 
@@ -94,7 +102,7 @@ const LoginForm = ({ onSuccess }) => {
       initial="hidden"
       animate="visible"
       onSubmit={handleSubmit(onSubmit, onError)}
-      className="w-full flex flex-col gap-4 sm:gap-5"
+      className="w-full flex flex-col gap-4 sm:gap-4 text-left"
       noValidate
     >
       {/* Root Server Error Alert */}
@@ -102,7 +110,7 @@ const LoginForm = ({ onSuccess }) => {
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-medium"
+          className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium"
         >
           {errors.root.serverError.message}
         </motion.div>
@@ -111,7 +119,7 @@ const LoginForm = ({ onSuccess }) => {
       {/* Email Input */}
       <motion.div variants={itemVariants}>
         <InputField
-          label="Email"
+          label="College Email"
           name="email"
           type="email"
           placeholder="you@cmr.edu.in"
@@ -126,57 +134,72 @@ const LoginForm = ({ onSuccess }) => {
         <PasswordField
           label="Password"
           name="password"
-          placeholder="Min. 6 characters"
+          placeholder="Min. 4 characters"
           error={errors.password}
           shake={passwordShake}
           {...register('password')}
         />
       </motion.div>
 
+      {/* Quick Demo Role Selector Pills */}
+      <motion.div variants={itemVariants} className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800 space-y-2">
+        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+          <Sparkles size={12} className="text-yellow-400" />
+          <span>Quick Demo Logins (Auto Role Detection):</span>
+        </span>
+        <div className="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            onClick={() => handleQuickDemo('student@cmr.edu.in', 'Cmrtc#Student2026!')}
+            className="px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+          >
+            <GraduationCap size={12} />
+            <span>Student Demo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickDemo('core@cmr.edu.in', 'Cmrtc#Core2026!')}
+            className="px-2.5 py-1.5 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+          >
+            <UserCheck size={12} />
+            <span>Core Team Demo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickDemo('faculty@cmr.edu.in', 'Cmrtc#Faculty2026!')}
+            className="px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+          >
+            <Shield size={12} />
+            <span>Faculty Demo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickDemo('admin@cmr.edu.in', 'Cmrtc#Admin2026!')}
+            className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+          >
+            <Crown size={12} />
+            <span>Admin Demo</span>
+          </button>
+        </div>
+      </motion.div>
+
       {/* Remember me & Forgot Password */}
       <motion.div variants={itemVariants} className="flex items-center justify-between select-none">
-        {/* Custom checkbox with ripple */}
-        <label className="flex items-center gap-3 cursor-pointer group text-sm text-[#94A3B8] hover:text-white">
-          <div className="relative w-5 h-5 flex items-center justify-center">
-            {/* Ripple background effect */}
-            <div className="absolute inset-0 rounded-md bg-[#3366FF]/10 scale-0 group-hover:scale-150 transition-transform duration-300 ease-out" />
-            <input 
-              type="checkbox" 
-              checked={rememberMe} 
-              onChange={(e) => setRememberMe(e.target.checked)} 
-              className="sr-only" 
-            />
-            <div className={`
-              w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-300
-              ${rememberMe ? 'border-[#3366FF] bg-[#3366FF]' : 'border-slate-500 bg-transparent'}
-            `}>
-              {rememberMe && (
-                <motion.svg 
-                  className="w-3.5 h-3.5 text-white" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="4" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <path d="M20 6 9 17l-5-5" />
-                </motion.svg>
-              )}
-            </div>
-          </div>
+        <label className="flex items-center gap-3 cursor-pointer group text-xs text-[#94A3B8] hover:text-white">
+          <input 
+            type="checkbox" 
+            checked={rememberMe} 
+            onChange={(e) => setRememberMe(e.target.checked)} 
+            className="rounded border-slate-700 bg-[#0F172A] text-[#3366FF]" 
+          />
           <span className="font-medium">Remember Me</span>
         </label>
 
-        {/* Forgot password with sliding underline */}
         <a 
           href="#forgot" 
           onMouseEnter={() => setIsForgotHovered(true)}
           onMouseLeave={() => setIsForgotHovered(false)}
-          className="text-sm font-semibold text-[#94A3B8] hover:text-[#3366FF] relative transition-colors duration-300 focus-ring focus:outline-none"
+          className="text-xs font-semibold text-[#94A3B8] hover:text-[#3366FF] relative transition-colors duration-300 focus:outline-none"
         >
           Forgot Password?
           <span 
@@ -187,9 +210,9 @@ const LoginForm = ({ onSuccess }) => {
       </motion.div>
 
       {/* Submit Button */}
-      <motion.div variants={itemVariants} className="mt-2">
+      <motion.div variants={itemVariants} className="mt-1">
         <SubmitButton status={submitStatus}>
-          Sign In &rarr;
+          Authenticate Role & Dashboard &rarr;
         </SubmitButton>
       </motion.div>
     </motion.form>

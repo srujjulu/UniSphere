@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Calendar } from 'lucide-react';
+import { Eye, Calendar, UserCheck } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import ClubCategoryBadge from './ClubCategoryBadge';
 import JoinButton from './JoinButton';
 import MoreButton from './MoreButton';
@@ -76,6 +77,7 @@ const ClubCard = ({
   onMoreClick, 
   isJoining 
 }) => {
+  const { user } = useAuth();
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [glowState, setGlowState] = useState({ x: 0, y: 0, opacity: 0 });
@@ -109,9 +111,9 @@ const ClubCard = ({
     setIsHovered(false);
   };
 
-  const logoSvg = clubLogoSvgs[club.id] || <CodeClubLogo />;
-  const borderHoverClass = clubBorderHovers[club.id] || clubBorderHovers.codeholics;
+  const logoSvg = clubLogoSvgs[club.id] || <AkritiLogo />;
   const accentClass = clubAccents[club.id] || clubAccents.codeholics;
+  const borderHoverClass = clubBorderHovers[club.id] || clubBorderHovers.codeholics;
 
   return (
     <motion.div
@@ -122,38 +124,25 @@ const ClubCard = ({
         transformStyle: 'preserve-3d',
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
       }}
-      transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       className={`
-        w-full rounded-[24px] bg-white/4 border border-white/8 backdrop-blur-xl p-7
-        relative flex flex-col justify-between transition-all duration-300 select-none
-        ${isHovered ? 'shadow-[0_20px_40px_rgba(0,0,0,0.4)] -translate-y-2' : 'shadow-[0_8px_24px_rgba(0,0,0,0.2)]'}
+        relative w-full rounded-[24px] bg-[#0E1626]/80 border border-white/10 p-6 flex flex-col justify-between 
+        backdrop-blur-xl shadow-xl transition-all duration-300 select-none overflow-hidden group text-left
         ${borderHoverClass}
       `}
     >
-      {/* Category Colored Top Accent Line (Animates height on hover) */}
+      {/* Category Colored Top Accent Line */}
       <motion.div 
         animate={{ height: isHovered ? 6 : 4 }}
         transition={{ duration: 0.25 }}
         className={`absolute top-0 left-0 w-full rounded-t-[24px] ${accentClass}`}
       />
 
-      {/* 3D Cursor Lighting Radial Glow Effect */}
-      <div 
-        className="absolute inset-0 pointer-events-none rounded-[24px] z-0 transition-opacity duration-300"
-        style={{
-          opacity: glowState.opacity,
-          background: `radial-gradient(circle 140px at ${glowState.x}px ${glowState.y}px, rgba(255,255,255,0.12), transparent 85%)`
-        }}
-      />
-
       {/* Main card info container */}
-      <div className="relative z-10 flex flex-col gap-5">
+      <div className="relative z-10 flex flex-col gap-4">
         {/* Top line: Logo and Category badge */}
         <div className="flex justify-between items-start">
-          {/* Logo Card */}
           <motion.div
-            animate={{ y: [0, -4, 0] }}
-            transition={{ repeat: Infinity, duration: 2.8, ease: "easeInOut" }}
             whileHover={{ scale: 1.12, rotate: 3 }}
             className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-md cursor-pointer p-2"
           >
@@ -167,13 +156,19 @@ const ClubCard = ({
           <h3 className="text-xl font-extrabold text-white tracking-tight leading-snug">
             {club.name}
           </h3>
-          <p className="text-sm font-semibold text-slate-400 mt-1">
-            {club.subtitle}
+          <p className="text-xs font-semibold text-slate-400 mt-1 line-clamp-2">
+            {club.subtitle || club.description}
           </p>
         </div>
 
+        {/* Faculty Coordinator Info */}
+        <div className="flex items-center gap-1.5 text-xs text-pink-400 font-bold bg-pink-500/10 px-3 py-1.5 rounded-xl border border-pink-500/20">
+          <UserCheck size={14} />
+          <span>Faculty Coordinator: {club.facultyCoordinator || 'Dr. CMRTC Faculty Lead'}</span>
+        </div>
+
         {/* Stats Section */}
-        <div className="flex gap-4 border-y border-white/5 py-3.5 text-xs text-slate-400 font-semibold font-mono justify-start">
+        <div className="flex gap-4 border-y border-white/5 py-3 text-xs text-slate-400 font-semibold font-mono justify-start">
           <div className="flex items-center gap-1.5">
             <Eye size={14} className="text-slate-500" />
             <span><StatCounter value={club.views} /> views</span>
@@ -185,17 +180,16 @@ const ClubCard = ({
         </div>
       </div>
 
-      {/* Actions (Join Button, More Button) */}
-      <div className="relative z-10 flex items-center gap-3 mt-6">
-        <div className="flex-1">
-          <JoinButton
-            category={club.category}
-            isJoined={isJoined}
-            isLoading={isJoining}
-            onClick={onJoinToggle}
-          />
-        </div>
-        <MoreButton onClick={onMoreClick} />
+      {/* Actions (View Details button for exploring club info) */}
+      <div className="relative z-10 flex items-center gap-3 mt-5">
+        <button
+          type="button"
+          onClick={onMoreClick}
+          className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg hover:shadow-pink-500/25 cursor-pointer transition-all active:scale-95 flex items-center justify-center gap-2"
+        >
+          <span>Explore Club Details</span>
+          <span className="text-base">ℹ️</span>
+        </button>
       </div>
     </motion.div>
   );

@@ -19,7 +19,10 @@ import {
   Camera,
   BookOpen,
   Shield,
-  Heart
+  Heart,
+  MapPin,
+  CheckCircle2,
+  Ticket
 } from 'lucide-react';
 import { mockClubs } from '../utils/mockClubs';
 
@@ -31,18 +34,39 @@ const InstagramIcon = ({ size = 18 }) => (
   </svg>
 );
 
-const FacebookIcon = ({ size = 18 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-  </svg>
-);
-
 const YoutubeIcon = ({ size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
     <polygon points="10 15 15 12 10 9 10 15" fill="currentColor" />
   </svg>
 );
+
+const clubSocialLinks = {
+  akriti: {
+    instagram: 'https://instagram.com/akriti_cultural_cmrtc',
+    youtube: 'https://youtube.com/@AkritiCulturalCMRTC'
+  },
+  codeholics: {
+    instagram: 'https://instagram.com/codeholics_cmrtc',
+    youtube: 'https://youtube.com/@CodeholicsCMRTC'
+  },
+  ncc: {
+    instagram: 'https://instagram.com/ncc_unit_cmrtc',
+    youtube: 'https://youtube.com/@NccCadetsCMRTC'
+  },
+  photography: {
+    instagram: 'https://instagram.com/film_photo_cmrtc',
+    youtube: 'https://youtube.com/@FilmPhotoCMRTC'
+  },
+  lexis: {
+    instagram: 'https://instagram.com/lexis_club_cmrtc',
+    youtube: 'https://youtube.com/@LexisLiteraryCMRTC'
+  },
+  nss: {
+    instagram: 'https://instagram.com/nss_unit_cmrtc',
+    youtube: 'https://youtube.com/@NssServiceCMRTC'
+  }
+};
 import { 
   AkritiLogo,
   CodeClubLogo, 
@@ -60,6 +84,9 @@ import PhotoWalksModal from '../components/dashboard/PhotoWalksModal';
 import MunDebatesModal from '../components/dashboard/MunDebatesModal';
 import BloodDrivesModal from '../components/dashboard/BloodDrivesModal';
 import ParadeDrillsModal from '../components/dashboard/ParadeDrillsModal';
+import ExploreEventsModal from '../components/dashboard/ExploreEventsModal';
+
+import { useAuth } from '../context/AuthContext';
 
 // Club Member Dashboard Themes & Data Config
 const dashboardClubConfigs = {
@@ -81,9 +108,11 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'Our Sponsors', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'Pegasus 2026', date: 'December 15-17, 2026', tag: 'Inter-College Fest', status: 'Registration Open', statusColor: 'bg-red-600 text-white' },
-      { id: 'e2', title: 'Dance Workshop', date: 'December 10, 2026', tag: 'Training Session', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white' },
-      { id: 'e3', title: 'Efflorescence Annual Day', date: 'January 20, 2027', tag: 'Annual Celebration', status: 'Coming Soon', statusColor: 'bg-rose-700 text-white' }
+      { id: 'e1', title: 'Pegasus 2026', date: 'December 15-17, 2026 • 09:30 AM', venue: 'CMRTC Main Auditorium', tag: 'Inter-College Fest', desc: 'The flagship annual cultural fest of CMRTC featuring dance battles, fashion shows, and musical nights.', seats: '420/500 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
+      { id: 'e2', title: 'Choreography & Dance Workshop', date: 'December 10, 2026 • 02:00 PM', venue: 'Dance Studio (Room 204)', tag: 'Training Session', desc: 'Master contemporary and hip-hop dance routines with celebrity choreographers.', seats: '85/100 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700' },
+      { id: 'e3', title: 'Efflorescence Annual Day', date: 'January 20, 2027 • 05:00 PM', venue: 'CMR Open Air Theatre', tag: 'Annual Gala', desc: 'A spectacular evening showcasing theater, instrumental ensembles, and cultural awards.', seats: '310/400 Registered', status: 'Coming Soon', statusColor: 'bg-rose-700 text-white hover:bg-rose-800' },
+      { id: 'e4', title: 'Nukkad Natak Street Play', date: 'September 20, 2026 • 11:00 AM', venue: 'Central Campus Quadrangle', tag: 'Street Theater', desc: 'High-energy street theatrical performances highlighting social awareness themes.', seats: '150/150 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700' },
+      { id: 'e5', title: 'Canvas Fine Arts Battle', date: 'October 05, 2026 • 10:00 AM', venue: 'Art Gallery Studio', tag: 'Art Contest', desc: 'Live painting and sketching contest on themes of modern canvas storytelling.', seats: '60/80 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' }
     ],
     activities: [
       { id: 'a1', text: 'Registered for Pegasus 2026', time: '2 hours ago' },
@@ -109,9 +138,11 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'Tech Sponsors', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'CMR HackFest 2026', date: 'September 05-07, 2026', tag: '36-Hour Hackathon', status: 'Registration Open', statusColor: 'bg-red-600 text-white' },
-      { id: 'e2', title: 'React v19 Masterclass', date: 'October 01, 2026', tag: 'Hands-on Bootcamp', status: 'Confirmed', statusColor: 'bg-[#EF4444] text-white' },
-      { id: 'e3', title: 'CodeWar Sprints 2026', date: 'November 15, 2026', tag: 'Coding Contest', status: 'Coming Soon', statusColor: 'bg-red-700 text-white' }
+      { id: 'e1', title: 'CMR HackFest 2026', date: 'September 05-07, 2026 • 09:00 AM', venue: 'Tech Lab 4 & Innovation Hub', tag: '36-Hour Hackathon', desc: '36-hour non-stop hackathon with prizes, mentorship, and cloud credits.', seats: '280/300 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
+      { id: 'e2', title: 'React v19 & Next.js Masterclass', date: 'October 01, 2026 • 02:00 PM', venue: 'Seminar Hall 2', tag: 'Hands-on Bootcamp', desc: 'Deep dive into React 19 Server Components, Actions, and high-performance Web apps.', seats: '140/150 Registered', status: 'Confirmed', statusColor: 'bg-[#EF4444] text-white hover:bg-red-700' },
+      { id: 'e3', title: 'CodeWar Speed Sprints 2026', date: 'November 15, 2026 • 04:00 PM', venue: 'Computer Center A', tag: 'Coding Contest', desc: 'Timed algorithmic problem solving sprint with live leaderboard scoring.', seats: '195/200 Registered', status: 'Coming Soon', statusColor: 'bg-red-700 text-white hover:bg-red-800' },
+      { id: 'e4', title: 'AI/ML & LLM Agents Workshop', date: 'December 05, 2026 • 10:00 AM', venue: 'AI Center of Excellence', tag: 'Tech Workshop', desc: 'Build RAG pipelines, fine-tune models, and deploy AI assistants using Python.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
+      { id: 'e5', title: 'Web3 & Cybersecurity Sprints', date: 'January 10, 2027 • 11:30 AM', venue: 'Cyber Lab 102', tag: 'CTF Challenge', desc: 'Ethical hacking Capture-The-Flag (CTF) tournament and smart contract security.', seats: '90/100 Registered', status: 'Confirmed', statusColor: 'bg-[#EF4444] text-white hover:bg-red-700' }
     ],
     activities: [
       { id: 'a1', text: 'Submitted project to CMR HackFest', time: '1 hour ago' },
@@ -137,9 +168,10 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'Army Sponsors', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'Independence Day Drill', date: 'August 15, 2026', tag: 'National Parade', status: 'Registration Open', statusColor: 'bg-blue-600 text-white' },
-      { id: 'e2', title: 'Annual Trekking Expedition', date: 'October 10, 2026', tag: 'Adventure Camp', status: 'Confirmed', statusColor: 'bg-blue-700 text-white' },
-      { id: 'e3', title: 'Cadet Captain Selection', date: 'November 05, 2026', tag: 'Selection Drill', status: 'Coming Soon', statusColor: 'bg-indigo-700 text-white' }
+      { id: 'e1', title: 'Independence Day Parade Drill', date: 'August 15, 2026 • 07:00 AM', venue: 'Main Parade Ground', tag: 'National Parade', desc: 'Ceremonial parade drill, flag hoisting, and guard of honor for national celebration.', seats: '210/210 Cadets', status: 'Registration Open', statusColor: 'bg-blue-600 text-white hover:bg-blue-700' },
+      { id: 'e2', title: 'Annual Trekking Expedition', date: 'October 10, 2026 • 06:00 AM', venue: 'Ananthagiri Hills Base', tag: 'Adventure Camp', desc: '25km endurance trek, map reading exercises, and outdoor survival skills camp.', seats: '150/160 Registered', status: 'Confirmed', statusColor: 'bg-blue-700 text-white hover:bg-blue-800' },
+      { id: 'e3', title: 'Cadet Captain Selection Drill', date: 'November 05, 2026 • 08:00 AM', venue: 'NCC Unit Office Field', tag: 'Selection Drill', desc: 'Leadership assessment, physical efficiency tests, and viva interview for leadership posts.', seats: '45/50 Registered', status: 'Coming Soon', statusColor: 'bg-indigo-700 text-white hover:bg-indigo-800' },
+      { id: 'e4', title: 'Republic Day Camp (RDC) Selection', date: 'December 01, 2026 • 07:30 AM', venue: 'Battalion Headquarters', tag: 'State Selection', desc: 'Rigorous drill and cultural selection trials for the prestigious New Delhi RDC Parade.', seats: '30/40 Cadets', status: 'Registration Open', statusColor: 'bg-blue-600 text-white hover:bg-blue-700' }
     ],
     activities: [
       { id: 'a1', text: 'Passed Physical Fitness Test', time: '3 hours ago' },
@@ -165,9 +197,10 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'Media Partners', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'Short Film Gala 2026', date: 'September 12, 2026', tag: 'Screening Festival', status: 'Registration Open', statusColor: 'bg-purple-600 text-white' },
-      { id: 'e2', title: 'Insta-Walk Photo Contest', date: 'November 10, 2026', tag: 'Outdoor Photowalk', status: 'Confirmed', statusColor: 'bg-purple-700 text-white' },
-      { id: 'e3', title: 'Darkroom & Lightroom Workshop', date: 'December 02, 2026', tag: 'Post-Production', status: 'Coming Soon', statusColor: 'bg-purple-800 text-white' }
+      { id: 'e1', title: 'Short Film Gala 2026', date: 'September 12, 2026 • 05:00 PM', venue: 'Auditorium Hall B', tag: 'Screening Festival', desc: 'Premiere of student short films, documentary showcases, and jury awards night.', seats: '220/250 Registered', status: 'Registration Open', statusColor: 'bg-purple-600 text-white hover:bg-purple-700' },
+      { id: 'e2', title: 'Insta-Walk Photo Contest', date: 'November 10, 2026 • 07:00 AM', venue: 'Botanical Gardens & Old City', tag: 'Outdoor Photowalk', desc: 'Guided street photography walk capturing urban life, architecture, and candid moments.', seats: '95/100 Registered', status: 'Confirmed', statusColor: 'bg-purple-700 text-white hover:bg-purple-800' },
+      { id: 'e3', title: 'Darkroom & Lightroom Workshop', date: 'December 02, 2026 • 02:00 PM', venue: 'Media Lab B', tag: 'Post-Production', desc: 'Master RAW color grading, portrait retouching, and cinematic preset design.', seats: '60/60 Registered', status: 'Coming Soon', statusColor: 'bg-purple-800 text-white hover:bg-purple-900' },
+      { id: 'e4', title: 'Studio Lighting Masterclass', date: 'January 18, 2027 • 10:30 AM', venue: 'Photography Studio 102', tag: 'Hands-on Lab', desc: 'Hands-on practice with softboxes, rim lights, and high-speed sync flash rigs.', seats: '40/45 Registered', status: 'Registration Open', statusColor: 'bg-purple-600 text-white hover:bg-purple-700' }
     ],
     activities: [
       { id: 'a1', text: 'Submitted photo entry to Insta-Walk', time: '4 hours ago' },
@@ -193,9 +226,10 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'Literary Partners', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'Inter-College Debate 2026', date: 'August 30, 2026', tag: 'Championship', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white' },
-      { id: 'e2', title: 'Word-Smith Poetry Slam', date: 'October 05, 2026', tag: 'Open Mic Night', status: 'Confirmed', statusColor: 'bg-emerald-700 text-white' },
-      { id: 'e3', title: 'CMRTC Model UN 2026', date: 'November 20, 2026', tag: 'Diplomatic Summit', status: 'Coming Soon', statusColor: 'bg-teal-700 text-white' }
+      { id: 'e1', title: 'Inter-College Debate Championship', date: 'August 30, 2026 • 10:00 AM', venue: 'Main Conference Hall', tag: 'Championship', desc: 'Parliamentary debate tournament with topics spanning global policy, tech ethics, and economics.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white hover:bg-emerald-700' },
+      { id: 'e2', title: 'Word-Smith Poetry Slam', date: 'October 05, 2026 • 05:30 PM', venue: 'Student Ampitheatre', tag: 'Open Mic Night', desc: 'A night of original spoken word poetry, acoustic tunes, and storytelling performances.', seats: '80/90 Registered', status: 'Confirmed', statusColor: 'bg-emerald-700 text-white hover:bg-emerald-800' },
+      { id: 'e3', title: 'CMRTC Model UN (MUN) 2026', date: 'November 20-22, 2026 • 09:00 AM', venue: 'Academic Block 3', tag: 'Diplomatic Summit', desc: '3-day simulation of UN General Assembly committees discussing international security.', seats: '180/200 Registered', status: 'Coming Soon', statusColor: 'bg-teal-700 text-white hover:bg-teal-800' },
+      { id: 'e4', title: 'Public Speaking & Oratory Seminar', date: 'December 12, 2026 • 02:00 PM', venue: 'Seminar Hall 3', tag: 'Skill Workshop', desc: 'Overcome stage fear, master body language, and deliver persuasive keynote speeches.', seats: '75/80 Registered', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white hover:bg-emerald-700' }
     ],
     activities: [
       { id: 'a1', text: 'Registered for Inter-College Debate', time: '2 hours ago' },
@@ -221,9 +255,10 @@ const dashboardClubConfigs = {
       { id: 'p4', label: 'NGO Partners', icon: Award }
     ],
     events: [
-      { id: 'e1', title: 'Swachh Bharat Campus Drive', date: 'August 20, 2026', tag: 'Cleanliness Drive', status: 'Registration Open', statusColor: 'bg-red-600 text-white' },
-      { id: 'e2', title: 'Mega Blood Donation Camp', date: 'October 12, 2026', tag: 'Health Drive', status: 'Confirmed', statusColor: 'bg-red-700 text-white' },
-      { id: 'e3', title: 'Annual Village Adoption Camp', date: 'December 15-21, 2026', tag: 'Special Camp', status: 'Coming Soon', statusColor: 'bg-rose-800 text-white' }
+      { id: 'e1', title: 'Swachh Bharat Campus Drive', date: 'August 20, 2026 • 08:00 AM', venue: 'CMRTC Campus Grounds', tag: 'Cleanliness Drive', desc: 'Campus-wide eco-cleanliness drive, waste segregation awareness, and plastic audit.', seats: '180/200 Volunteers', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
+      { id: 'e2', title: 'Mega Blood Donation Camp', date: 'October 12, 2026 • 09:00 AM', venue: 'College Health Center', tag: 'Health Drive', desc: 'Organized in partnership with Red Cross Society with donor certificates and health checkups.', seats: '250 Donor Pledges', status: 'Confirmed', statusColor: 'bg-red-700 text-white hover:bg-red-800' },
+      { id: 'e3', title: 'Annual Village Adoption Camp', date: 'December 15-21, 2026 • 7 Days', venue: 'Medchal Rural Mandal', tag: 'Special Camp', desc: '7-day residential camp focusing on rural literacy, health surveys, and solar lamp distribution.', seats: '50 Selected Volunteers', status: 'Coming Soon', statusColor: 'bg-rose-800 text-white hover:bg-rose-900' },
+      { id: 'e4', title: 'Haritha Haram Tree Plantation', date: 'September 25, 2026 • 09:30 AM', venue: 'Campus Eco Park', tag: 'Green Initiative', desc: 'Planting 500 saplings across campus with geotagging for long-term growth monitoring.', seats: '120 Volunteers', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' }
     ],
     activities: [
       { id: 'a1', text: 'Volunteered for Swachh Bharat Drive', time: '3 hours ago' },
@@ -297,7 +332,16 @@ const ClubMemberDashboardPage = () => {
   };
   const TalentIcon = config.talentIcon || Music;
 
+  const clubSocials = clubSocialLinks[clubId] || {
+    instagram: `https://instagram.com/${clubId}_cmrtc`,
+    youtube: `https://youtube.com/@${clubData.name.replace(/\s+/g, '')}CMRTC`
+  };
+
+  const { isCoordinator } = useAuth();
+
   const [activeTab, setActiveTab] = useState('Overview');
+  const [isExploreEventsOpen, setIsExploreEventsOpen] = useState(false);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
   const [isMoviePromotionsOpen, setIsMoviePromotionsOpen] = useState(false);
   const [isCoreMembersOpen, setIsCoreMembersOpen] = useState(false);
   const [isSponsorsOpen, setIsSponsorsOpen] = useState(false);
@@ -314,6 +358,19 @@ const ClubMemberDashboardPage = () => {
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
+  };
+
+  const handleEventRegister = (evt, forceStatus) => {
+    const isReg = forceStatus !== undefined ? forceStatus : !registeredEvents.includes(evt.id);
+    if (isReg) {
+      if (!registeredEvents.includes(evt.id)) {
+        setRegisteredEvents((prev) => [...prev, evt.id]);
+      }
+      addToast(`🎉 Successfully registered for ${evt.title}!`, 'success');
+    } else {
+      setRegisteredEvents((prev) => prev.filter((id) => id !== evt.id));
+      addToast(`Cancelled registration for ${evt.title}`, 'info');
+    }
   };
 
   return (
@@ -340,22 +397,45 @@ const ClubMemberDashboardPage = () => {
         {/* Right Tools & User Profile */}
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex items-center gap-3 text-slate-400">
-            <button className="hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+            <button 
+              onClick={() => addToast(`${config.name} Member Portal Settings`, 'info')}
+              className="hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
+              title="Settings"
+            >
               <Settings size={18} />
             </button>
-            <button className="hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+            <button 
+              onClick={() => addToast(`Contact Mailbox: ${clubId}@cmr.edu.in`, 'info')}
+              className="hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
+              title="Mailbox"
+            >
               <Mail size={18} />
             </button>
-            <div className="h-4 w-[1px] bg-slate-200" />
-            <button className="hover:text-pink-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+
+            
+            {/* Active Instagram Link */}
+            <a
+              href={clubSocials.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-pink-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer flex items-center justify-center"
+              title={`Visit Official ${config.name} Instagram Page`}
+              onClick={() => addToast(`Opening Official ${config.name} Instagram... 📸`, 'info')}
+            >
               <InstagramIcon size={18} />
-            </button>
-            <button className="hover:text-blue-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
-              <FacebookIcon size={18} />
-            </button>
-            <button className="hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer">
+            </a>
+
+            {/* Active YouTube Link */}
+            <a
+              href={clubSocials.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-red-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer flex items-center justify-center"
+              title={`Visit Official ${config.name} YouTube Channel`}
+              onClick={() => addToast(`Opening Official ${config.name} YouTube Channel... 🎥`, 'info')}
+            >
               <YoutubeIcon size={18} />
-            </button>
+            </a>
           </div>
 
           {/* User Profile Pill */}
@@ -425,6 +505,7 @@ const ClubMemberDashboardPage = () => {
                     } else if (lbl.includes('core') || lbl.includes('member') || lbl.includes('cadet') || lbl.includes('volunteer') || lbl.includes('crew') || lbl.includes('developer') || lbl.includes('board')) {
                       setIsCoreMembersOpen(true);
                     } else if (lbl.includes('event')) {
+                      setIsExploreEventsOpen(true);
                       setActiveTab('Events');
                     } else {
                       setIsParadeDrillsOpen(true);
@@ -446,7 +527,7 @@ const ClubMemberDashboardPage = () => {
           <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Upcoming Events</p>
-              <p className="text-2xl font-black text-slate-900 mt-1">3</p>
+              <p className="text-2xl font-black text-slate-900 mt-1">{config.events.length}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center">
               <Calendar size={22} />
@@ -457,7 +538,7 @@ const ClubMemberDashboardPage = () => {
           <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Events Attended</p>
-              <p className="text-2xl font-black text-slate-900 mt-1">0</p>
+              <p className="text-2xl font-black text-slate-900 mt-1">{registeredEvents.length}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
               <Trophy size={22} />
@@ -559,10 +640,21 @@ const ClubMemberDashboardPage = () => {
                     </div>
 
                     <button
-                      onClick={() => addToast(`Registered for ${evt.title}!`, 'success')}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold shadow-sm cursor-pointer transition-all active:scale-95 ${evt.statusColor}`}
+                      onClick={() => handleEventRegister(evt)}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold shadow-sm cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 ${
+                        registeredEvents.includes(evt.id)
+                          ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                          : evt.statusColor || 'bg-red-600 text-white'
+                      }`}
                     >
-                      {evt.status}
+                      {registeredEvents.includes(evt.id) ? (
+                        <>
+                          <CheckCircle2 size={13} />
+                          <span>Registered ✔</span>
+                        </>
+                      ) : (
+                        <span>{evt.status}</span>
+                      )}
                     </button>
                   </div>
                 ))}
@@ -605,12 +697,88 @@ const ClubMemberDashboardPage = () => {
         )}
 
         {activeTab === 'Events' && (
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center space-y-4">
-            <Calendar size={40} className="mx-auto text-slate-400" />
-            <h3 className="text-xl font-bold text-slate-900">All {config.name} Events</h3>
-            <p className="text-sm text-slate-500 max-w-md mx-auto">
-              Check back for updated event schedules, venue maps, and team registrations.
-            </p>
+          <div className="space-y-6">
+            {/* Header banner */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <Calendar size={22} className={config.accentText} />
+                  <span>All {config.name} Events</span>
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  Explore and register for upcoming hackathons, workshops, fests, and cultural showcases.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsExploreEventsOpen(true)}
+                className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
+              >
+                <Sparkles size={16} className="text-amber-400" />
+                <span>Launch Interactive Explorer</span>
+              </button>
+            </div>
+
+            {/* Events Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {config.events.map((evt) => {
+                const isReg = registeredEvents.includes(evt.id);
+                return (
+                  <div
+                    key={evt.id}
+                    className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
+                          {evt.tag}
+                        </span>
+                        <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                          <MapPin size={13} className="text-red-500" />
+                          {evt.venue || 'CMRTC Main Campus'}
+                        </span>
+                      </div>
+
+                      <h4 className="text-lg font-black text-slate-900 leading-snug">
+                        {evt.title}
+                      </h4>
+
+                      <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                        {evt.desc || `Join the official event hosted by ${config.name}.`}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-1 font-mono text-xs font-semibold text-slate-700">
+                        <Clock size={14} className="text-amber-500" />
+                        {evt.date}
+                      </span>
+
+                      <button
+                        onClick={() => handleEventRegister(evt)}
+                        className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shadow-sm cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 ${
+                          isReg
+                            ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                            : evt.statusColor || 'bg-red-600 text-white hover:bg-red-700'
+                        }`}
+                      >
+                        {isReg ? (
+                          <>
+                            <CheckCircle2 size={14} />
+                            <span>Registered ✔</span>
+                          </>
+                        ) : (
+                          <>
+                            <Ticket size={14} />
+                            <span>{evt.status || 'Register Now'}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -727,6 +895,17 @@ const ClubMemberDashboardPage = () => {
         onClose={() => setIsParadeDrillsOpen(false)}
         clubName={config.name}
       />
+
+      {/* Explore Events Interactive Modal */}
+      <ExploreEventsModal
+        isOpen={isExploreEventsOpen}
+        onClose={() => setIsExploreEventsOpen(false)}
+        clubName={config.name}
+        events={config.events}
+        onRegister={handleEventRegister}
+      />
+
+
     </div>
   );
 };

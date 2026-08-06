@@ -17,9 +17,11 @@ import {
   Award,
   Eye,
   UserCheck,
-  Heart
+  Heart,
+  Image as ImageIcon
 } from 'lucide-react';
 import Toast from '../components/ui/Toast';
+import ClubPhotoGalleryModal from '../components/dashboard/ClubPhotoGalleryModal';
 import { mockClubs } from '../utils/mockClubs';
 import { 
   AkritiLogo,
@@ -182,6 +184,15 @@ const ClubPage = () => {
   const theme = clubThemes[clubId] || clubThemes.codeholics;
 
   const [toasts, setToasts] = useState([]);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+  const addToast = (msg, type = 'success') => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message: msg, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 4000);
+  };
 
 
 
@@ -333,6 +344,15 @@ const ClubPage = () => {
           transition={{ duration: 0.5, delay: 0.45 }}
           className="flex flex-wrap items-center justify-center gap-4 mt-2"
         >
+          {/* Photo Gallery Button */}
+          <button
+            onClick={() => setIsGalleryOpen(true)}
+            className="bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2.5 text-base transition-all duration-200 cursor-pointer active:scale-95 backdrop-blur-md"
+          >
+            <ImageIcon size={20} className="text-pink-300" />
+            <span>Photo Gallery</span>
+          </button>
+
           {/* Sign In Button */}
           <button
             onClick={() => navigate(`/club/${clubData.id}/signin`)}
@@ -352,6 +372,14 @@ const ClubPage = () => {
           </button>
         </motion.div>
       </main>
+
+      {/* Club Event Photo Gallery Modal */}
+      <ClubPhotoGalleryModal
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        initialClubId={clubData.id}
+        onToast={(msg, type) => addToast(msg, type)}
+      />
 
       {/* Footer Info */}
       <footer className="w-full py-6 text-center text-white/90 text-sm font-medium space-y-1 relative z-20 mt-6 border-t border-white/10">
