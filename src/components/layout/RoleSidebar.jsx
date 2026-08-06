@@ -43,6 +43,7 @@ const menuByRole = {
     { id: 'home', label: 'Home Dashboard', icon: Home },
     { id: 'my-portfolio', label: 'My Portfolio', icon: Briefcase },
     { id: 'my-certificates', label: 'My Certificates', icon: Award },
+    { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'my-clubs', label: 'My Clubs', icon: Compass },
     { id: 'join-club', label: 'Join Club', icon: UserPlus },
     { id: 'membership-payment', label: 'Membership Status & Payment', icon: CreditCard },
@@ -55,6 +56,7 @@ const menuByRole = {
   ],
   core: [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'manage-club', label: 'Manage Club', icon: Users },
     { id: 'membership-requests', label: 'Approve/Reject Members', icon: UserCheck },
     { id: 'manage-events', label: 'Manage Events', icon: PlusCircle },
@@ -69,6 +71,7 @@ const menuByRole = {
   ],
   faculty: [
     { id: 'club-activities', label: 'View Club Activities', icon: Compass },
+    { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'approve-events', label: 'Approve Major Events', icon: CheckSquare },
     { id: 'monitor-members', label: 'Monitor Members', icon: Users },
     { id: 'view-reports', label: 'View Reports', icon: FileText },
@@ -77,6 +80,7 @@ const menuByRole = {
   ],
   admin: [
     { id: 'manage-all-clubs', label: 'Manage All Clubs', icon: Layers },
+    { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'manage-all-users', label: 'Manage All Users', icon: Users },
     { id: 'manage-roles', label: 'Manage Roles', icon: ShieldCheck },
     { id: 'manage-faculty', label: 'Manage Faculty Coordinators', icon: Shield },

@@ -20,6 +20,7 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import { mockClubs } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
+import EventCalendar from './EventCalendar';
 import { getStoredCertificates } from '../../utils/mockCertificates';
 
 const initialUserList = [
@@ -112,6 +113,11 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Section: Event Calendar */}
+        {activeSection === 'event-calendar' && (
+          <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
+        )}
 
         {/* Section: Manage All Clubs */}
         {activeSection === 'manage-all-clubs' && (

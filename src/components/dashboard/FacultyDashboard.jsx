@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import InfluencerSheetModal from './InfluencerSheetModal';
+import EventCalendar from './EventCalendar';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 
@@ -117,7 +118,12 @@ const FacultyDashboard = () => {
           </div>
         </div>
 
-        {/* Section: Approve Major Events */}
+        {/* Section: Event Calendar */}
+        {activeSection === 'event-calendar' && (
+          <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
+        )}
+
+        {/* Section: Major Events Approval Queue */}
         {(activeSection === 'approve-events' || activeSection === 'club-activities') && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
             <h3 className="text-xl font-black text-white flex items-center gap-2">

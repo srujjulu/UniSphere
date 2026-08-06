@@ -22,6 +22,7 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import InfluencerSheetModal from './InfluencerSheetModal';
+import EventCalendar from './EventCalendar';
 import { useAuth } from '../../context/AuthContext';
 import { mockClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
@@ -199,7 +200,12 @@ const CoreTeamDashboard = () => {
           </div>
         </div>
 
-        {/* Overview Stats */}
+        {/* Section: Event Calendar */}
+        {activeSection === 'event-calendar' && (
+          <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
+        )}
+
+        {/* Section: Core Dashboard Overview */}
         {activeSection === 'dashboard' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
