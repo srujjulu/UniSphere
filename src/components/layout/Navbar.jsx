@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { LogOut } from 'lucide-react';
+import { LogOut, Search } from 'lucide-react';
 import NotificationCenter from './NotificationCenter';
+import GlobalSearchModal from './GlobalSearchModal';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [onlineCount, setOnlineCount] = useState(34);
   const [isLogoutHovered, setIsLogoutHovered] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -94,7 +93,20 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Notification Center & User Card (Avatar + Username) or Sign In Button */}
+        {/* Global Search & Notification Center & User Card */}
+        <button
+          id="global-search-trigger"
+          onClick={() => setIsSearchOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer shadow-md text-xs font-medium"
+          title="Search UniSphere (Ctrl + K)"
+        >
+          <Search size={16} className="text-pink-400" />
+          <span className="hidden md:inline font-bold">Search...</span>
+          <kbd className="hidden lg:inline px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-slate-400 border border-slate-700">
+            Ctrl K
+          </kbd>
+        </button>
+
         {user ? (
           <div className="flex items-center gap-3 sm:gap-4">
             <NotificationCenter />
@@ -138,6 +150,12 @@ const Navbar = () => {
           </button>
         )}
       </div>
+
+      {/* Global Search Modal */}
+      <GlobalSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </nav>
   );
 };

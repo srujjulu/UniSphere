@@ -34,9 +34,11 @@ import {
   Sparkles,
   Menu,
   X,
-  Briefcase
+  Briefcase,
+  Search
 } from 'lucide-react';
 import { useAuth, roleLabels } from '../../context/AuthContext';
+import GlobalSearchModal from './GlobalSearchModal';
 
 const menuByRole = {
   student: [
@@ -109,7 +111,8 @@ const roleIcons = {
 const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' }) => {
   const { user, logout, switchRole } = useAuth();
   const navigate = useNavigate();
-  const [isOpenMobile, setIsOpenMobile] = useState(false);
+  const [isOpenMobile, setIsIsOpenMobile] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const effectiveRole = user?.role || currentRole;
   const menuItems = menuByRole[effectiveRole] || menuByRole.student;
@@ -120,7 +123,7 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
       {/* Mobile Toggle Button */}
       <div className="lg:hidden fixed top-4 left-4 z-40">
         <button
-          onClick={() => setIsOpenMobile(!isOpenMobile)}
+          onClick={() => setIsIsOpenMobile(!isOpenMobile)}
           className="p-2.5 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-xl flex items-center gap-2 text-xs font-bold"
         >
           {isOpenMobile ? <X size={18} /> : <Menu size={18} />}
@@ -131,7 +134,7 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
       {/* Backdrop for Mobile */}
       {isOpenMobile && (
         <div
-          onClick={() => setIsOpenMobile(false)}
+          onClick={() => setIsIsOpenMobile(false)}
           className="lg:hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
         />
       )}
@@ -158,6 +161,13 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
             </div>
 
             <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className="p-2 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer shadow-md"
+                title="Search UniSphere (Ctrl + K)"
+              >
+                <Search size={16} className="text-pink-400" />
+              </button>
               <NotificationCenter />
               <ProfileDropdown />
             </div>
@@ -234,6 +244,12 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
           </button>
         </div>
       </aside>
+
+      {/* Global Search Modal */}
+      <GlobalSearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </>
   );
 };
