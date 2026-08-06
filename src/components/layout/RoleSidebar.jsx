@@ -33,13 +33,15 @@ import {
   ChevronRight,
   Sparkles,
   Menu,
-  X
+  X,
+  Briefcase
 } from 'lucide-react';
 import { useAuth, roleLabels } from '../../context/AuthContext';
 
 const menuByRole = {
   student: [
     { id: 'home', label: 'Home Dashboard', icon: Home },
+    { id: 'my-portfolio', label: 'My Portfolio', icon: Briefcase },
     { id: 'my-clubs', label: 'My Clubs', icon: Compass },
     { id: 'join-club', label: 'Join Club', icon: UserPlus },
     { id: 'membership-payment', label: 'Membership Status & Payment', icon: CreditCard },

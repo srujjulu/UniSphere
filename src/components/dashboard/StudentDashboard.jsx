@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
+import StudentPortfolio from './StudentPortfolio';
 import { mockClubs } from '../../utils/mockClubs';
 import { useAuth } from '../../context/AuthContext';
 import { getStoredRequests, saveRequest, getApprovedClubsForStudent } from '../../utils/mockRequests';
@@ -108,36 +109,38 @@ const StudentDashboard = () => {
         )}
 
         {/* Top Header Banner */}
-        <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#0F172A]/90 via-indigo-950/40 to-[#0F172A]/90 p-8 rounded-[32px] border border-white/10 backdrop-blur-3xl shadow-2xl">
-          <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        {activeSection !== 'my-portfolio' && (
+          <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#0F172A]/90 via-indigo-950/40 to-[#0F172A]/90 p-8 rounded-[32px] border border-white/10 backdrop-blur-3xl shadow-2xl">
+            <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative space-y-2 max-w-xl z-10">
-            <div className="flex items-center gap-2">
-              <span className="px-3.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-black text-[11px] uppercase tracking-widest border border-blue-500/30 shadow-sm flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                🎓 Student Member Portal
-              </span>
+            <div className="relative space-y-2 max-w-xl z-10">
+              <div className="flex items-center gap-2">
+                <span className="px-3.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-black text-[11px] uppercase tracking-widest border border-blue-500/30 shadow-sm flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                  🎓 Student Member Portal
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight text-gradient-blue">
+                Welcome to Student Hub!
+              </h1>
+              <p className="text-xs md:text-sm text-slate-300 font-medium leading-relaxed">
+                Browse official CMRTC clubs, manage annual membership fees, register for upcoming campus events, and view official announcements.
+              </p>
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight text-gradient-blue">
-              Welcome to Student Hub!
-            </h1>
-            <p className="text-xs md:text-sm text-slate-300 font-medium leading-relaxed">
-              Browse official CMRTC clubs, manage annual membership fees, register for upcoming campus events, and view official announcements.
-            </p>
-          </div>
 
-          <div className="relative z-10 flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
-            <div className="glass-card px-5 py-3 rounded-2xl border border-white/10 text-right space-y-0.5">
-              <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Enrolled Clubs</p>
-              <p className="text-xl font-black text-blue-400">{enrolledClubs.length} Clubs</p>
-            </div>
-            <div className="glass-card px-5 py-3 rounded-2xl border border-white/10 text-right space-y-0.5">
-              <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Registered Events</p>
-              <p className="text-xl font-black text-emerald-400">{registeredEvents.length} Events</p>
+            <div className="relative z-10 flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+              <div className="glass-card px-5 py-3 rounded-2xl border border-white/10 text-right space-y-0.5">
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Enrolled Clubs</p>
+                <p className="text-xl font-black text-blue-400">{enrolledClubs.length} Clubs</p>
+              </div>
+              <div className="glass-card px-5 py-3 rounded-2xl border border-white/10 text-right space-y-0.5">
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Registered Events</p>
+                <p className="text-xl font-black text-emerald-400">{registeredEvents.length} Events</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Section: Home Dashboard */}
         {activeSection === 'home' && (
@@ -216,6 +219,11 @@ const StudentDashboard = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Section: My Portfolio (Achievement Portfolio) */}
+        {activeSection === 'my-portfolio' && (
+          <StudentPortfolio onToast={(msg, type) => triggerToast(msg)} />
         )}
 
         {/* Section: Join Club (Explore All Campus Clubs) */}
