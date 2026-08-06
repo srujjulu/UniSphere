@@ -17,12 +17,14 @@ import {
   Sparkles, 
   Trash2, 
   Calendar,
-  Image as ImageIcon
+  Image as ImageIcon,
+  QrCode
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
+import EventQRGeneratorModal from './EventQRGeneratorModal';
 import { useAuth } from '../../context/AuthContext';
 import { mockClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
@@ -43,6 +45,8 @@ const CoreTeamDashboard = () => {
   const [events, setEvents] = useState(mockEventsList);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [selectedQREvent, setSelectedQREvent] = useState(null);
   const [toast, setToast] = useState('');
 
   // Certificate Upload Form State
@@ -357,6 +361,17 @@ const CoreTeamDashboard = () => {
                   </div>
 
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setSelectedQREvent(ev);
+                        setIsQRModalOpen(true);
+                      }}
+                      className="px-3 py-1.5 rounded-xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 font-bold text-xs border border-pink-500/30 flex items-center gap-1 cursor-pointer"
+                    >
+                      <QrCode size={14} />
+                      <span>QR & Attendance</span>
+                    </button>
+
                     {ev.status === 'Completed' ? (
                       <button
                         onClick={() => setIsGalleryOpen(true)}
@@ -700,6 +715,14 @@ const CoreTeamDashboard = () => {
           onClose={() => setIsInfluencerOpen(false)}
           clubName="CMRTC Campus"
           currentClubId="all"
+          onToast={(msg, type) => triggerToast(msg)}
+        />
+
+        {/* Event QR Code & Attendance Monitor Modal */}
+        <EventQRGeneratorModal
+          isOpen={isQRModalOpen}
+          onClose={() => setIsQRModalOpen(false)}
+          event={selectedQREvent || { id: 'cal-4', title: 'CMR HackFest 2026' }}
           onToast={(msg, type) => triggerToast(msg)}
         />
       </main>
