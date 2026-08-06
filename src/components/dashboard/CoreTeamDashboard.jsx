@@ -43,9 +43,9 @@ const CoreTeamDashboard = () => {
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
 
-  // Filter requests for currently selected club
+  // Filter requests for currently selected club or all clubs
   const memberRequests = allMemberRequests.filter(
-    r => (r.clubId === selectedClubId || !r.clubId) && r.status === 'pending'
+    r => (selectedClubId === 'all' || r.clubId === selectedClubId || !r.clubId) && r.status === 'pending'
   );
 
   // New Event Form State
@@ -132,9 +132,12 @@ const CoreTeamDashboard = () => {
                   onChange={(e) => setSelectedClubId(e.target.value)}
                   className="h-8 pl-3 pr-8 rounded-full bg-gradient-to-r from-pink-600 to-rose-600 text-white font-black text-xs outline-none cursor-pointer shadow-lg shadow-pink-600/25 appearance-none border border-white/20 transition-all hover:scale-105 active:scale-95"
                 >
+                  <option value="all" className="bg-slate-900 text-amber-400 font-bold">
+                    🌟 View All Clubs Requests
+                  </option>
                   {mockClubs.map((c) => (
                     <option key={c.id} value={c.id} className="bg-slate-900 text-white font-semibold">
-                      Switch Managed Club: {c.name}
+                      Managed Club: {c.name}
                     </option>
                   ))}
                 </select>

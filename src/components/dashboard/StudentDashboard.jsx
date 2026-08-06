@@ -21,6 +21,8 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import { mockClubs } from '../../utils/mockClubs';
+import { useAuth } from '../../context/AuthContext';
+import { getStoredRequests, saveRequest } from '../../utils/mockRequests';
 
 const mockAnnouncements = [
   { id: '1', title: 'Pegasus 2026 Annual Cultural Fest Registrations Open!', date: 'August 03, 2026', club: 'AKRITI Club', urgency: 'High' },
@@ -36,15 +38,37 @@ const mockGalleryPhotos = [
 ];
 
 const StudentDashboard = () => {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('home');
-  const [enrolledClubs, setEnrolledClubs] = useState(['akriti', 'codeholics']);
+  const [enrolledClubs, setEnrolledClubs] = useState(['akriti']);
+  const [requests, setRequests] = useState(getStoredRequests);
   const [registeredEvents, setRegisteredEvents] = useState(['e1', 'e2']);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [toast, setToast] = useState('');
 
+  const studentRoll = user?.email ? user.email.split('@')[0].toUpperCase() : '237R1A05BA';
+  const studentName = user?.name || 'Student Member';
+
   const triggerToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleApplyToClub = (club) => {
+    saveRequest({
+      id: `req-${Date.now()}`,
+      name: studentName,
+      rollNo: studentRoll,
+      branch: 'CMR Student',
+      clubId: club.id,
+      clubName: club.name,
+      talent: club.category || 'General Member',
+      email: user?.email || `${studentRoll.toLowerCase()}@cmr.edu.in`,
+      status: 'pending',
+      date: 'Just now'
+    });
+    setRequests(getStoredRequests());
+    triggerToast(`Submitted join application for ${club.name}! ⏳ Sent to ${club.name} coordinators.`);
   };
 
   const handleDownload = (photoTitle) => {
@@ -197,6 +221,12 @@ const StudentDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {mockClubs.map((club) => {
                 const isJoined = enrolledClubs.includes(club.id);
+                const reqMatch = requests.find(
+                  r => r.clubId === club.id && (r.rollNo.toUpperCase() === studentRoll.toUpperCase() || r.email === user?.email)
+                );
+                const isPending = reqMatch?.status === 'pending';
+                const isApproved = reqMatch?.status === 'approved' || isJoined;
+
                 return (
                   <div key={club.id} className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-4 flex flex-col justify-between">
                     <div className="space-y-2">
@@ -204,11 +234,15 @@ const StudentDashboard = () => {
                         <span className="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-extrabold text-[10px] uppercase">
                           {club.category}
                         </span>
-                        {isJoined && (
+                        {isApproved ? (
                           <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
                             Joined ✔
                           </span>
-                        )}
+                        ) : isPending ? (
+                          <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px]">
+                            Pending Approval ⏳
+                          </span>
+                        ) : null}
                       </div>
                       <h4 className="text-base font-black text-white">{club.name}</h4>
                       <p className="text-xs text-slate-400">{club.description || club.subtitle}</p>
@@ -216,16 +250,17 @@ const StudentDashboard = () => {
 
                     <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between">
                       <span className="text-[11px] text-slate-400 font-semibold">{club.membersCount || '120+ Members'}</span>
-                      {isJoined ? (
-                        <button disabled className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-500 font-bold text-xs cursor-not-allowed">
-                          Already Enrolled
+                      {isApproved ? (
+                        <button disabled className="px-3.5 py-1.5 rounded-xl bg-emerald-950/40 text-emerald-400 font-bold text-xs border border-emerald-500/30 cursor-not-allowed">
+                          Active Member
+                        </button>
+                      ) : isPending ? (
+                        <button disabled className="px-3.5 py-1.5 rounded-xl bg-amber-950/40 text-amber-300 font-bold text-xs border border-amber-500/30 cursor-not-allowed">
+                          Request Pending ⏳
                         </button>
                       ) : (
                         <button
-                          onClick={() => {
-                            setEnrolledClubs([...enrolledClubs, club.id]);
-                            triggerToast(`Submitted membership application for ${club.name}! ⏳`);
-                          }}
+                          onClick={() => handleApplyToClub(club)}
                           className="px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs cursor-pointer shadow-md transition-all active:scale-95"
                         >
                           Apply to Join

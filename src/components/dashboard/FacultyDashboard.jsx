@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import InfluencerSheetModal from './InfluencerSheetModal';
+import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 
 const pendingMajorEvents = [
   { id: 'fe1', title: 'Pegasus 2026 Annual Cultural Fest', club: 'AKRITI Club', budget: '₹1,50,000', venue: 'CMR Auditorium', status: 'pending' },
@@ -24,8 +25,26 @@ const pendingMajorEvents = [
 const FacultyDashboard = () => {
   const [activeSection, setActiveSection] = useState('approve-events');
   const [eventApprovals, setEventApprovals] = useState(pendingMajorEvents);
+  const [memberRequests, setMemberRequests] = useState(getStoredRequests);
+  const [facultyClubFilter, setFacultyClubFilter] = useState('all');
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
+
+  const filteredFacultyRequests = memberRequests.filter(
+    r => (facultyClubFilter === 'all' || r.clubId === facultyClubFilter) && r.status === 'pending'
+  );
+
+  const handleApproveMember = (id, name, clubName) => {
+    updateRequestStatus(id, 'approved');
+    setMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'approved' } : m));
+    triggerToast(`Approved student ${name} into ${clubName || 'Club'}! ✅`);
+  };
+
+  const handleRejectMember = (id, name) => {
+    updateRequestStatus(id, 'rejected');
+    setMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'rejected' } : m));
+    triggerToast(`Rejected request for ${name}. ❌`);
+  };
 
   const triggerToast = (msg) => {
     setToast(msg);
@@ -129,45 +148,119 @@ const FacultyDashboard = () => {
 
         {/* Section: Monitor Members & Budgets */}
         {(activeSection === 'monitor-members' || activeSection === 'monitor-budgets') && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-3">
-              <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-                <Users size={18} className="text-amber-400" />
-                <span>Student Roster Monitoring</span>
-              </h3>
-              <div className="space-y-2 text-xs text-slate-300">
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>AKRITI Cultural Club Roster</span>
-                  <span className="font-bold text-white">420 Active Members</span>
+          <div className="space-y-6">
+            {/* All Clubs Join Requests Queue */}
+            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                    <Users size={18} className="text-amber-400" />
+                    <span>All Campus Clubs Membership Applications Queue</span>
+                  </h3>
+                  <p className="text-xs text-slate-400">Review and approve pending student join applications across all CMRTC clubs.</p>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>Codeholics Tech Club Roster</span>
-                  <span className="font-bold text-white">350 Active Members</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>NCC Cadet Corps Roster</span>
-                  <span className="font-bold text-white">180 Active Cadets</span>
-                </div>
+
+                {/* Club Filter Select */}
+                <select
+                  value={facultyClubFilter}
+                  onChange={(e) => setFacultyClubFilter(e.target.value)}
+                  className="h-9 px-3 rounded-xl bg-slate-800 text-amber-300 font-bold text-xs border border-amber-500/30 outline-none cursor-pointer"
+                >
+                  <option value="all">🌟 All Clubs ({memberRequests.filter(r => r.status === 'pending').length})</option>
+                  <option value="lexis">Lexis Club</option>
+                  <option value="codeholics">Codeholics Club</option>
+                  <option value="akriti">AKRITI Cultural</option>
+                  <option value="ncc">NCC Cadet Corps</option>
+                  <option value="photography">Film & Photo</option>
+                  <option value="nss">NSS Unit</option>
+                </select>
               </div>
+
+              {filteredFacultyRequests.length === 0 ? (
+                <div className="p-4 rounded-2xl bg-slate-800/40 text-center text-xs text-slate-400">
+                  No pending membership applications found for this club category.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {filteredFacultyRequests.map((req) => (
+                    <div key={req.id} className="p-4 rounded-2xl bg-slate-800/90 border border-slate-700 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            {req.clubName || req.clubId}
+                          </span>
+                          <span className="text-xs font-mono font-bold text-slate-300">{req.rollNo}</span>
+                        </div>
+                        <h4 className="text-sm font-extrabold text-white mt-1">{req.name}</h4>
+                        <p className="text-xs text-slate-400">{req.talent} • {req.branch}</p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleApproveMember(req.id, req.name, req.clubName)}
+                          className="w-8 h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center cursor-pointer shadow-md"
+                          title="Approve Member"
+                        >
+                          <Check size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleRejectMember(req.id, req.name)}
+                          className="w-8 h-8 rounded-xl bg-red-600 hover:bg-red-700 text-white flex items-center justify-center cursor-pointer shadow-md"
+                          title="Reject Request"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-3">
-              <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-                <DollarSign size={18} className="text-emerald-400" />
-                <span>Faculty Budget Audit Oversight</span>
-              </h3>
-              <div className="space-y-2 text-xs text-slate-300">
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>AKRITI Allocated Budget</span>
-                  <span className="font-bold text-emerald-400">₹1,50,000</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-3">
+                <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                  <Users size={18} className="text-amber-400" />
+                  <span>Student Roster Summary</span>
+                </h3>
+                <div className="space-y-2 text-xs text-slate-300">
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>AKRITI Cultural Club Roster</span>
+                    <span className="font-bold text-white">420 Active Members</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>Codeholics Tech Club Roster</span>
+                    <span className="font-bold text-white">350 Active Members</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>NCC Cadet Corps Roster</span>
+                    <span className="font-bold text-white">180 Active Cadets</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>Lexis Club Roster</span>
+                    <span className="font-bold text-white">98 Active Members</span>
+                  </div>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>Codeholics Allocated Budget</span>
-                  <span className="font-bold text-emerald-400">₹1,20,000</span>
-                </div>
-                <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
-                  <span>NSS Service Allocated Budget</span>
-                  <span className="font-bold text-emerald-400">₹80,000</span>
+              </div>
+
+              <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-3">
+                <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                  <DollarSign size={18} className="text-emerald-400" />
+                  <span>Faculty Budget Audit Oversight</span>
+                </h3>
+                <div className="space-y-2 text-xs text-slate-300">
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>AKRITI Allocated Budget</span>
+                    <span className="font-bold text-emerald-400">₹1,50,000</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>Codeholics Allocated Budget</span>
+                    <span className="font-bold text-emerald-400">₹1,20,000</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                    <span>NSS Service Allocated Budget</span>
+                    <span className="font-bold text-emerald-400">₹80,000</span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -36,16 +36,40 @@ export const initialRequests = [
     date: '2 days ago'
   },
   { 
-    id: 'req-lexis-2', 
-    name: 'Vikram Singh', 
-    rollNo: '227R1A0589', 
+    id: 'req-ncc-1', 
+    name: 'Aditya Teja', 
+    rollNo: '217R1A0577', 
     branch: 'CSE 4th Yr', 
-    clubId: 'lexis',
-    clubName: 'Lexis Club',
-    talent: 'Model UN (MUN) & Anchor', 
-    email: 'vikram.v@cmr.edu.in',
+    clubId: 'ncc',
+    clubName: 'NCC Unit',
+    talent: 'Drill & Parade', 
+    email: 'aditya.t@cmr.edu.in',
     status: 'pending',
     date: '3 days ago'
+  },
+  { 
+    id: 'req-photo-1', 
+    name: 'Kavya Reddy', 
+    rollNo: '237R1A0512', 
+    branch: 'AIML 2nd Yr', 
+    clubId: 'photography',
+    clubName: 'Film & Photography Club',
+    talent: 'DSLR Cinematography', 
+    email: 'kavya.r@cmr.edu.in',
+    status: 'pending',
+    date: '4 days ago'
+  },
+  { 
+    id: 'req-nss-1', 
+    name: 'Priyanka Rao', 
+    rollNo: '227R1A1208', 
+    branch: 'IT 3rd Yr', 
+    clubId: 'nss',
+    clubName: 'NSS Unit',
+    talent: 'Community Service & Drives', 
+    email: 'priyanka.r@cmr.edu.in',
+    status: 'pending',
+    date: '5 days ago'
   }
 ];
 
@@ -73,7 +97,7 @@ export const saveRequest = (newRequest) => {
   if (exists) {
     updated = current.map(r => 
       (r.rollNo.toUpperCase() === newRequest.rollNo.toUpperCase() && r.clubId === newRequest.clubId) 
-        ? { ...r, ...newRequest } 
+        ? { ...r, ...newRequest, status: 'pending' } 
         : r
     );
   } else {
@@ -89,4 +113,13 @@ export const updateRequestStatus = (id, newStatus) => {
   const updated = current.map(r => r.id === id ? { ...r, status: newStatus } : r);
   localStorage.setItem('cmrtc_club_member_requests', JSON.stringify(updated));
   return updated;
+};
+
+export const getStudentClubStatus = (rollNoOrEmail, clubId) => {
+  if (!rollNoOrEmail) return 'none';
+  const all = getStoredRequests();
+  const match = all.find(
+    r => (r.rollNo.toLowerCase() === rollNoOrEmail.toLowerCase() || r.email?.toLowerCase() === rollNoOrEmail.toLowerCase()) && r.clubId === clubId
+  );
+  return match ? match.status : 'none';
 };
