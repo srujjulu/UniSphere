@@ -287,56 +287,107 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {/* Section: Membership Status & Payment */}
+        {/* Section: Membership Status & Payment / My Clubs */}
         {(activeSection === 'membership-payment' || activeSection === 'my-clubs') && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-5">
-            <h3 className="text-xl font-black text-white flex items-center gap-2">
-              <CreditCard size={20} className="text-blue-400" />
-              <span>Membership Status & Annual Fee Payments</span>
-            </h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xl font-black text-white flex items-center gap-2">
+                  <CreditCard size={20} className="text-blue-400" />
+                  <span>My Clubs & Membership Status</span>
+                </h3>
+                <p className="text-xs text-slate-400">View active memberships, fee payment receipts, and pending coordinator approval status across all campus clubs.</p>
+              </div>
+
+              <button
+                onClick={() => setActiveSection('join-club')}
+                className="px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs cursor-pointer shadow-md transition-all active:scale-95 flex items-center gap-1.5"
+              >
+                <UserPlus size={14} />
+                <span>Apply to More Clubs</span>
+              </button>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-3">
-                <div className="flex justify-between items-center">
-                  <h4 className="font-bold text-white">AKRITI Cultural Club</h4>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-xs">
-                    Active • Paid ₹250/yr
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400">Membership Valid until July 2027. Access granted to all dance & music workshops.</p>
-                <button 
-                  onClick={() => triggerToast('Downloaded Membership Receipt PDF')}
-                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer"
-                >
-                  Download Fee Receipt
-                </button>
-              </div>
+              {mockClubs.map((club) => {
+                const reqMatch = requests.find(
+                  r => r.clubId === club.id && (r.rollNo.toUpperCase() === studentRoll.toUpperCase() || r.email === user?.email)
+                );
+                const isApproved = enrolledClubs.includes(club.id) || reqMatch?.status === 'approved';
+                const isPending = reqMatch?.status === 'pending';
 
-              <div className="p-5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-3">
-                <div className="flex justify-between items-center">
-                  <h4 className="font-bold text-white">Codeholics Tech Club</h4>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-xs">
-                    Active • Paid ₹300/yr
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400">Membership Valid until August 2027. Includes hackathon priority passes.</p>
-                <button 
-                  onClick={() => triggerToast('Downloaded Membership Receipt PDF')}
-                  className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer"
-                >
-                  Download Fee Receipt
-                </button>
-              </div>
+                // Only show clubs the student has requested or joined in My Clubs view
+                if (!isApproved && !isPending) return null;
 
-              <div className="p-5 rounded-2xl bg-slate-800/80 border border-amber-500/30 space-y-3">
-                <div className="flex justify-between items-center">
-                  <h4 className="font-bold text-white">Film & Photography Club</h4>
-                  <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs">
-                    Pending Core Approval ⏳
-                  </span>
+                const feeLabel = club.id === 'ncc' || club.id === 'nss' ? 'Active • Free' : 'Active • Paid ₹250/yr';
+
+                return (
+                  <div 
+                    key={club.id} 
+                    className={`p-5 rounded-2xl bg-slate-800/80 border ${isApproved ? 'border-emerald-500/30' : 'border-amber-500/30'} space-y-3 flex flex-col justify-between`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-extrabold text-white text-base">{club.name}</h4>
+                        {isApproved ? (
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-xs">
+                            {feeLabel}
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs">
+                            Pending Core Approval ⏳
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-300">
+                        {isApproved 
+                          ? `Membership Valid until 2027. Full access to ${club.name} workshops, events & certification.` 
+                          : `Application submitted on ${reqMatch?.date || 'Recent'}. Awaiting approval by ${club.name} Coordinators.`}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 flex items-center justify-between border-t border-slate-700/60">
+                      {isApproved ? (
+                        <>
+                          <button 
+                            onClick={() => triggerToast(`Downloaded Membership Receipt PDF for ${club.name}`)}
+                            className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer transition-all"
+                          >
+                            Download Fee Receipt
+                          </button>
+                          <button
+                            onClick={() => navigate(`/club/${club.id}/member-dashboard`)}
+                            className="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs cursor-pointer flex items-center gap-1"
+                          >
+                            <span>Member Portal</span>
+                            <ArrowRight size={12} />
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-[11px] text-amber-400/90 font-mono font-medium">
+                          Application under review by {club.name} Lead
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* If no clubs are joined or requested yet */}
+              {mockClubs.every(club => {
+                const reqMatch = requests.find(r => r.clubId === club.id && (r.rollNo.toUpperCase() === studentRoll.toUpperCase() || r.email === user?.email));
+                return !enrolledClubs.includes(club.id) && reqMatch?.status !== 'approved' && reqMatch?.status !== 'pending';
+              }) && (
+                <div className="col-span-full p-8 rounded-2xl bg-slate-800/40 text-center space-y-3">
+                  <p className="text-sm font-bold text-slate-300">No active club memberships or pending applications found.</p>
+                  <button
+                    onClick={() => setActiveSection('join-club')}
+                    className="px-5 py-2.5 rounded-xl bg-pink-600 text-white font-bold text-xs cursor-pointer shadow-md"
+                  >
+                    Browse & Join Clubs
+                  </button>
                 </div>
-                <p className="text-xs text-slate-400">Application submitted on Aug 02, 2026. Awaiting approval by Club Student Leads.</p>
-              </div>
+              )}
             </div>
           </div>
         )}
