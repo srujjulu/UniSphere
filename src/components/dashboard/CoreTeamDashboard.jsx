@@ -18,7 +18,10 @@ import {
   Trash2, 
   Calendar,
   Image as ImageIcon,
-  QrCode
+  QrCode,
+  Star,
+  MessageSquare,
+  ThumbsUp
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
@@ -29,6 +32,7 @@ import { useAuth } from '../../context/AuthContext';
 import { mockClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { saveCertificate } from '../../utils/mockCertificates';
+import { getEventFeedbackSummary, getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
 
 const mockEventsList = [
   { id: 'ev1', title: 'CMR HackFest 2026', date: 'Sept 05-07, 2026', seats: '150/200', budget: '₹25,000' },
@@ -694,6 +698,101 @@ const CoreTeamDashboard = () => {
                 <p className="text-xs text-slate-400">Sponsorship collections & expense vouchers.</p>
                 <button onClick={() => triggerToast('Downloaded Statement PDF')} className="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs">Download PDF</button>
               </div>
+            </div>
+
+            {/* Event Feedback & Satisfaction Analytics Panel */}
+            <div className="pt-6 border-t border-slate-800 space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-lg font-black text-white flex items-center gap-2">
+                    <Star size={18} className="text-amber-400 fill-amber-400" />
+                    <span>Event Feedback & Student Reviews Analytics</span>
+                  </h4>
+                  <p className="text-xs text-slate-400">Real-time student ratings, feedback list, and most liked event comments.</p>
+                </div>
+              </div>
+
+              {(() => {
+                const summary = getEventFeedbackSummary('cal-9');
+                return (
+                  <div className="space-y-6">
+                    {/* Top Stats Overview */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                        <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Average Rating</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-3xl font-black text-amber-400 font-mono">{summary.avgRating} ★</span>
+                          <span className="text-xs text-slate-400 font-bold">/ 5.0 Rating</span>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                        <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Reviews</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-3xl font-black text-white font-mono">{summary.totalReviews}</span>
+                          <span className="text-xs text-emerald-400 font-bold">Reviews Received</span>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                        <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Student Satisfaction</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-3xl font-black text-emerald-400 font-mono">98%</span>
+                          <span className="text-xs text-slate-400 font-bold">Positive Feedback</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Most Liked Comments */}
+                    <div className="space-y-3">
+                      <h5 className="text-xs font-extrabold text-white flex items-center gap-1.5 uppercase tracking-wider">
+                        <ThumbsUp size={14} className="text-amber-400" />
+                        <span>Most Liked Student Comments</span>
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {summary.mostLikedComments.map((rev) => (
+                          <div key={rev.id} className="p-4 rounded-2xl bg-slate-800/90 border border-slate-700 space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs font-bold text-white">{rev.studentName} <span className="text-pink-400">({rev.rollNo})</span></span>
+                              <span className="text-xs font-bold text-amber-400 font-mono">{rev.rating} ★</span>
+                            </div>
+                            <p className="text-xs text-slate-300 italic">"{rev.comment}"</p>
+                            <div className="flex justify-between items-center text-[10px] text-slate-500 pt-1">
+                              <span>Date: {rev.date}</span>
+                              <span className="text-emerald-400 font-bold flex items-center gap-1">
+                                <ThumbsUp size={11} /> {rev.likes} Likes
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* All Feedback List */}
+                    <div className="space-y-3">
+                      <h5 className="text-xs font-extrabold text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
+                        <MessageSquare size={14} className="text-blue-400" />
+                        <span>All Student Feedback & Reviews ({summary.feedbackList.length})</span>
+                      </h5>
+                      <div className="space-y-2">
+                        {summary.feedbackList.map((rev) => (
+                          <div key={rev.id} className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/60 flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-xs">
+                            <div className="space-y-0.5">
+                              <div className="flex items-center gap-2">
+                                <span className="font-extrabold text-white">{rev.studentName}</span>
+                                <span className="text-slate-400 font-mono text-[11px]">({rev.rollNo})</span>
+                                <span className="text-amber-400 font-bold">{rev.rating} ★</span>
+                              </div>
+                              <p className="text-slate-300 italic">"{rev.comment}"</p>
+                            </div>
+                            <span className="text-[10px] text-slate-500 font-mono">{rev.date}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         )}

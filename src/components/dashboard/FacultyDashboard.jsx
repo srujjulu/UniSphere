@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { 
   Shield, 
   CheckSquare, 
@@ -11,13 +9,15 @@ import {
   X, 
   Sparkles, 
   Compass, 
-  AlertCircle 
+  AlertCircle,
+  Star
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
+import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
 
 const pendingMajorEvents = [
   { id: 'fe1', title: 'Pegasus 2026 Annual Cultural Fest', club: 'AKRITI Club', budget: '₹1,50,000', venue: 'CMR Auditorium', status: 'pending' },
@@ -369,6 +369,30 @@ const FacultyDashboard = () => {
                   <p className="text-xs text-slate-400">Verified club certificates: 340</p>
                   <button onClick={() => triggerToast('Downloaded NACC Report PDF')} className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer">Download PDF</button>
                 </div>
+              </div>
+            </div>
+
+            {/* Campus Event Feedback & Satisfaction Audit Grid */}
+            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+              <h3 className="text-xl font-black text-white flex items-center gap-2">
+                <Star size={20} className="text-amber-400 fill-amber-400" />
+                <span>Campus Event Satisfaction & Ratings Audit</span>
+              </h3>
+              <p className="text-xs text-slate-400">Faculty oversight summary of student event reviews, star ratings, and satisfaction metrics.</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {getAllFeedbackSummaries().map((summary) => (
+                  <div key={summary.eventId} className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        {summary.clubName}
+                      </span>
+                      <span className="text-xs font-mono font-bold text-amber-400">{summary.avgRating} ★</span>
+                    </div>
+                    <h4 className="text-sm font-extrabold text-white">{summary.eventTitle}</h4>
+                    <p className="text-xs text-slate-400">Reviews: <strong className="text-white">{summary.totalReviews}</strong> • Rating: <strong className="text-emerald-400">{summary.avgRating} / 5.0</strong></p>
+                  </div>
+                ))}
               </div>
             </div>
 

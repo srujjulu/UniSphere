@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Clock, MapPin, Users, Award, CheckCircle2, TicketCheck, Sparkles, Share2, QrCode } from 'lucide-react';
+import { X, Calendar, Clock, MapPin, Users, Award, CheckCircle2, TicketCheck, Sparkles, Share2, QrCode, Star } from 'lucide-react';
 import { clubColors } from '../../utils/mockCalendarEvents';
 import StudentQRScannerModal from './StudentQRScannerModal';
+import EventFeedbackModal from './EventFeedbackModal';
 import { 
   AkritiLogo,
   CodeClubLogo, 
@@ -33,6 +34,7 @@ const CalendarEventModal = ({
   onToast 
 }) => {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   if (!isOpen || !event) return null;
 
@@ -173,16 +175,23 @@ const CalendarEventModal = ({
                   )}
                 </div>
 
-                {/* Scan QR Attendance Action for Registered Student */}
+                {/* Scan QR Attendance & Feedback Action for Registered Student */}
                 {isRegistered && !isHoliday && (
-                  <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-                    <span className="text-xs text-slate-400 font-medium">Mark your attendance at venue:</span>
+                  <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                     <button
                       onClick={() => setIsScannerOpen(true)}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
+                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
                     >
                       <QrCode size={15} />
                       <span>Scan QR Attendance</span>
+                    </button>
+
+                    <button
+                      onClick={() => setIsFeedbackOpen(true)}
+                      className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs border border-amber-500/30 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+                    >
+                      <Star size={14} className="fill-amber-400 text-amber-400" />
+                      <span>Rate Event & Feedback ⭐</span>
                     </button>
                   </div>
                 )}
@@ -213,6 +222,15 @@ const CalendarEventModal = ({
       <StudentQRScannerModal
         isOpen={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
+        event={event}
+        studentRoll={studentRoll}
+        onToast={onToast}
+      />
+
+      {/* Student Event Feedback Modal */}
+      <EventFeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
         event={event}
         studentRoll={studentRoll}
         onToast={onToast}
