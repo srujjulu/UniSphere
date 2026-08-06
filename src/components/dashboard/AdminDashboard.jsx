@@ -23,6 +23,7 @@ import RoleSidebar from '../layout/RoleSidebar';
 import { mockClubs } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
+import AlumniNetwork from './AlumniNetwork';
 import { getStoredCertificates } from '../../utils/mockCertificates';
 import { getStoredVolunteerRecords, editStudentVolunteerHours } from '../../utils/mockVolunteerHours';
 
@@ -120,6 +121,11 @@ const AdminDashboard = () => {
         {/* Section: Event Calendar */}
         {activeSection === 'event-calendar' && (
           <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
+        )}
+
+        {/* Section: Alumni Network */}
+        {activeSection === 'alumni-network' && (
+          <AlumniNetwork onToast={(msg, type) => triggerToast(msg)} />
         )}
 
         {/* Section: Manage All Clubs */}

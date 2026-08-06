@@ -15,6 +15,7 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
+import AlumniNetwork from './AlumniNetwork';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
@@ -121,6 +122,11 @@ const FacultyDashboard = () => {
         {/* Section: Event Calendar */}
         {activeSection === 'event-calendar' && (
           <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
+        )}
+
+        {/* Section: Alumni Network */}
+        {activeSection === 'alumni-network' && (
+          <AlumniNetwork onToast={(msg, type) => triggerToast(msg)} />
         )}
 
         {/* Section: Major Events Approval Queue */}

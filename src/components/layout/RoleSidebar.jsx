@@ -43,6 +43,7 @@ import GlobalSearchModal from './GlobalSearchModal';
 const menuByRole = {
   student: [
     { id: 'home', label: 'Home Dashboard', icon: Home },
+    { id: 'alumni-network', label: 'Alumni Network', icon: GraduationCap },
     { id: 'my-portfolio', label: 'My Portfolio', icon: Briefcase },
     { id: 'volunteer-hours', label: 'Volunteer Hours', icon: Clock },
     { id: 'my-certificates', label: 'My Certificates', icon: Award },
@@ -59,6 +60,7 @@ const menuByRole = {
   ],
   core: [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'alumni-network', label: 'Alumni Network', icon: GraduationCap },
     { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'manage-club', label: 'Manage Club', icon: Users },
     { id: 'membership-requests', label: 'Approve/Reject Members', icon: UserCheck },
@@ -74,6 +76,7 @@ const menuByRole = {
   ],
   faculty: [
     { id: 'club-activities', label: 'View Club Activities', icon: Compass },
+    { id: 'alumni-network', label: 'Alumni Network', icon: GraduationCap },
     { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'approve-events', label: 'Approve Major Events', icon: CheckSquare },
     { id: 'monitor-members', label: 'Monitor Members', icon: Users },
@@ -83,6 +86,7 @@ const menuByRole = {
   ],
   admin: [
     { id: 'manage-all-clubs', label: 'Manage All Clubs', icon: Layers },
+    { id: 'alumni-network', label: 'Alumni Network', icon: GraduationCap },
     { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'manage-all-users', label: 'Manage All Users', icon: Users },
     { id: 'manage-roles', label: 'Manage Roles', icon: ShieldCheck },
