@@ -123,3 +123,20 @@ export const getStudentClubStatus = (rollNoOrEmail, clubId) => {
   );
   return match ? match.status : 'none';
 };
+
+export const getApprovedClubsForStudent = (rollNoOrEmail) => {
+  if (typeof window === 'undefined') return ['akriti'];
+  const all = getStoredRequests();
+  if (!rollNoOrEmail) return ['akriti'];
+  const searchStr = rollNoOrEmail.trim().toLowerCase();
+  const approvedFromRequests = all
+    .filter(r => 
+      r.status === 'approved' && (
+        r.rollNo.toLowerCase() === searchStr || 
+        (r.email && r.email.toLowerCase() === searchStr)
+      )
+    )
+    .map(r => r.clubId);
+
+  return Array.from(new Set(['akriti', ...approvedFromRequests]));
+};

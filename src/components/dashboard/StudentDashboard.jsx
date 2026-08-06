@@ -22,7 +22,7 @@ import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import { mockClubs } from '../../utils/mockClubs';
 import { useAuth } from '../../context/AuthContext';
-import { getStoredRequests, saveRequest } from '../../utils/mockRequests';
+import { getStoredRequests, saveRequest, getApprovedClubsForStudent } from '../../utils/mockRequests';
 
 const mockAnnouncements = [
   { id: '1', title: 'Pegasus 2026 Annual Cultural Fest Registrations Open!', date: 'August 03, 2026', club: 'AKRITI Club', urgency: 'High' },
@@ -40,7 +40,6 @@ const mockGalleryPhotos = [
 const StudentDashboard = () => {
   const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('home');
-  const [enrolledClubs, setEnrolledClubs] = useState(['akriti']);
   const [requests, setRequests] = useState(getStoredRequests);
   const [registeredEvents, setRegisteredEvents] = useState(['e1', 'e2']);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
@@ -48,6 +47,20 @@ const StudentDashboard = () => {
 
   const studentRoll = user?.email ? user.email.split('@')[0].toUpperCase() : '237R1A05BA';
   const studentName = user?.name || 'Student Member';
+
+  const [enrolledClubs, setEnrolledClubs] = useState(() => getApprovedClubsForStudent(studentRoll));
+
+  // Sync approved clubs whenever local storage or requests state updates
+  React.useEffect(() => {
+    const syncApproved = () => {
+      const current = getStoredRequests();
+      setRequests(current);
+      setEnrolledClubs(getApprovedClubsForStudent(studentRoll));
+    };
+    syncApproved();
+    window.addEventListener('storage', syncApproved);
+    return () => window.removeEventListener('storage', syncApproved);
+  }, [studentRoll]);
 
   const triggerToast = (msg) => {
     setToast(msg);

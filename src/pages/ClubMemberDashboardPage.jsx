@@ -87,6 +87,7 @@ import ParadeDrillsModal from '../components/dashboard/ParadeDrillsModal';
 import ExploreEventsModal from '../components/dashboard/ExploreEventsModal';
 
 import { useAuth } from '../context/AuthContext';
+import { getStudentClubStatus, getApprovedClubsForStudent } from '../utils/mockRequests';
 
 // Club Member Dashboard Themes & Data Config
 const dashboardClubConfigs = {
@@ -337,7 +338,12 @@ const ClubMemberDashboardPage = () => {
     youtube: `https://youtube.com/@${clubData.name.replace(/\s+/g, '')}CMRTC`
   };
 
-  const { isCoordinator } = useAuth();
+  const { user, isCoordinator } = useAuth();
+  const studentRoll = user?.email ? user.email.split('@')[0].toUpperCase() : '237R1A05BA';
+  const studentName = user?.name || 'Student Member';
+
+  const memberStatus = getStudentClubStatus(studentRoll, clubData.id);
+  const isApprovedMember = memberStatus === 'approved' || clubData.id === 'akriti';
 
   const [activeTab, setActiveTab] = useState('Overview');
   const [isExploreEventsOpen, setIsExploreEventsOpen] = useState(false);
@@ -441,11 +447,11 @@ const ClubMemberDashboardPage = () => {
           {/* User Profile Pill */}
           <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-full pl-1.5 pr-3 py-1">
             <div className={`w-8 h-8 rounded-full ${config.bannerGradient} text-white font-black text-sm flex items-center justify-center shadow-sm`}>
-              D
+              {studentName.charAt(0).toUpperCase()}
             </div>
             <div className="text-left leading-none">
-              <p className="text-xs font-bold text-slate-900">Demo User</p>
-              <p className="text-[10px] font-semibold text-slate-500 mt-0.5">{config.talentLabel.split('&')[0].trim()}</p>
+              <p className="text-xs font-bold text-slate-900">{studentName}</p>
+              <p className="text-[10px] font-semibold text-slate-500 mt-0.5">{studentRoll}</p>
             </div>
             <button
               onClick={() => {
@@ -471,8 +477,13 @@ const ClubMemberDashboardPage = () => {
           className={`${config.bannerGradient} rounded-[28px] p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden`}
         >
           <div className="max-w-2xl space-y-2 relative z-10">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-3 py-1 rounded-full bg-white/20 text-white font-extrabold text-xs tracking-wider uppercase backdrop-blur-md border border-white/30 flex items-center gap-1.5">
+                {isApprovedMember ? 'Verified Active Member ✔' : memberStatus === 'pending' ? 'Application Pending Approval ⏳' : 'Student Member'}
+              </span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
-              <span>Welcome back, Demo User!</span> 👋
+              <span>Welcome back, {studentName}!</span> 👋
             </h2>
             <p className="text-sm sm:text-base font-medium opacity-95 leading-relaxed">
               {config.subtitle}
