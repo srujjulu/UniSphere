@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { LogOut } from 'lucide-react';
+import NotificationCenter from './NotificationCenter';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -93,9 +94,11 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* User Card (Avatar + Username) or Sign In Button */}
+        {/* Notification Center & User Card (Avatar + Username) or Sign In Button */}
         {user ? (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <NotificationCenter />
+            
             <div className="flex items-center gap-3">
               {/* Animated Avatar */}
               <motion.div
