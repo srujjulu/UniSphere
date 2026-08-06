@@ -24,12 +24,7 @@ import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import { useAuth } from '../../context/AuthContext';
 import { mockClubs } from '../../utils/mockClubs';
-
-const initialRequests = [
-  { id: 'm1', name: 'Rahul Sharma', rollNo: '237R1A0512', branch: 'CSE 2nd Yr', talent: 'Web Dev & AI', status: 'pending' },
-  { id: 'm2', name: 'Sneha Reddy', rollNo: '237R1A0445', branch: 'ECE 3rd Yr', talent: 'Classical Dance', status: 'pending' },
-  { id: 'm3', name: 'Vikram Singh', rollNo: '227R1A0589', branch: 'CSE 4th Yr', talent: 'Competitive Coding', status: 'pending' }
-];
+import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 
 const mockEventsList = [
   { id: 'ev1', title: 'CMR HackFest 2026', date: 'Sept 05-07, 2026', seats: '150/200', budget: '₹25,000' },
@@ -42,11 +37,16 @@ const CoreTeamDashboard = () => {
   const activeClub = mockClubs.find(c => c.id === selectedClubId) || mockClubs[0];
 
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [memberRequests, setMemberRequests] = useState(initialRequests);
+  const [allMemberRequests, setAllMemberRequests] = useState(getStoredRequests);
   const [events, setEvents] = useState(mockEventsList);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
+
+  // Filter requests for currently selected club
+  const memberRequests = allMemberRequests.filter(
+    r => (r.clubId === selectedClubId || !r.clubId) && r.status === 'pending'
+  );
 
   // New Event Form State
   const [newEventTitle, setNewEventTitle] = useState('');
@@ -62,12 +62,14 @@ const CoreTeamDashboard = () => {
   };
 
   const handleApproveMember = (id, name) => {
-    setMemberRequests(prev => prev.filter(m => m.id !== id));
+    updateRequestStatus(id, 'approved');
+    setAllMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'approved' } : m));
     triggerToast(`Approved ${name} into ${activeClub.name}! ✅`);
   };
 
   const handleRejectMember = (id, name) => {
-    setMemberRequests(prev => prev.filter(m => m.id !== id));
+    updateRequestStatus(id, 'rejected');
+    setAllMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'rejected' } : m));
     triggerToast(`Rejected membership request for ${name}. ❌`);
   };
 

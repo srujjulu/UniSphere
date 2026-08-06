@@ -19,6 +19,7 @@ import confetti from 'canvas-confetti';
 import Toast from '../components/ui/Toast';
 import { mockClubs } from '../utils/mockClubs';
 import { saveInfluencer } from '../utils/mockInfluencers';
+import { saveRequest } from '../utils/mockRequests';
 import { 
   AkritiLogo,
   CodeClubLogo, 
@@ -196,6 +197,20 @@ const ClubSignUpPage = () => {
 
     const formattedInsta = instagram.startsWith('@') ? instagram : `@${instagram}`;
     const formattedYt = youtube.startsWith('@') ? youtube : `@${youtube}`;
+
+    // Save membership join request for club coordinators
+    saveRequest({
+      id: `req-${Date.now()}`,
+      name: fullName.trim(),
+      rollNo: rollNo.trim().toUpperCase(),
+      branch: 'CMR Student',
+      clubId: clubData.id,
+      clubName: clubData.name,
+      talent: talent,
+      email: email.trim(),
+      status: 'pending',
+      date: 'Just now'
+    });
 
     // Register student to Campus Influencers Sheet
     saveInfluencer({
