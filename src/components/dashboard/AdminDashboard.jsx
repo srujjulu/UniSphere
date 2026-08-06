@@ -15,13 +15,16 @@ import {
   CheckCircle2,
   Lock,
   Award,
-  Download
+  Download,
+  Clock,
+  Edit
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import { mockClubs } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
 import { getStoredCertificates } from '../../utils/mockCertificates';
+import { getStoredVolunteerRecords, editStudentVolunteerHours } from '../../utils/mockVolunteerHours';
 
 const initialUserList = [
   { id: 'u1', name: 'Ananya Sharma', email: 'ananya@cmr.edu.in', role: 'student', rollNo: '227R1A05A1' },
@@ -283,6 +286,59 @@ const AdminDashboard = () => {
                   <h4 className="text-sm font-extrabold text-white">{cert.title}</h4>
                   <p className="text-xs text-slate-400">Event: <strong className="text-slate-200">{cert.eventName}</strong> • Recipient: <strong className="text-amber-400">{cert.studentRoll}</strong> ({cert.studentName})</p>
                   <p className="text-[11px] font-mono text-slate-500">ID: {cert.credentialId} • Issued: {cert.issueDate}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Section: Admin Volunteer Hours Audit & Editor */}
+        {(activeSection === 'reports' || activeSection === 'system-settings') && (
+          <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-black text-white flex items-center gap-2">
+                  <Clock size={20} className="text-amber-400" />
+                  <span>Admin Student Volunteer Hours Audit & Editor</span>
+                </h3>
+                <p className="text-xs text-slate-400">View and adjust total volunteer service hours for students across campus.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {Object.values(getStoredVolunteerRecords()).map((rec) => (
+                <div key={rec.studentRoll} className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-mono font-bold text-amber-400">{rec.studentRoll}</span>
+                    <span className="text-sm font-black text-emerald-400 font-mono">{rec.totalHours} Hours</span>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm font-extrabold text-white">{rec.studentName}</h4>
+                    <p className="text-xs text-slate-400">{rec.department}</p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-700 flex items-center gap-2">
+                    <input
+                      type="number"
+                      defaultValue={rec.totalHours}
+                      id={`edit-vol-${rec.studentRoll}`}
+                      className="w-20 h-8 px-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-white outline-none"
+                    />
+                    <button
+                      onClick={() => {
+                        const val = document.getElementById(`edit-vol-${rec.studentRoll}`)?.value;
+                        if (val !== undefined) {
+                          editStudentVolunteerHours(rec.studentRoll, val, 'Admin Audit');
+                          triggerToast(`Updated volunteer hours for ${rec.studentRoll} to ${val} Hours! 🛠️`);
+                        }
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1"
+                    >
+                      <Edit size={12} />
+                      <span>Save Edit</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

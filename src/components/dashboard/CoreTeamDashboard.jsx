@@ -33,6 +33,7 @@ import { mockClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { saveCertificate } from '../../utils/mockCertificates';
 import { getEventFeedbackSummary, getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
+import { assignVolunteerHours } from '../../utils/mockVolunteerHours';
 
 const mockEventsList = [
   { id: 'ev1', title: 'CMR HackFest 2026', date: 'Sept 05-07, 2026', seats: '150/200', budget: '₹25,000' },
@@ -52,6 +53,26 @@ const CoreTeamDashboard = () => {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [selectedQREvent, setSelectedQREvent] = useState(null);
   const [toast, setToast] = useState('');
+
+  // Volunteer Hours Form State
+  const [volRoll, setVolRoll] = useState('237R1A05BA');
+  const [volEvent, setVolEvent] = useState('Swachh Bharat Cleanliness & Greenery Drive');
+  const [volHours, setVolHours] = useState('8');
+
+  const handleAssignVolunteerHours = (e) => {
+    e.preventDefault();
+    if (!volRoll.trim() || !volHours) return;
+
+    assignVolunteerHours({
+      studentRoll: volRoll.trim(),
+      eventTitle: volEvent,
+      clubName: activeClub.name,
+      hours: Number(volHours),
+      assignedBy: `${user?.name || 'Coordinator'} (${activeClub.name})`
+    });
+
+    triggerToast(`Assigned +${volHours} Volunteer Hours to ${volRoll.toUpperCase()}! 🤝`);
+  };
 
   // Certificate Upload Form State
   const [certEventName, setCertEventName] = useState('CMR HackFest 2026');
@@ -475,6 +496,66 @@ const CoreTeamDashboard = () => {
                   >
                     <Upload size={16} />
                     <span>Upload & Issue Certificate PDF</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Assign Volunteer Hours Form */}
+            <div className="pt-6 border-t border-slate-800 space-y-4 text-left">
+              <div className="flex items-center gap-2">
+                <Clock size={20} className="text-amber-400" />
+                <h4 className="text-lg font-black text-white">Assign Volunteer Hours After Event Completion</h4>
+              </div>
+              <p className="text-xs text-slate-400">Log community service and voluntary participation hours for students in NSS drives and NCC drills.</p>
+
+              <form onSubmit={handleAssignVolunteerHours} className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-800/60 p-5 rounded-2xl border border-slate-700">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Student Roll Number *</label>
+                  <input
+                    type="text"
+                    required
+                    value={volRoll}
+                    onChange={(e) => setVolRoll(e.target.value)}
+                    placeholder="e.g. 237R1A05BA"
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-amber-300 outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Completed Service Event</label>
+                  <input
+                    type="text"
+                    required
+                    value={volEvent}
+                    onChange={(e) => setVolEvent(e.target.value)}
+                    placeholder="e.g. Swachh Bharat Cleanliness Drive"
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase mb-1">Volunteer Hours to Add</label>
+                  <select
+                    value={volHours}
+                    onChange={(e) => setVolHours(e.target.value)}
+                    className="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-emerald-400 outline-none"
+                  >
+                    <option value="4">+4 Volunteer Hours</option>
+                    <option value="8">+8 Volunteer Hours</option>
+                    <option value="12">+12 Volunteer Hours</option>
+                    <option value="16">+16 Volunteer Hours</option>
+                    <option value="24">+24 Volunteer Hours</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-3 flex justify-end">
+                  <button
+                    type="submit"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs uppercase cursor-pointer shadow-lg flex items-center gap-2 active:scale-95 transition-all"
+                  >
+                    <Clock size={16} />
+                    <span>Assign Volunteer Hours 🤝</span>
                   </button>
                 </div>
               </form>

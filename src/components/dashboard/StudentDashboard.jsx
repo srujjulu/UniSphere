@@ -23,6 +23,7 @@ import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import StudentPortfolio from './StudentPortfolio';
 import StudentCertificates from './StudentCertificates';
 import EventCalendar from './EventCalendar';
+import VolunteerTracker from './VolunteerTracker';
 import { mockClubs } from '../../utils/mockClubs';
 import { useAuth } from '../../context/AuthContext';
 import { getStoredRequests, saveRequest, getApprovedClubsForStudent } from '../../utils/mockRequests';
@@ -111,7 +112,7 @@ const StudentDashboard = () => {
         )}
 
         {/* Top Header Banner */}
-        {activeSection !== 'my-portfolio' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && activeSection !== 'club-events' && (
+        {activeSection !== 'my-portfolio' && activeSection !== 'volunteer-hours' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && activeSection !== 'club-events' && (
           <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#0F172A]/90 via-indigo-950/40 to-[#0F172A]/90 p-8 rounded-[32px] border border-white/10 backdrop-blur-3xl shadow-2xl">
             <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -226,6 +227,11 @@ const StudentDashboard = () => {
         {/* Section: My Portfolio (Achievement Portfolio) */}
         {activeSection === 'my-portfolio' && (
           <StudentPortfolio onToast={(msg, type) => triggerToast(msg)} />
+        )}
+
+        {/* Section: Volunteer Hours Tracker */}
+        {activeSection === 'volunteer-hours' && (
+          <VolunteerTracker onToast={(msg, type) => triggerToast(msg)} />
         )}
 
         {/* Section: My Certificates (Certificate Center) */}
