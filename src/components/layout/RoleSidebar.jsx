@@ -35,7 +35,8 @@ import {
   Menu,
   X,
   Briefcase,
-  Search
+  Search,
+  Clock
 } from 'lucide-react';
 import { useAuth, roleLabels } from '../../context/AuthContext';
 import GlobalSearchModal from './GlobalSearchModal';
