@@ -48,6 +48,27 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static images folder access
 app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
 
+// Root Welcome Route
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head><title>UniSphere CMRTC API</title></head>
+      <body style="font-family: system-ui, sans-serif; background: #0b0f19; color: white; display: flex; align-items: center; justify-content: center; height: 90vh; margin: 0;">
+        <div style="text-align: center; max-width: 600px; padding: 40px; border-radius: 20px; background: #151c2e; border: 1px solid #2d3748; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+          <h1 style="color: #ef4444; font-size: 28px; margin-bottom: 10px;">🚀 UniSphere Backend API is Online!</h1>
+          <p style="color: #94a3b8; font-size: 16px; line-height: 1.5;">CMR Technical Campus Official Student Clubs Portal REST API Services</p>
+          <div style="margin-top: 25px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="/api/health" style="padding: 10px 20px; background: #2563eb; color: white; border-radius: 10px; text-decoration: none; font-weight: bold;">📡 Health Check</a>
+            <a href="/api/clubs" style="padding: 10px 20px; background: #059669; color: white; border-radius: 10px; text-decoration: none; font-weight: bold;">🏛️ View Clubs</a>
+            <a href="/api/events" style="padding: 10px 20px; background: #7c3aed; color: white; border-radius: 10px; text-decoration: none; font-weight: bold;">📅 View Events</a>
+          </div>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
 // API Health Check
 app.get('/api/health', (req, res) => {
   res.status(200).json({
