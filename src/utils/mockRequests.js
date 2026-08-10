@@ -1,3 +1,5 @@
+import { mockClubs, isClubAtMaxCapacity } from './mockClubs';
+
 export const initialRequests = [
   { 
     id: 'req-lexis-1', 
@@ -86,8 +88,20 @@ export const getStoredRequests = () => {
   return initialRequests;
 };
 
+export const CLUB_MAX_LIMIT = 50;
+
 export const saveRequest = (newRequest) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return { success: true };
+  
+  // Check if club is already at maximum capacity of 50 members
+  if (isClubAtMaxCapacity(newRequest.clubId)) {
+    const club = mockClubs.find(c => c.id === newRequest.clubId);
+    return {
+      success: false,
+      error: `Registration Closed: ${club?.name || 'This club'} has reached its maximum capacity of 50 members.`
+    };
+  }
+
   const current = getStoredRequests();
   // Avoid duplicate rollNo for same club
   const exists = current.some(
@@ -104,15 +118,30 @@ export const saveRequest = (newRequest) => {
     updated = [newRequest, ...current];
   }
   localStorage.setItem('cmrtc_club_member_requests', JSON.stringify(updated));
-  return updated;
+  return { success: true, data: updated };
 };
 
 export const updateRequestStatus = (id, newStatus) => {
   if (typeof window === 'undefined') return;
   const current = getStoredRequests();
+  const targetReq = current.find(r => r.id === id);
+
+  if (newStatus === 'approved' && targetReq) {
+    const club = mockClubs.find(c => c.id === targetReq.clubId);
+    if ((club?.membersCount || 0) >= CLUB_MAX_LIMIT) {
+      return {
+        success: false,
+        error: `Cannot approve: ${club.name} is already full with 50/50 members.`
+      };
+    }
+    if (club) {
+      club.membersCount = Math.min(CLUB_MAX_LIMIT, (club.membersCount || 0) + 1);
+    }
+  }
+
   const updated = current.map(r => r.id === id ? { ...r, status: newStatus } : r);
   localStorage.setItem('cmrtc_club_member_requests', JSON.stringify(updated));
-  return updated;
+  return { success: true, data: updated };
 };
 
 export const getStudentClubStatus = (rollNoOrEmail, clubId) => {

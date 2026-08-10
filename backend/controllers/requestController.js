@@ -35,6 +35,14 @@ export const applyToClub = (req, res) => {
       }
     }
 
+    // Check if club is already at maximum capacity of 50 members
+    if ((club.membersCount || 0) >= 50) {
+      return res.status(400).json({
+        success: false,
+        error: `Registration Closed: ${club.name} has reached its maximum capacity of 50 members.`
+      });
+    }
+
     const newRequest = insertOne('requests', {
       studentRoll: rollNo,
       studentName: name,
@@ -103,15 +111,29 @@ export const updateRequestStatus = (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid status. Must be approved, rejected, or pending.' });
     }
 
+    const existingReq = findById('requests', id);
+    if (!existingReq) {
+      return res.status(404).json({ success: false, error: 'Request not found.' });
+    }
+
+    if (status === 'approved') {
+      const club = findById('clubs', existingReq.clubId);
+      if (club && (club.membersCount || 0) >= 50) {
+        return res.status(400).json({
+          success: false,
+          error: `Cannot approve application: ${club.name} has already reached the maximum limit of 50 members.`
+        });
+      }
+      if (club) {
+        updateById('clubs', club.id, { membersCount: Math.min(50, (club.membersCount || 0) + 1) });
+      }
+    }
+
     const updated = updateById('requests', id, {
       status,
       decidedBy: `${req.user?.name || 'Coordinator'} (${req.user?.role || 'core'})`,
       decidedAt: new Date().toISOString()
     });
-
-    if (!updated) {
-      return res.status(404).json({ success: false, error: 'Request not found.' });
-    }
 
     return res.status(200).json({
       success: true,

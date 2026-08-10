@@ -592,11 +592,11 @@ const ClubMemberDashboardPage = () => {
             </div>
           </div>
 
-          {/* Card 3: Community Members */}
+          {/* Card 3: Club Capacity & Members */}
           <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Community Members</p>
-              <p className="text-2xl font-black text-slate-900 mt-1">{clubData.membersCount || 500}+</p>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Club Capacity</p>
+              <p className="text-2xl font-black text-slate-900 mt-1">{clubData.membersCount || 48}/50 Max</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center">
               <Users size={22} />

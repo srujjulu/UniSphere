@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Lock } from 'lucide-react';
 
 const categoryGradients = {
   Cultural: 'from-red-500 to-rose-600 shadow-red-500/20 hover:shadow-red-500/40 border-red-500/20 focus-ring',
@@ -15,22 +15,24 @@ const JoinButton = ({
   category, 
   isJoined, 
   isLoading, 
+  isFull,
   onClick 
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   // Styling based on state
   const buttonGradient = categoryGradients[category] || categoryGradients.Technical;
+  const isButtonDisabled = isLoading || (isFull && !isJoined);
 
   return (
     <motion.button
       type="button"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
-      disabled={isLoading}
-      whileHover={!isJoined && !isLoading ? { y: -3, scale: 1.015 } : {}}
-      whileTap={!isLoading ? { scale: 0.98 } : {}}
+      onClick={isButtonDisabled && !isJoined ? undefined : onClick}
+      disabled={isButtonDisabled && !isJoined}
+      whileHover={!isJoined && !isButtonDisabled ? { y: -3, scale: 1.015 } : {}}
+      whileTap={!isButtonDisabled ? { scale: 0.98 } : {}}
       className={`
         w-full h-12 rounded-xl text-sm font-bold tracking-wider uppercase cursor-pointer select-none
         relative overflow-hidden flex items-center justify-center border transition-all duration-300
@@ -40,7 +42,9 @@ const JoinButton = ({
             ? isHovered 
               ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-[0_4px_15px_rgba(239,68,68,0.15)]' 
               : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-            : `bg-gradient-to-r ${buttonGradient} text-white shadow-lg`
+            : isFull
+              ? 'bg-red-500/10 border-red-500/30 text-red-400 cursor-not-allowed opacity-90'
+              : `bg-gradient-to-r ${buttonGradient} text-white shadow-lg`
         }
       `}
     >
@@ -74,6 +78,16 @@ const JoinButton = ({
                 <span>Joined</span>
               </>
             )}
+          </motion.div>
+        ) : isFull ? (
+          <motion.div
+            key="full"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex items-center gap-1.5 text-xs font-black tracking-wide"
+          >
+            <Lock size={14} className="text-red-400" />
+            <span>Quota Full (50/50)</span>
           </motion.div>
         ) : (
           <motion.span

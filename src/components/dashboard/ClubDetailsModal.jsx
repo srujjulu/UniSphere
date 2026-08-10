@@ -160,18 +160,30 @@ const ClubDetailsModal = ({
 
             {/* Bottom Actions Footer */}
             <div className="p-5 sm:p-6 bg-[#0B101E] border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
-              {/* Member stats */}
-              <div className="flex items-center gap-2 text-slate-400 text-xs sm:text-sm font-medium">
-                <Users size={15} />
-                <span>{club.membersCount + (isJoined ? 1 : 0)} registered members</span>
+              {/* Member stats & Quota status */}
+              <div className="flex flex-col gap-1 text-left">
+                <div className="flex items-center gap-2 text-slate-300 text-xs sm:text-sm font-semibold">
+                  <Users size={15} className="text-indigo-400" />
+                  <span>{Math.min(50, club.membersCount + (isJoined ? 1 : 0))}/50 Members Enrolled</span>
+                </div>
+                {club.membersCount >= 50 ? (
+                  <span className="text-[11px] font-bold text-red-400 font-mono">
+                    ⚠️ 50-Member Quota Full · Registrations Closed
+                  </span>
+                ) : (
+                  <span className="text-[11px] font-bold text-emerald-400 font-mono">
+                    ✅ {50 - club.membersCount} spots remaining before quota closes
+                  </span>
+                )}
               </div>
 
               {/* Join CTA */}
-              <div className="w-full sm:w-[200px]">
+              <div className="w-full sm:w-[220px]">
                 <JoinButton
                   category={club.category}
                   isJoined={isJoined}
                   isLoading={isJoining}
+                  isFull={club.membersCount >= 50}
                   onClick={onJoinToggle}
                 />
               </div>

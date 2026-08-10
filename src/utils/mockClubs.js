@@ -1,3 +1,5 @@
+export const CLUB_MAX_MEMBERS = 50;
+
 export const mockClubs = [
   {
     id: 'akriti',
@@ -13,7 +15,8 @@ export const mockClubs = [
       { id: 'e1', title: 'Annual Art Exhibition', date: 'Aug 15, 2026' },
       { id: 'e2', title: 'Nukkad Natak Street Play', date: 'Sep 20, 2026' }
     ],
-    membersCount: 142
+    membersCount: 48,
+    maxMembers: 50
   },
   {
     id: 'lexis',
@@ -29,7 +32,8 @@ export const mockClubs = [
       { id: 'e3', title: 'Inter-College Debate Championship', date: 'Aug 30, 2026' },
       { id: 'e4', title: 'Word-Smith Poetry Slam', date: 'Oct 05, 2026' }
     ],
-    membersCount: 98
+    membersCount: 42,
+    maxMembers: 50
   },
   {
     id: 'photography',
@@ -45,7 +49,8 @@ export const mockClubs = [
       { id: 'e5', title: 'Short Film Screening Gala', date: 'Sep 12, 2026' },
       { id: 'e6', title: 'Insta-Walk Photowalk Contest', date: 'Nov 10, 2026' }
     ],
-    membersCount: 115
+    membersCount: 46,
+    maxMembers: 50
   },
   {
     id: 'ncc',
@@ -61,7 +66,8 @@ export const mockClubs = [
       { id: 'e7', title: 'Independence Day Parade Drill', date: 'Aug 15, 2026' },
       { id: 'e8', title: 'Mega Blood Donation Drive', date: 'Oct 12, 2026' }
     ],
-    membersCount: 210
+    membersCount: 50,
+    maxMembers: 50
   },
   {
     id: 'codeholics',
@@ -77,7 +83,8 @@ export const mockClubs = [
       { id: 'e9', title: 'CMR HackFest 2026', date: 'Sep 05-07, 2026' },
       { id: 'e10', title: 'Advanced React v19 Masterclass', date: 'Oct 01, 2026' }
     ],
-    membersCount: 350
+    membersCount: 47,
+    maxMembers: 50
   },
   {
     id: 'nss',
@@ -93,9 +100,15 @@ export const mockClubs = [
       { id: 'e11', title: 'Swachh Bharat Campus Drive', date: 'Aug 20, 2026' },
       { id: 'e12', title: 'NSS Annual Special Camp', date: 'Dec 15-21, 2026' }
     ],
-    membersCount: 180
+    membersCount: 44,
+    maxMembers: 50
   }
 ];
+
+export const isClubAtMaxCapacity = (clubId) => {
+  const club = mockClubs.find((c) => c.id === clubId);
+  return (club?.membersCount || 0) >= CLUB_MAX_MEMBERS;
+};
 
 export const getStoredClubs = () => {
   if (typeof window === 'undefined') return mockClubs;

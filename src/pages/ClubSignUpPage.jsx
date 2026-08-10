@@ -141,9 +141,16 @@ const ClubSignUpPage = () => {
     }, 4000);
   };
 
+  const isQuotaFull = (clubData?.membersCount || 0) >= 50;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg('');
+
+    if (isQuotaFull) {
+      setErrorMsg(`Registration Closed: ${clubData.name} has reached its maximum limit of 50 members.`);
+      return;
+    }
 
     if (!fullName.trim() || fullName.trim().length < 2) {
       setErrorMsg('Please enter your valid full name (min. 2 characters)');
@@ -295,7 +302,7 @@ const ClubSignUpPage = () => {
           </motion.div>
 
           {/* Heading & Subtitle */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-4">
             <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${theme.titleColor}`}>
               Join {clubData.name} Club
             </h2>
@@ -303,6 +310,27 @@ const ClubSignUpPage = () => {
               {theme.accentText}
             </p>
           </div>
+
+          {/* 50-Member Quota Status Badge */}
+          {isQuotaFull ? (
+            <div className="mb-5 p-3.5 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-600 text-xs font-bold flex items-center gap-2.5">
+              <Lock size={18} className="shrink-0 text-red-500" />
+              <div className="text-left">
+                <p className="font-extrabold uppercase tracking-wide">Capacity Full (50/50 Members)</p>
+                <p className="text-[11px] font-normal text-red-600/90">This club has reached its maximum limit of 50 members. New registrations are temporarily closed.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs font-semibold flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Membership Quota:
+              </span>
+              <span className="font-mono text-emerald-600 font-bold">
+                {clubData.membersCount}/50 Enrolled ({50 - clubData.membersCount} spots remaining)
+              </span>
+            </div>
+          )}
 
           {/* Success State */}
           {isSuccess ? (
@@ -525,9 +553,14 @@ const ClubSignUpPage = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className={`w-full h-13 rounded-2xl font-extrabold text-sm tracking-wider uppercase cursor-pointer mt-2 transition-all duration-200 active:scale-95 ${theme.buttonBg}`}
+                disabled={isQuotaFull}
+                className={`w-full h-13 rounded-2xl font-extrabold text-sm tracking-wider uppercase mt-2 transition-all duration-200 ${
+                  isQuotaFull
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed border border-slate-300'
+                    : `cursor-pointer active:scale-95 ${theme.buttonBg}`
+                }`}
               >
-                Create Account
+                {isQuotaFull ? '🔒 Registrations Closed (50/50 Full)' : 'Create Account'}
               </button>
 
               {/* Already have an account? Sign In link */}
