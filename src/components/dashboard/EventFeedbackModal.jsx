@@ -15,8 +15,6 @@ const EventFeedbackModal = ({
   studentName = 'Student Member',
   onToast 
 }) => {
-  if (!isOpen || !event) return null;
-
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -25,6 +23,7 @@ const EventFeedbackModal = ({
 
   // Check if student already submitted feedback
   useEffect(() => {
+    if (!event) return;
     const alreadySubmitted = hasStudentSubmittedFeedback(event.id, studentRoll);
     setIsSubmitted(alreadySubmitted);
     if (alreadySubmitted) {
@@ -32,7 +31,9 @@ const EventFeedbackModal = ({
       const match = summary.feedbackList.find(r => r.rollNo.toUpperCase() === studentRoll.toUpperCase());
       setExistingReview(match);
     }
-  }, [event.id, studentRoll]);
+  }, [event?.id, studentRoll, event]);
+
+  if (!isOpen || !event) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -131,6 +131,7 @@ const ClubSignUpPage = () => {
 
   const [errorMsg, setErrorMsg] = useState('');
   const [toasts, setToasts] = useState([]);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const addToast = (message, type = 'success') => {
     const id = Date.now();
@@ -154,8 +155,15 @@ const ClubSignUpPage = () => {
       return;
     }
 
-    if (!email.trim() || !email.includes('@')) {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       setErrorMsg('Please enter a valid email address');
+      return;
+    }
+
+    const isCollegeDomain = cleanEmail.endsWith('@cmr.edu.in') || cleanEmail.endsWith('@cmrtc.ac.in') || cleanEmail.endsWith('@cmrg.ac.in') || cleanEmail.endsWith('@cmr.ac.in');
+    if (!isCollegeDomain) {
+      setErrorMsg('Registration requires an official college email ID (@cmr.edu.in or @cmrtc.ac.in)');
       return;
     }
 
@@ -238,8 +246,10 @@ const ClubSignUpPage = () => {
       origin: { y: 0.6 }
     });
 
-    // Direct redirect to Club Member Dashboard
-    navigate(`/club/${clubData.id}/member-dashboard`);
+    setIsSuccess(true);
+
+    // Redirect to member dashboard after brief delay
+    setTimeout(() => navigate(`/club/${clubData.id}/member-dashboard`), 2500);
   };
 
   return (

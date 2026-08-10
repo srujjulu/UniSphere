@@ -22,9 +22,13 @@ import {
   Heart,
   MapPin,
   CheckCircle2,
-  Ticket
+  Ticket,
+  Image as ImageIcon,
+  ExternalLink,
+  ZoomIn
 } from 'lucide-react';
 import { mockClubs } from '../utils/mockClubs';
+import ClubPhotoGalleryModal from '../components/dashboard/ClubPhotoGalleryModal';
 
 const InstagramIcon = ({ size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -104,15 +108,22 @@ const dashboardClubConfigs = {
     talentIcon: Music,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'Movie Promotions', icon: Sparkles },
       { id: 'p3', label: 'Core Members', icon: Users },
       { id: 'p4', label: 'Our Sponsors', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Pegasus 2026 Mega Cultural Concert', caption: 'Electrifying atmosphere with thousands of students cheering under festival lights', image: '/images/akriti/akriti-live-concert-stage.jpg', tag: 'Mega Concert' },
+      { id: 'gp2', title: 'Flashmob 2K25 Campus Showcase', caption: 'Energetic synchronization dance performance and live vocals by the Akriti cultural crew', image: '/images/akriti/akriti-flashmob-2k25.jpg', tag: 'Dance Showcase' },
+      { id: 'gp3', title: 'Grand Raag Musical Night & Fireworks', caption: 'Vibrant musical band performance with fireworks and dynamic stage lighting', image: '/images/akriti/akriti-grand-raag-concert.jpg', tag: 'Live Band' },
+      { id: 'gp4', title: 'Traditional Cultural Fest & Bathukamma', caption: 'Celebrating rich ethnic heritage, folk dances, and vibrant festivities at CMRTC', image: '/images/akriti/akriti-traditional-fest.jpg', tag: 'Ethnic Showcase' }
+    ],
     events: [
-      { id: 'e1', title: 'Pegasus 2026', date: 'December 15-17, 2026 • 09:30 AM', venue: 'CMRTC Main Auditorium', tag: 'Inter-College Fest', desc: 'The flagship annual cultural fest of CMRTC featuring dance battles, fashion shows, and musical nights.', seats: '420/500 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
-      { id: 'e2', title: 'Choreography & Dance Workshop', date: 'December 10, 2026 • 02:00 PM', venue: 'Dance Studio (Room 204)', tag: 'Training Session', desc: 'Master contemporary and hip-hop dance routines with celebrity choreographers.', seats: '85/100 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700' },
-      { id: 'e3', title: 'Efflorescence Annual Day', date: 'January 20, 2027 • 05:00 PM', venue: 'CMR Open Air Theatre', tag: 'Annual Gala', desc: 'A spectacular evening showcasing theater, instrumental ensembles, and cultural awards.', seats: '310/400 Registered', status: 'Coming Soon', statusColor: 'bg-rose-700 text-white hover:bg-rose-800' },
-      { id: 'e4', title: 'Nukkad Natak Street Play', date: 'September 20, 2026 • 11:00 AM', venue: 'Central Campus Quadrangle', tag: 'Street Theater', desc: 'High-energy street theatrical performances highlighting social awareness themes.', seats: '150/150 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700' },
+      { id: 'e1', title: 'Pegasus 2026 Mega Concert', date: 'December 15-17, 2026 • 09:30 AM', venue: 'CMRTC Main Auditorium', tag: 'Inter-College Fest', desc: 'The flagship annual cultural fest of CMRTC featuring dance battles, fashion shows, and musical nights.', seats: '420/500 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700', image: '/images/akriti/akriti-live-concert-stage.jpg' },
+      { id: 'e2', title: 'Flashmob 2K25 & Dance Workshop', date: 'December 10, 2026 • 02:00 PM', venue: 'Central Quadrangle & Studio', tag: 'Dance Showcase', desc: 'Master contemporary and hip-hop dance routines with celebrity choreographers.', seats: '85/100 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700', image: '/images/akriti/akriti-flashmob-2k25.jpg' },
+      { id: 'e3', title: 'Grand Raag Musical Night', date: 'January 20, 2027 • 05:00 PM', venue: 'CMR Open Air Theatre', tag: 'Musical Gala', desc: 'A spectacular evening showcasing live band, instrumental ensembles, and cultural awards.', seats: '310/400 Registered', status: 'Coming Soon', statusColor: 'bg-rose-700 text-white hover:bg-rose-800', image: '/images/akriti/akriti-grand-raag-concert.jpg' },
+      { id: 'e4', title: 'Traditional Cultural Day & Bathukamma', date: 'September 20, 2026 • 11:00 AM', venue: 'Central Campus Quadrangle', tag: 'Ethnic Celebration', desc: 'High-energy cultural performances highlighting folk dance and festive traditions.', seats: '150/150 Registered', status: 'Confirmed', statusColor: 'bg-[#ED1C24] text-white hover:bg-red-700', image: '/images/akriti/akriti-traditional-fest.jpg' },
       { id: 'e5', title: 'Canvas Fine Arts Battle', date: 'October 05, 2026 • 10:00 AM', venue: 'Art Gallery Studio', tag: 'Art Contest', desc: 'Live painting and sketching contest on themes of modern canvas storytelling.', seats: '60/80 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' }
     ],
     activities: [
@@ -134,19 +145,22 @@ const dashboardClubConfigs = {
     talentIcon: Code,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'Hackathons', icon: Code },
       { id: 'p3', label: 'Core Developers', icon: Users },
       { id: 'p4', label: 'Tech Sponsors', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Hack The Verse - National Level Hackathon', caption: '300+ developers, teams, faculty coordinators, and mentors gathered on the grand stage of CMRTC', image: '/images/codeholics/codeholics-hack-the-verse.png', tag: 'National Hackathon' }
+    ],
     events: [
-      { id: 'e1', title: 'CMR HackFest 2026', date: 'September 05-07, 2026 • 09:00 AM', venue: 'Tech Lab 4 & Innovation Hub', tag: '36-Hour Hackathon', desc: '36-hour non-stop hackathon with prizes, mentorship, and cloud credits.', seats: '280/300 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
+      { id: 'e1', title: 'Hack The Verse 2026 - National Hackathon', date: 'September 05-07, 2026 • 09:00 AM', venue: 'CMRTC Main Auditorium & Innovation Hub', tag: '36-Hour Hackathon', desc: '36-hour non-stop national hackathon with cash prizes, cloud credits, and startup incubation grants.', seats: '280/300 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700', image: '/images/codeholics/codeholics-hack-the-verse.png' },
       { id: 'e2', title: 'React v19 & Next.js Masterclass', date: 'October 01, 2026 • 02:00 PM', venue: 'Seminar Hall 2', tag: 'Hands-on Bootcamp', desc: 'Deep dive into React 19 Server Components, Actions, and high-performance Web apps.', seats: '140/150 Registered', status: 'Confirmed', statusColor: 'bg-[#EF4444] text-white hover:bg-red-700' },
       { id: 'e3', title: 'CodeWar Speed Sprints 2026', date: 'November 15, 2026 • 04:00 PM', venue: 'Computer Center A', tag: 'Coding Contest', desc: 'Timed algorithmic problem solving sprint with live leaderboard scoring.', seats: '195/200 Registered', status: 'Coming Soon', statusColor: 'bg-red-700 text-white hover:bg-red-800' },
-      { id: 'e4', title: 'AI/ML & LLM Agents Workshop', date: 'December 05, 2026 • 10:00 AM', venue: 'AI Center of Excellence', tag: 'Tech Workshop', desc: 'Build RAG pipelines, fine-tune models, and deploy AI assistants using Python.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
-      { id: 'e5', title: 'Web3 & Cybersecurity Sprints', date: 'January 10, 2027 • 11:30 AM', venue: 'Cyber Lab 102', tag: 'CTF Challenge', desc: 'Ethical hacking Capture-The-Flag (CTF) tournament and smart contract security.', seats: '90/100 Registered', status: 'Confirmed', statusColor: 'bg-[#EF4444] text-white hover:bg-red-700' }
+      { id: 'e4', title: 'AI/ML & LLM Agents Workshop', date: 'December 05, 2026 • 10:00 AM', venue: 'AI Center of Excellence', tag: 'Tech Workshop', desc: 'Build RAG pipelines, fine-tune models, and deploy AI assistants using Python.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' }
     ],
     activities: [
-      { id: 'a1', text: 'Submitted project to CMR HackFest', time: '1 hour ago' },
+      { id: 'a1', text: 'Won 1st Prize in Hack The Verse Hackathon', time: '1 hour ago' },
       { id: 'a2', text: 'Earned 100 Coding Points', time: '5 hours ago' },
       { id: 'a3', text: 'Joined Codeholics Club', time: '1 day ago' }
     ]
@@ -164,47 +178,57 @@ const dashboardClubConfigs = {
     talentIcon: Shield,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'Parade Drills', icon: Shield },
       { id: 'p3', label: 'Core Cadets', icon: Users },
       { id: 'p4', label: 'Army Sponsors', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Annual Training Camp (ATC-V) Trophy Ceremony', caption: 'Army officers, trainers and CMRTC NCC cadets celebrating trophy victory', image: '/images/ncc/ncc-atc-camp-trophy-ceremony.jpg', tag: 'ATC Camp' },
+      { id: 'gp2', title: 'Candlelight Tribute Vigil at Campus Entrance', caption: 'Cadets and college leadership holding candles in solemn memorial tribute', image: '/images/ncc/ncc-candlelight-vigil-entrance.jpg', tag: 'Memorial Vigil' },
+      { id: 'gp3', title: 'Night Candlelight Memorial March', caption: 'Solemn evening candle march with the Prayers for Pahalgam banner', image: '/images/ncc/ncc-night-memorial-march.jpg', tag: 'Night March' }
+    ],
     events: [
-      { id: 'e1', title: 'Independence Day Parade Drill', date: 'August 15, 2026 • 07:00 AM', venue: 'Main Parade Ground', tag: 'National Parade', desc: 'Ceremonial parade drill, flag hoisting, and guard of honor for national celebration.', seats: '210/210 Cadets', status: 'Registration Open', statusColor: 'bg-blue-600 text-white hover:bg-blue-700' },
-      { id: 'e2', title: 'Annual Trekking Expedition', date: 'October 10, 2026 • 06:00 AM', venue: 'Ananthagiri Hills Base', tag: 'Adventure Camp', desc: '25km endurance trek, map reading exercises, and outdoor survival skills camp.', seats: '150/160 Registered', status: 'Confirmed', statusColor: 'bg-blue-700 text-white hover:bg-blue-800' },
-      { id: 'e3', title: 'Cadet Captain Selection Drill', date: 'November 05, 2026 • 08:00 AM', venue: 'NCC Unit Office Field', tag: 'Selection Drill', desc: 'Leadership assessment, physical efficiency tests, and viva interview for leadership posts.', seats: '45/50 Registered', status: 'Coming Soon', statusColor: 'bg-indigo-700 text-white hover:bg-indigo-800' },
-      { id: 'e4', title: 'Republic Day Camp (RDC) Selection', date: 'December 01, 2026 • 07:30 AM', venue: 'Battalion Headquarters', tag: 'State Selection', desc: 'Rigorous drill and cultural selection trials for the prestigious New Delhi RDC Parade.', seats: '30/40 Cadets', status: 'Registration Open', statusColor: 'bg-blue-600 text-white hover:bg-blue-700' }
+      { id: 'e1', title: 'Annual Training Camp (ATC-V) Drill', date: 'August 15, 2026 • 07:00 AM', venue: 'Main Parade Ground & Camp Field', tag: 'ATC Camp', desc: 'Ceremonial parade drill, troop inspections, and trophy felicitation for outstanding cadets.', seats: '210/210 Cadets', status: 'Registration Open', statusColor: 'bg-blue-600 text-white hover:bg-blue-700', image: '/images/ncc/ncc-atc-camp-trophy-ceremony.jpg' },
+      { id: 'e2', title: 'Candlelight Tribute & Memorial Vigil', date: 'October 10, 2026 • 06:00 PM', venue: 'CMRTC Main Entrance Plaza', tag: 'Tribute Vigil', desc: 'Solemn candlelight assembly honoring martyrs and national service heroes.', seats: '150/160 Registered', status: 'Confirmed', statusColor: 'bg-blue-700 text-white hover:bg-blue-800', image: '/images/ncc/ncc-candlelight-vigil-entrance.jpg' },
+      { id: 'e3', title: 'Night Candlelight March for Unity', date: 'November 05, 2026 • 07:00 PM', venue: 'Campus Perimeter Avenue', tag: 'Night March', desc: 'Evening solidarity march led by NCC cadets and faculty coordinators.', seats: '45/50 Registered', status: 'Coming Soon', statusColor: 'bg-indigo-700 text-white hover:bg-indigo-800', image: '/images/ncc/ncc-night-memorial-march.jpg' }
     ],
     activities: [
-      { id: 'a1', text: 'Passed Physical Fitness Test', time: '3 hours ago' },
+      { id: 'a1', text: 'Won ATC-V Camp Championship Trophy', time: '3 hours ago' },
       { id: 'a2', text: 'Enrolled in Republic Day Camp selection', time: '1 day ago' },
       { id: 'a3', text: 'Joined NCC Cadets Unit', time: '2 days ago' }
     ]
   },
   photography: {
-    name: 'Film & Photography Club',
+    name: 'Film & Photography Club (FAP)',
     bannerGradient: 'bg-gradient-to-r from-[#6B21A8] via-[#581C87] to-[#C084FC]',
     primaryColor: '#9333EA',
     accentBorder: 'border-purple-200',
     accentBg: 'bg-purple-50',
     accentText: 'text-[#9333EA]',
     tagBg: 'bg-purple-500/10 text-[#9333EA]',
-    subtitle: "Ready to frame the world? Discover photowalks, short film screenings, lighting masterclasses, and video editing workshops.",
+    subtitle: "Ready to frame the world? Discover official event shoots, graduation galas, photowalks, and live stage media coverage.",
     talentLabel: 'DSLR & Cinematography',
     talentIcon: Camera,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'Photo Walks', icon: Camera },
       { id: 'p3', label: 'Core Crew', icon: Users },
       { id: 'p4', label: 'Media Partners', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Graduation Ceremony 2K26 Dignitaries Stage', caption: 'Class of 2026 graduation celebration with academic leaders and faculties', image: '/images/fap/fap-graduation-ceremony-stage.jpg', tag: 'Graduation 2K26' },
+      { id: 'gp2', title: 'Graduation Ceremony Degree & Medal Awards', caption: 'Honoring distinction graduates with degrees, gold medals, and felicitation', image: '/images/fap/fap-graduation-ceremony-awards.jpg', tag: 'Awards Gala' },
+      { id: 'gp3', title: 'Campus Fest Stage Anchoring & Live Shoot', caption: 'Dynamic stage anchoring coverage captured by the FAP visual media team', image: '/images/fap/fap-anchors-stage-event.jpg', tag: 'Live Stage' }
+    ],
     events: [
-      { id: 'e1', title: 'Short Film Gala 2026', date: 'September 12, 2026 • 05:00 PM', venue: 'Auditorium Hall B', tag: 'Screening Festival', desc: 'Premiere of student short films, documentary showcases, and jury awards night.', seats: '220/250 Registered', status: 'Registration Open', statusColor: 'bg-purple-600 text-white hover:bg-purple-700' },
-      { id: 'e2', title: 'Insta-Walk Photo Contest', date: 'November 10, 2026 • 07:00 AM', venue: 'Botanical Gardens & Old City', tag: 'Outdoor Photowalk', desc: 'Guided street photography walk capturing urban life, architecture, and candid moments.', seats: '95/100 Registered', status: 'Confirmed', statusColor: 'bg-purple-700 text-white hover:bg-purple-800' },
-      { id: 'e3', title: 'Darkroom & Lightroom Workshop', date: 'December 02, 2026 • 02:00 PM', venue: 'Media Lab B', tag: 'Post-Production', desc: 'Master RAW color grading, portrait retouching, and cinematic preset design.', seats: '60/60 Registered', status: 'Coming Soon', statusColor: 'bg-purple-800 text-white hover:bg-purple-900' },
-      { id: 'e4', title: 'Studio Lighting Masterclass', date: 'January 18, 2027 • 10:30 AM', venue: 'Photography Studio 102', tag: 'Hands-on Lab', desc: 'Hands-on practice with softboxes, rim lights, and high-speed sync flash rigs.', seats: '40/45 Registered', status: 'Registration Open', statusColor: 'bg-purple-600 text-white hover:bg-purple-700' }
+      { id: 'e1', title: 'Graduation Ceremony 2K26 Live Coverage', date: 'September 12, 2026 • 05:00 PM', venue: 'CMRTC Main Auditorium', tag: 'Official Shoot', desc: 'Complete media coverage of graduation walk, diploma presentations, and stage photography.', seats: '220/250 Registered', status: 'Registration Open', statusColor: 'bg-purple-600 text-white hover:bg-purple-700', image: '/images/fap/fap-graduation-ceremony-stage.jpg' },
+      { id: 'e2', title: 'Graduation Awards & Medals Photo Gala', date: 'November 10, 2026 • 07:00 AM', venue: 'Auditorium Stage & VIP Lounge', tag: 'Medal Ceremony', desc: 'High-definition portrait sessions for distinction medalists and parents.', seats: '95/100 Registered', status: 'Confirmed', statusColor: 'bg-purple-700 text-white hover:bg-purple-800', image: '/images/fap/fap-graduation-ceremony-awards.jpg' },
+      { id: 'e3', title: 'Stage Anchoring & Live Telecast Shoot', date: 'December 02, 2026 • 02:00 PM', venue: 'Media Studio & Open Theatre', tag: 'Live Anchoring', desc: 'Cinematic video recording of festival hosts, open-mic performances, and guest talks.', seats: '60/60 Registered', status: 'Coming Soon', statusColor: 'bg-purple-800 text-white hover:bg-purple-900', image: '/images/fap/fap-anchors-stage-event.jpg' }
     ],
     activities: [
-      { id: 'a1', text: 'Submitted photo entry to Insta-Walk', time: '4 hours ago' },
+      { id: 'a1', text: 'Captured 450+ Graduation 2K26 HD Photos', time: '4 hours ago' },
       { id: 'a2', text: 'Attended Lighting Masterclass', time: '1 day ago' },
       { id: 'a3', text: 'Joined Film & Photography Club', time: '2 days ago' }
     ]
@@ -217,24 +241,29 @@ const dashboardClubConfigs = {
     accentBg: 'bg-emerald-50',
     accentText: 'text-[#059669]',
     tagBg: 'bg-emerald-500/10 text-[#059669]',
-    subtitle: "Ready to raise your voice? Master public speaking, compete in inter-college debates, Model UN (MUN), and poetry slams.",
+    subtitle: "Ready to raise your voice? Experience Esperanza Freshers, Model UN (MUN), rampwalk galas, and oratorical championships.",
     talentLabel: 'Debating & Public Speaking',
     talentIcon: BookOpen,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'MUN Debates', icon: BookOpen },
       { id: 'p3', label: 'Executive Board', icon: Users },
       { id: 'p4', label: 'Literary Partners', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Esperanza 2K26 - Mr & Ms Freshers Winners Stage', caption: 'The Lexis Club crowning ceremony with faculties and student leads on the main auditorium stage', image: '/images/lexis/lexis-esperanza-freshers-winners.jpg', tag: 'Esperanza 2K26' },
+      { id: 'gp2', title: 'Esperanza 2K26 Rampwalk & Cultural Showcase', caption: 'Elegant stage rampwalk and student celebration during Freshers Night', image: '/images/lexis/lexis-esperanza-rampwalk.jpg', tag: 'Rampwalk Night' },
+      { id: 'gp3', title: 'Esperanza 2K26 Faculty & Dignitaries Felicitation', caption: 'Honoring professors, student coordinators, and department heads on stage', image: '/images/lexis/lexis-esperanza-faculty-stage.jpg', tag: 'Felicitation' }
+    ],
     events: [
-      { id: 'e1', title: 'Inter-College Debate Championship', date: 'August 30, 2026 • 10:00 AM', venue: 'Main Conference Hall', tag: 'Championship', desc: 'Parliamentary debate tournament with topics spanning global policy, tech ethics, and economics.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white hover:bg-emerald-700' },
-      { id: 'e2', title: 'Word-Smith Poetry Slam', date: 'October 05, 2026 • 05:30 PM', venue: 'Student Ampitheatre', tag: 'Open Mic Night', desc: 'A night of original spoken word poetry, acoustic tunes, and storytelling performances.', seats: '80/90 Registered', status: 'Confirmed', statusColor: 'bg-emerald-700 text-white hover:bg-emerald-800' },
-      { id: 'e3', title: 'CMRTC Model UN (MUN) 2026', date: 'November 20-22, 2026 • 09:00 AM', venue: 'Academic Block 3', tag: 'Diplomatic Summit', desc: '3-day simulation of UN General Assembly committees discussing international security.', seats: '180/200 Registered', status: 'Coming Soon', statusColor: 'bg-teal-700 text-white hover:bg-teal-800' },
-      { id: 'e4', title: 'Public Speaking & Oratory Seminar', date: 'December 12, 2026 • 02:00 PM', venue: 'Seminar Hall 3', tag: 'Skill Workshop', desc: 'Overcome stage fear, master body language, and deliver persuasive keynote speeches.', seats: '75/80 Registered', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white hover:bg-emerald-700' }
+      { id: 'e1', title: 'Esperanza 2K26 Mr & Ms Freshers Gala', date: 'August 30, 2026 • 10:00 AM', venue: 'Main Auditorium Stage', tag: 'Freshers Gala', desc: 'Flagship annual talent hunt, personality rounds, and sash crowning ceremony.', seats: '110/120 Registered', status: 'Registration Open', statusColor: 'bg-emerald-600 text-white hover:bg-emerald-700', image: '/images/lexis/lexis-esperanza-freshers-winners.jpg' },
+      { id: 'e2', title: 'Esperanza Rampwalk & Cultural Showcase', date: 'October 05, 2026 • 05:30 PM', venue: 'Auditorium Central Runway', tag: 'Fashion & Walk', desc: 'A glamorous celebration of poise, confidence, and ethnic attire on the grand stage.', seats: '80/90 Registered', status: 'Confirmed', statusColor: 'bg-emerald-700 text-white hover:bg-emerald-800', image: '/images/lexis/lexis-esperanza-rampwalk.jpg' },
+      { id: 'e3', title: 'Faculty Felicitation & Diplomatic Summit', date: 'November 20-22, 2026 • 09:00 AM', venue: 'Academic Block 3 & Stage', tag: 'Felicitation', desc: 'Acknowledging mentors and student ambassadors with leadership mementos.', seats: '180/200 Registered', status: 'Coming Soon', statusColor: 'bg-teal-700 text-white hover:bg-teal-800', image: '/images/lexis/lexis-esperanza-faculty-stage.jpg' }
     ],
     activities: [
-      { id: 'a1', text: 'Registered for Inter-College Debate', time: '2 hours ago' },
-      { id: 'a2', text: 'Submitted poem to Word-Smith Slam', time: '1 day ago' },
+      { id: 'a1', text: 'Crowned Mr & Ms Freshers at Esperanza 2K26', time: '2 hours ago' },
+      { id: 'a2', text: 'Submitted speech for MUN Summit', time: '1 day ago' },
       { id: 'a3', text: 'Joined The Lexis Club', time: '3 days ago' }
     ]
   },
@@ -246,24 +275,27 @@ const dashboardClubConfigs = {
     accentBg: 'bg-red-50',
     accentText: 'text-[#DC2626]',
     tagBg: 'bg-red-500/10 text-[#DC2626]',
-    subtitle: "Ready to make a real community impact? Volunteer in blood donation drives, village adoption, Swachh Bharat, and youth leadership camps.",
+    subtitle: "Ready to make a real community impact? Participate in sustainability summits, campus green initiatives, and youth leadership drives.",
     talentLabel: 'Community Service & Volunteering',
     talentIcon: Heart,
     actionPills: [
       { id: 'p1', label: 'Explore Events', icon: Sparkles },
+      { id: 'p_gallery', label: 'Photo Gallery', icon: ImageIcon },
       { id: 'p2', label: 'Blood Drives', icon: Heart },
       { id: 'p3', label: 'Core Volunteers', icon: Users },
       { id: 'p4', label: 'NGO Partners', icon: Award }
     ],
+    galleryPhotos: [
+      { id: 'gp1', title: 'Sustainable Campus Impact Summit & Awards 2026', caption: 'Bharat Environment Program summit felicitation and sustainable campus impact certificate ceremony', image: '/images/nss/nss-sustainable-campus-awards.jpg', tag: 'Green Summit 2026' },
+      { id: 'gp2', title: 'CMRTC Campus Clubs Inauguration & MOU Ceremony', caption: 'Official accreditation banner and club partnership launch with campus directors and leads', image: '/images/nss/nss-campus-club-inauguration.jpg', tag: 'Club Launch' }
+    ],
     events: [
-      { id: 'e1', title: 'Swachh Bharat Campus Drive', date: 'August 20, 2026 • 08:00 AM', venue: 'CMRTC Campus Grounds', tag: 'Cleanliness Drive', desc: 'Campus-wide eco-cleanliness drive, waste segregation awareness, and plastic audit.', seats: '180/200 Volunteers', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' },
-      { id: 'e2', title: 'Mega Blood Donation Camp', date: 'October 12, 2026 • 09:00 AM', venue: 'College Health Center', tag: 'Health Drive', desc: 'Organized in partnership with Red Cross Society with donor certificates and health checkups.', seats: '250 Donor Pledges', status: 'Confirmed', statusColor: 'bg-red-700 text-white hover:bg-red-800' },
-      { id: 'e3', title: 'Annual Village Adoption Camp', date: 'December 15-21, 2026 • 7 Days', venue: 'Medchal Rural Mandal', tag: 'Special Camp', desc: '7-day residential camp focusing on rural literacy, health surveys, and solar lamp distribution.', seats: '50 Selected Volunteers', status: 'Coming Soon', statusColor: 'bg-rose-800 text-white hover:bg-rose-900' },
-      { id: 'e4', title: 'Haritha Haram Tree Plantation', date: 'September 25, 2026 • 09:30 AM', venue: 'Campus Eco Park', tag: 'Green Initiative', desc: 'Planting 500 saplings across campus with geotagging for long-term growth monitoring.', seats: '120 Volunteers', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700' }
+      { id: 'e1', title: 'Sustainable Campus Impact Summit 2026', date: 'August 20, 2026 • 08:00 AM', venue: 'Main Auditorium & Eco Hall', tag: 'Sustainability Summit', desc: 'National green campus conference, eco-awards presentation, and certificate distribution.', seats: '180/200 Volunteers', status: 'Registration Open', statusColor: 'bg-red-600 text-white hover:bg-red-700', image: '/images/nss/nss-sustainable-campus-awards.jpg' },
+      { id: 'e2', title: 'CMRTC Campus Clubs MOU & Launch Ceremony', date: 'October 12, 2026 • 09:00 AM', venue: 'Central Quadrangle Lawn', tag: 'Club Inauguration', desc: 'Official club alliance signing and student leadership charter announcement.', seats: '250 Donor Pledges', status: 'Confirmed', statusColor: 'bg-red-700 text-white hover:bg-red-800', image: '/images/nss/nss-campus-club-inauguration.jpg' }
     ],
     activities: [
-      { id: 'a1', text: 'Volunteered for Swachh Bharat Drive', time: '3 hours ago' },
-      { id: 'a2', text: 'Pledged blood donation for health drive', time: '1 day ago' },
+      { id: 'a1', text: 'Received Sustainable Campus Impact Award', time: '3 hours ago' },
+      { id: 'a2', text: 'Attended Campus Clubs MOU Inauguration', time: '1 day ago' },
       { id: 'a3', text: 'Joined NSS Service Unit', time: '2 days ago' }
     ]
   }
@@ -347,6 +379,8 @@ const ClubMemberDashboardPage = () => {
 
   const [activeTab, setActiveTab] = useState('Overview');
   const [isExploreEventsOpen, setIsExploreEventsOpen] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [previewPhoto, setPreviewPhoto] = useState(null);
   const [registeredEvents, setRegisteredEvents] = useState([]);
   const [isMoviePromotionsOpen, setIsMoviePromotionsOpen] = useState(false);
   const [isCoreMembersOpen, setIsCoreMembersOpen] = useState(false);
@@ -499,13 +533,15 @@ const ClubMemberDashboardPage = () => {
                   key={pill.id}
                   onClick={() => {
                     const lbl = pill.label.toLowerCase();
-                    if (lbl.includes('parade') || lbl.includes('drill')) {
+                    if (lbl.includes('gallery') || lbl.includes('photo')) {
+                      setIsGalleryOpen(true);
+                    } else if (lbl.includes('parade') || lbl.includes('drill')) {
                       setIsParadeDrillsOpen(true);
                     } else if (lbl.includes('blood') || lbl.includes('drive')) {
                       setIsBloodDrivesOpen(true);
                     } else if (lbl.includes('mun') || lbl.includes('debate')) {
                       setIsMunDebatesOpen(true);
-                    } else if (lbl.includes('walk') || lbl.includes('photo')) {
+                    } else if (lbl.includes('walk')) {
                       setIsPhotoWalksOpen(true);
                     } else if (lbl.includes('hackathon') || lbl.includes('sprint') || lbl.includes('code')) {
                       setIsHackathonsOpen(true);
@@ -600,9 +636,9 @@ const ClubMemberDashboardPage = () => {
           </button>
         </div>
 
-        {/* 4. Tabs Navigation (Overview, Events, Profile) */}
-        <div className="bg-slate-200/60 p-1 rounded-2xl flex items-center gap-2 max-w-md">
-          {['Overview', 'Events', 'Profile'].map((tab) => (
+        {/* 4. Tabs Navigation (Overview, Events, Photo Gallery, Profile) */}
+        <div className="bg-slate-200/60 p-1 rounded-2xl flex items-center gap-2 max-w-lg">
+          {['Overview', 'Events', 'Photo Gallery', 'Profile'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -704,6 +740,65 @@ const ClubMemberDashboardPage = () => {
               </div>
             </div>
 
+            {/* Event Photo Highlights Showcase (Full Width under Overview) */}
+            {config.galleryPhotos && config.galleryPhotos.length > 0 && (
+              <div className="lg:col-span-3 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                      <ImageIcon size={20} className={config.accentText} />
+                      <span>{config.name} Official Photo Gallery Highlights</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 font-medium">
+                      High-energy concert moments, dance battles, cultural fests & stage performances
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setIsGalleryOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-extrabold transition-all cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <ExternalLink size={14} className="text-amber-400" />
+                    <span>View All Albums & G-Drive Folders</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                  {config.galleryPhotos.map((photo) => (
+                    <div
+                      key={photo.id}
+                      onClick={() => setPreviewPhoto(photo)}
+                      className="group relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer bg-slate-900 flex flex-col justify-end aspect-[4/5]"
+                    >
+                      <img
+                        src={photo.image}
+                        alt={photo.title}
+                        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                      <div className="relative z-10 p-4 space-y-1.5 text-left text-white">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2.5 py-0.5 rounded-full bg-red-600/90 text-white font-black text-[10px] uppercase tracking-wider backdrop-blur-md">
+                            {photo.tag}
+                          </span>
+                          <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            <ZoomIn size={14} />
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-black leading-tight drop-shadow-md">
+                          {photo.title}
+                        </h4>
+                        <p className="text-[11px] text-slate-200 font-medium line-clamp-2 opacity-90 leading-snug">
+                          {photo.caption}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 
@@ -731,64 +826,152 @@ const ClubMemberDashboardPage = () => {
             </div>
 
             {/* Events Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {config.events.map((evt) => {
                 const isReg = registeredEvents.includes(evt.id);
                 return (
                   <div
                     key={evt.id}
-                    className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                    className="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden"
                   >
-                    <div className="space-y-2.5">
-                      <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                          {evt.tag}
-                        </span>
-                        <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-                          <MapPin size={13} className="text-red-500" />
-                          {evt.venue || 'CMRTC Main Campus'}
-                        </span>
+                    {/* Event Photo Cover Banner if available */}
+                    {evt.image && (
+                      <div 
+                        className="relative w-full h-48 bg-slate-900 cursor-pointer overflow-hidden group"
+                        onClick={() => setPreviewPhoto({ title: evt.title, caption: evt.desc, image: evt.image, tag: evt.tag })}
+                      >
+                        <img 
+                          src={evt.image} 
+                          alt={evt.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                        <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                          <span className="px-3 py-1 rounded-full bg-red-600 font-black text-[11px] uppercase tracking-wider backdrop-blur-md shadow-md">
+                            {evt.tag}
+                          </span>
+                          <span className="text-xs font-semibold bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1">
+                            <ZoomIn size={12} />
+                            Click to View Photo
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        {!evt.image && (
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
+                              {evt.tag}
+                            </span>
+                            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                              <MapPin size={13} className="text-red-500" />
+                              {evt.venue || 'CMRTC Main Campus'}
+                            </span>
+                          </div>
+                        )}
+
+                        <h4 className="text-lg font-black text-slate-900 leading-snug">
+                          {evt.title}
+                        </h4>
+
+                        <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                          {evt.desc || `Join the official event hosted by ${config.name}.`}
+                        </p>
                       </div>
 
-                      <h4 className="text-lg font-black text-slate-900 leading-snug">
-                        {evt.title}
-                      </h4>
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 flex-wrap">
+                        <span className="flex items-center gap-1 font-mono text-xs font-semibold text-slate-700">
+                          <Clock size={14} className="text-amber-500" />
+                          {evt.date}
+                        </span>
 
-                      <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                        {evt.desc || `Join the official event hosted by ${config.name}.`}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                      <span className="flex items-center gap-1 font-mono text-xs font-semibold text-slate-700">
-                        <Clock size={14} className="text-amber-500" />
-                        {evt.date}
-                      </span>
-
-                      <button
-                        onClick={() => handleEventRegister(evt)}
-                        className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shadow-sm cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 ${
-                          isReg
-                            ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                            : evt.statusColor || 'bg-red-600 text-white hover:bg-red-700'
-                        }`}
-                      >
-                        {isReg ? (
-                          <>
-                            <CheckCircle2 size={14} />
-                            <span>Registered ✔</span>
-                          </>
-                        ) : (
-                          <>
-                            <Ticket size={14} />
-                            <span>{evt.status || 'Register Now'}</span>
-                          </>
-                        )}
-                      </button>
+                        <button
+                          onClick={() => handleEventRegister(evt)}
+                          className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shadow-sm cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 ${
+                            isReg
+                              ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                              : evt.statusColor || 'bg-red-600 text-white hover:bg-red-700'
+                          }`}
+                        >
+                          {isReg ? (
+                            <>
+                              <CheckCircle2 size={14} />
+                              <span>Registered ✔</span>
+                            </>
+                          ) : (
+                            <>
+                              <Ticket size={14} />
+                              <span>{evt.status || 'Register Now'}</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
               })}
+            </div>
+          </div>
+        )}
+
+        {/* Dedicated Photo Gallery Tab */}
+        {activeTab === 'Photo Gallery' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+                  <ImageIcon size={22} className={config.accentText} />
+                  <span>{config.name} Official Photo Gallery</span>
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  Browse high-definition captures from flashmobs, Pegasus concerts, musical nights, and cultural celebrations.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsGalleryOpen(true)}
+                className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
+              >
+                <ExternalLink size={16} className="text-amber-400" />
+                <span>Open G-Drive Photo Vault</span>
+              </button>
+            </div>
+
+            {/* Gallery Photo Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {(config.galleryPhotos || []).map((photo) => (
+                <div
+                  key={photo.id}
+                  onClick={() => setPreviewPhoto(photo)}
+                  className="group relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer bg-slate-900 flex flex-col justify-end aspect-[4/5]"
+                >
+                  <img
+                    src={photo.image}
+                    alt={photo.title}
+                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
+
+                  <div className="relative z-10 p-5 space-y-2 text-left text-white">
+                    <div className="flex items-center justify-between">
+                      <span className="px-3 py-1 rounded-full bg-red-600 text-white font-black text-[11px] uppercase tracking-wider backdrop-blur-md shadow-md">
+                        {photo.tag}
+                      </span>
+                      <span className="w-8 h-8 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                        <ZoomIn size={16} />
+                      </span>
+                    </div>
+                    <h4 className="text-base font-black leading-tight drop-shadow-md">
+                      {photo.title}
+                    </h4>
+                    <p className="text-xs text-slate-200 font-medium line-clamp-2 opacity-90 leading-relaxed">
+                      {photo.caption}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -915,6 +1098,61 @@ const ClubMemberDashboardPage = () => {
         events={config.events}
         onRegister={handleEventRegister}
       />
+
+      {/* Official Photo Gallery Modal */}
+      <ClubPhotoGalleryModal
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        initialClubId={clubData.id}
+        onToast={(msg, type) => addToast(msg, type)}
+      />
+
+      {/* Photo Lightbox Preview Modal */}
+      {previewPhoto && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+          onClick={() => setPreviewPhoto(null)}
+        >
+          <div 
+            className="relative max-w-4xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-white/20 animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setPreviewPhoto(null)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black cursor-pointer border border-white/20 transition-all"
+            >
+              ✕
+            </button>
+            <div className="w-full max-h-[70vh] bg-black flex items-center justify-center overflow-hidden">
+              <img 
+                src={previewPhoto.image} 
+                alt={previewPhoto.title} 
+                className="w-full max-h-[70vh] object-contain"
+              />
+            </div>
+            <div className="p-6 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-white/10">
+              <div className="space-y-1">
+                <span className="px-3 py-1 rounded-full bg-red-600/30 text-red-300 font-bold text-xs border border-red-500/40">
+                  {previewPhoto.tag || 'Akriti Moment'}
+                </span>
+                <h3 className="text-xl font-black mt-2 text-white">{previewPhoto.title}</h3>
+                <p className="text-xs text-slate-300">{previewPhoto.caption}</p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setPreviewPhoto(null);
+                  setIsGalleryOpen(true);
+                }}
+                className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 flex-shrink-0"
+              >
+                <ExternalLink size={14} />
+                <span>Open G-Drive Album</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
     </div>

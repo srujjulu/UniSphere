@@ -2,17 +2,14 @@ import React from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 const AuthLayout = ({ children, leftPanelContent }) => {
-  // Motion values for mouse movement parallax (Desktop only)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
   const handleMouseMove = (e) => {
-    // Only calculate parallax on desktop sizes (width > 1024px)
     if (window.innerWidth < 1024) return;
-
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - left) / width - 0.5; // range: -0.5 to 0.5
-    const y = (e.clientY - top) / height - 0.5; // range: -0.5 to 0.5
+    const x = (e.clientX - left) / width - 0.5;
+    const y = (e.clientY - top) / height - 0.5;
     mouseX.set(x);
     mouseY.set(y);
   };
@@ -22,56 +19,46 @@ const AuthLayout = ({ children, leftPanelContent }) => {
     mouseY.set(0);
   };
 
-  // Transform vectors for branding elements (subtle movement)
-  const logoX = useTransform(mouseX, [-0.5, 0.5], [-3, 3]);
-  const logoY = useTransform(mouseY, [-0.5, 0.5], [-3, 3]);
-
-  const headingX = useTransform(mouseX, [-0.5, 0.5], [-5, 5]);
-  const headingY = useTransform(mouseY, [-0.5, 0.5], [-5, 5]);
-
-  const glowX = useTransform(mouseX, [-0.5, 0.5], [-15, 15]);
-  const glowY = useTransform(mouseY, [-0.5, 0.5], [-15, 15]);
+  const logoX = useTransform(mouseX, [-0.5, 0.5], [-2, 2]);
+  const logoY = useTransform(mouseY, [-0.5, 0.5], [-2, 2]);
+  const headingX = useTransform(mouseX, [-0.5, 0.5], [-3, 3]);
+  const headingY = useTransform(mouseY, [-0.5, 0.5], [-3, 3]);
 
   return (
     <div 
-      className="flex flex-col lg:flex-row h-screen h-svh w-full overflow-hidden bg-[#0B1120]"
+      className="flex flex-col lg:flex-row min-h-screen w-full overflow-x-hidden bg-[#080C16] text-white selection:bg-indigo-500/30 selection:text-white"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Left Branding Panel */}
+      {/* Left Institutional Branding Panel */}
       <motion.div
-        initial={{ opacity: 0, x: -60 }}
+        initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full h-auto py-8 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:h-full relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-800/60 lg:border-b-0 lg:border-r select-none"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full py-10 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:min-h-screen relative flex flex-col justify-center items-center overflow-hidden border-b border-white/[0.08] lg:border-b-0 lg:border-r bg-[#0B101E]/90 select-none"
       >
-        {/* Animated Blueprint Grid */}
-        <div className="blueprint-grid absolute inset-0 z-0" />
-
-        {/* Dynamic Slow-Moving Glows (Parallax active) */}
-        <motion.div 
-          style={{ x: glowX, y: glowY }}
-          className="absolute inset-0 z-1 pointer-events-none"
-        >
-          <div className="glow-circle-blue absolute w-[400px] h-[400px] -top-32 -left-12 rounded-full blur-[100px]" />
-          <div className="glow-circle-purple absolute w-[450px] h-[450px] top-[30%] -right-24 rounded-full blur-[120px]" />
-          <div className="glow-circle-orange absolute w-[350px] h-[350px] -bottom-24 left-[20%] rounded-full blur-[90px]" />
-        </motion.div>
+        {/* Subtle Ambient Spotlight */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-40"
+          style={{
+            background: 'radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.18), transparent 70%)'
+          }}
+        />
 
         {/* Branding Elements Passed from Page */}
-        <div className="relative z-10 w-full flex flex-col justify-center items-center px-6 text-center">
+        <div className="relative z-10 w-full flex flex-col justify-center items-center px-6 sm:px-12 text-center max-w-xl">
           {leftPanelContent({ logoStyle: { x: logoX, y: logoY }, headingStyle: { x: headingX, y: headingY } })}
         </div>
       </motion.div>
 
       {/* Right Form Card Panel */}
       <motion.div
-        initial={{ opacity: 0, x: 60 }}
+        initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:h-full relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto"
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:min-h-screen relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto justify-center py-8 lg:py-12"
       >
-        <div className="w-full max-w-[460px] mx-auto my-auto py-6 sm:py-8 lg:py-10">
+        <div className="w-full max-w-[440px] mx-auto">
           {children}
         </div>
       </motion.div>
@@ -80,3 +67,4 @@ const AuthLayout = ({ children, leftPanelContent }) => {
 };
 
 export default AuthLayout;
+

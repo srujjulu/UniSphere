@@ -17,10 +17,13 @@ const registerSchema = z.object({
   assignedClub: z.string().optional(),
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   email: z.string()
-    .min(1, { message: 'Email is required' })
+    .min(1, { message: 'College Email is required' })
     .email({ message: 'Invalid email address' })
-    .refine((val) => val.endsWith('@cmr.edu.in'), {
-      message: 'Email must end with @cmr.edu.in to join Campus Clubs',
+    .refine((val) => {
+      const lower = val.trim().toLowerCase();
+      return lower.endsWith('@cmr.edu.in') || lower.endsWith('@cmrtc.ac.in') || lower.endsWith('@cmrg.ac.in') || lower.endsWith('@cmr.ac.in');
+    }, {
+      message: 'Email must be an official college email (@cmr.edu.in / @cmrtc.ac.in)',
     }),
   instagram: z.string().optional(),
   youtube: z.string().optional(),

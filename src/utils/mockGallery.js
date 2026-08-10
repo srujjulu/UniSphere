@@ -3,86 +3,260 @@ export const initialAlbums = [
     id: 'album-akriti-1',
     clubId: 'akriti',
     clubName: 'AKRITI Cultural Club',
-    eventName: 'Pegasus 2025 Dance Auditions',
+    eventName: 'Pegasus 2026 Mega Cultural Concert',
     eventDate: 'December 15, 2025',
-    coverImage: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_Pegasus2025_CMRTC',
+    coverImage: '/images/akriti/akriti-live-concert-stage.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_Pegasus2026_CMRTC',
     uploadedBy: 'AKRITI Coordinator',
     createdAt: '2025-12-16',
-    photoCount: 245
+    photoCount: 380
+  },
+  {
+    id: 'album-akriti-2',
+    clubId: 'akriti',
+    clubName: 'AKRITI Cultural Club',
+    eventName: 'Flashmob 2K25 Campus Dance Showcase',
+    eventDate: 'January 10, 2025',
+    coverImage: '/images/akriti/akriti-flashmob-2k25.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_Flashmob2K25_CMRTC',
+    uploadedBy: 'AKRITI Dance Lead',
+    createdAt: '2025-01-11',
+    photoCount: 195
+  },
+  {
+    id: 'album-akriti-3',
+    clubId: 'akriti',
+    clubName: 'AKRITI Cultural Club',
+    eventName: 'Grand Raag Musical Night & Fireworks',
+    eventDate: 'February 22, 2025',
+    coverImage: '/images/akriti/akriti-grand-raag-concert.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_GrandRaag_CMRTC',
+    uploadedBy: 'AKRITI Music Wing',
+    createdAt: '2025-02-23',
+    photoCount: 260
+  },
+  {
+    id: 'album-akriti-4',
+    clubId: 'akriti',
+    clubName: 'AKRITI Cultural Club',
+    eventName: 'Traditional Cultural Fest & Bathukamma Celebrations',
+    eventDate: 'October 18, 2025',
+    coverImage: '/images/akriti/akriti-traditional-fest.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_TraditionalFest_CMRTC',
+    uploadedBy: 'AKRITI Cultural Secretary',
+    createdAt: '2025-10-19',
+    photoCount: 310
   },
   {
     id: 'album-codeholics-1',
     clubId: 'codeholics',
     clubName: 'Codeholics Tech Club',
-    eventName: 'CMR HackFest 2026 36-Hour Hackathon',
+    eventName: 'CMR HackFest 2026 - Hack The Verse National Hackathon',
     eventDate: 'September 05, 2026',
-    coverImage: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1Codeholics_HackFest2026_CMRTC',
+    coverImage: '/images/codeholics/codeholics-hack-the-verse.png',
+    driveUrl: 'https://drive.google.com/drive/folders/1Codeholics_HackTheVerse_CMRTC',
     uploadedBy: 'Codeholics Lead',
     createdAt: '2026-09-06',
-    photoCount: 180
+    photoCount: 340
   },
   {
     id: 'album-photography-1',
     clubId: 'photography',
-    clubName: 'Film & Photography Club',
-    eventName: 'Campus Sunset Photo Walk 2025',
-    eventDate: 'November 20, 2025',
-    coverImage: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1PhotoClub_SunsetWalk2025_CMRTC',
-    uploadedBy: 'Photo Club Lead',
-    createdAt: '2025-11-21',
-    photoCount: 120
+    clubName: 'Film & Photography Club (FAP)',
+    eventName: 'Graduation Ceremony 2K26 Stage & Class of 2026',
+    eventDate: 'May 12, 2026',
+    coverImage: '/images/fap/fap-graduation-ceremony-stage.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1FAP_Graduation2026_CMRTC',
+    uploadedBy: 'FAP Lead Photographer',
+    createdAt: '2026-05-13',
+    photoCount: 450
+  },
+  {
+    id: 'album-photography-2',
+    clubId: 'photography',
+    clubName: 'Film & Photography Club (FAP)',
+    eventName: 'Graduation Ceremony 2K26 Degree & Medal Awards',
+    eventDate: 'May 12, 2026',
+    coverImage: '/images/fap/fap-graduation-ceremony-awards.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1FAP_GraduationAwards2026_CMRTC',
+    uploadedBy: 'FAP Media Team',
+    createdAt: '2026-05-13',
+    photoCount: 320
+  },
+  {
+    id: 'album-photography-3',
+    clubId: 'photography',
+    clubName: 'Film & Photography Club (FAP)',
+    eventName: 'Campus Fest Stage Anchoring & Live Media Shoot',
+    eventDate: 'February 15, 2026',
+    coverImage: '/images/fap/fap-anchors-stage-event.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1FAP_LiveMediaShoot_CMRTC',
+    uploadedBy: 'FAP Cinematographer',
+    createdAt: '2026-02-16',
+    photoCount: 210
   },
   {
     id: 'album-ncc-1',
     clubId: 'ncc',
     clubName: 'NCC Cadet Corps',
-    eventName: 'Republic Day Parade Drill 2026',
-    eventDate: 'January 26, 2026',
-    coverImage: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1NCC_RepublicDay2026_CMRTC',
+    eventName: 'Annual Training Camp (ATC-V) Trophy Ceremony',
+    eventDate: 'January 20, 2026',
+    coverImage: '/images/ncc/ncc-atc-camp-trophy-ceremony.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1NCC_ATCTrophy2026_CMRTC',
     uploadedBy: 'NCC SUO',
-    createdAt: '2026-01-27',
-    photoCount: 95
+    createdAt: '2026-01-21',
+    photoCount: 220
+  },
+  {
+    id: 'album-ncc-2',
+    clubId: 'ncc',
+    clubName: 'NCC Cadet Corps',
+    eventName: 'Candlelight Tribute Vigil at Campus Entrance',
+    eventDate: 'April 22, 2025',
+    coverImage: '/images/ncc/ncc-candlelight-vigil-entrance.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1NCC_TributeVigil_CMRTC',
+    uploadedBy: 'NCC Cadets Wing',
+    createdAt: '2025-04-23',
+    photoCount: 160
+  },
+  {
+    id: 'album-ncc-3',
+    clubId: 'ncc',
+    clubName: 'NCC Cadet Corps',
+    eventName: 'Night Candlelight Memorial March',
+    eventDate: 'April 22, 2025',
+    coverImage: '/images/ncc/ncc-night-memorial-march.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1NCC_MemorialMarch_CMRTC',
+    uploadedBy: 'NCC Sergeant',
+    createdAt: '2025-04-23',
+    photoCount: 140
   },
   {
     id: 'album-nss-1',
     clubId: 'nss',
     clubName: 'NSS Service Scheme',
-    eventName: 'Mega Blood Donation Drive 2025',
-    eventDate: 'October 10, 2025',
-    coverImage: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1NSS_BloodDrive2025_CMRTC',
+    eventName: 'Sustainable Campus Impact Summit & Awards 2026',
+    eventDate: 'March 15, 2026',
+    coverImage: '/images/nss/nss-sustainable-campus-awards.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1NSS_SustainabilitySummit2026_CMRTC',
+    uploadedBy: 'NSS Lead Coordinator',
+    createdAt: '2026-03-16',
+    photoCount: 310
+  },
+  {
+    id: 'album-nss-2',
+    clubId: 'nss',
+    clubName: 'NSS Service Scheme',
+    eventName: 'Campus Clubs Inauguration & MOU Ceremony',
+    eventDate: 'July 10, 2025',
+    coverImage: '/images/nss/nss-campus-club-inauguration.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1NSS_ClubInauguration_CMRTC',
     uploadedBy: 'NSS Lead',
-    createdAt: '2025-10-11',
-    photoCount: 110
+    createdAt: '2025-07-11',
+    photoCount: 185
   },
   {
     id: 'album-lexis-1',
     clubId: 'lexis',
     clubName: 'The Lexis Literary Club',
-    eventName: 'CMR Model United Nations (MUN) 2025',
-    eventDate: 'October 02, 2025',
-    coverImage: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format&fit=crop&q=80',
-    driveUrl: 'https://drive.google.com/drive/folders/1Lexis_MUN2025_CMRTC',
+    eventName: 'Esperanza 2K26 - Mr & Ms Freshers Grand Stage',
+    eventDate: 'February 10, 2026',
+    coverImage: '/images/lexis/lexis-esperanza-freshers-winners.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1Lexis_Esperanza2026_CMRTC',
     uploadedBy: 'Lexis President',
-    createdAt: '2025-10-03',
-    photoCount: 85
+    createdAt: '2026-02-11',
+    photoCount: 290
+  },
+  {
+    id: 'album-lexis-2',
+    clubId: 'lexis',
+    clubName: 'The Lexis Literary Club',
+    eventName: 'Esperanza 2K26 Rampwalk & Cultural Showcase',
+    eventDate: 'February 10, 2026',
+    coverImage: '/images/lexis/lexis-esperanza-rampwalk.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1Lexis_Rampwalk2026_CMRTC',
+    uploadedBy: 'Lexis Media Lead',
+    createdAt: '2026-02-11',
+    photoCount: 175
+  },
+  {
+    id: 'album-lexis-3',
+    clubId: 'lexis',
+    clubName: 'The Lexis Literary Club',
+    eventName: 'Esperanza 2K26 Faculty & Dignitaries Felicitation',
+    eventDate: 'February 10, 2026',
+    coverImage: '/images/lexis/lexis-esperanza-faculty-stage.jpg',
+    driveUrl: 'https://drive.google.com/drive/folders/1Lexis_Felicitation2026_CMRTC',
+    uploadedBy: 'Lexis Secretary',
+    createdAt: '2026-02-11',
+    photoCount: 210
   }
 ];
 
 export const getStoredAlbums = () => {
   if (typeof window === 'undefined') return initialAlbums;
-  const stored = localStorage.getItem('cmrtc_event_albums_gdrive');
+  
+  // Check versioned storage
+  const stored = localStorage.getItem('cmrtc_event_albums_gdrive_v3');
   if (stored) {
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     } catch {
-      return initialAlbums;
+      // fallback
     }
   }
+
+  // Auto-migrate legacy storage
+  const legacyStored = localStorage.getItem('cmrtc_event_albums_gdrive');
+  if (legacyStored) {
+    try {
+      const parsed = JSON.parse(legacyStored);
+      if (Array.isArray(parsed)) {
+        // Upgrade any unsplash or old images to the official ones
+        const updated = parsed.map((album) => {
+          if (album.id === 'album-codeholics-1' || album.eventName?.toLowerCase().includes('hackfest') || album.eventName?.toLowerCase().includes('verse')) {
+            return {
+              ...album,
+              eventName: 'CMR HackFest 2026 - Hack The Verse National Hackathon',
+              coverImage: '/images/codeholics/codeholics-hack-the-verse.png'
+            };
+          }
+          if (album.id === 'album-akriti-1' && album.coverImage?.includes('unsplash')) {
+            return { ...album, coverImage: '/images/akriti/akriti-live-concert-stage.jpg' };
+          }
+          if (album.id === 'album-photography-1' && album.coverImage?.includes('unsplash')) {
+            return { ...album, coverImage: '/images/fap/fap-graduation-ceremony-stage.jpg' };
+          }
+          if (album.id === 'album-ncc-1' && album.coverImage?.includes('unsplash')) {
+            return { ...album, coverImage: '/images/ncc/ncc-atc-camp-trophy-ceremony.jpg' };
+          }
+          if (album.id === 'album-nss-1' && album.coverImage?.includes('unsplash')) {
+            return { ...album, coverImage: '/images/nss/nss-sustainable-campus-awards.jpg' };
+          }
+          if (album.id === 'album-lexis-1' && album.coverImage?.includes('unsplash')) {
+            return { ...album, coverImage: '/images/lexis/lexis-esperanza-freshers-winners.jpg' };
+          }
+          return album;
+        });
+
+        // Ensure full list has all rich albums
+        const existingIds = new Set(updated.map((a) => a.id));
+        const merged = [...updated, ...initialAlbums.filter((a) => !existingIds.has(a.id))];
+
+        localStorage.setItem('cmrtc_event_albums_gdrive_v3', JSON.stringify(merged));
+        localStorage.setItem('cmrtc_event_albums_gdrive', JSON.stringify(merged));
+        return merged;
+      }
+    } catch {
+      // fallback to initial
+    }
+  }
+
+  localStorage.setItem('cmrtc_event_albums_gdrive_v3', JSON.stringify(initialAlbums));
+  localStorage.setItem('cmrtc_event_albums_gdrive', JSON.stringify(initialAlbums));
   return initialAlbums;
 };
 
@@ -90,6 +264,7 @@ export const saveNewAlbum = (newAlbum) => {
   if (typeof window === 'undefined') return;
   const current = getStoredAlbums();
   const updated = [newAlbum, ...current];
+  localStorage.setItem('cmrtc_event_albums_gdrive_v3', JSON.stringify(updated));
   localStorage.setItem('cmrtc_event_albums_gdrive', JSON.stringify(updated));
   return updated;
 };
@@ -107,6 +282,7 @@ export const updateAlbumDriveLink = (albumId, newDriveUrl, newCoverUrl) => {
     }
     return album;
   });
+  localStorage.setItem('cmrtc_event_albums_gdrive_v3', JSON.stringify(updated));
   localStorage.setItem('cmrtc_event_albums_gdrive', JSON.stringify(updated));
   return updated;
 };
@@ -115,6 +291,7 @@ export const deleteAlbum = (albumId) => {
   if (typeof window === 'undefined') return;
   const current = getStoredAlbums();
   const updated = current.filter((album) => album.id !== albumId);
+  localStorage.setItem('cmrtc_event_albums_gdrive_v3', JSON.stringify(updated));
   localStorage.setItem('cmrtc_event_albums_gdrive', JSON.stringify(updated));
   return updated;
 };

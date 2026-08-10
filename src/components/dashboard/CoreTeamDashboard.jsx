@@ -21,7 +21,8 @@ import {
   QrCode,
   Star,
   MessageSquare,
-  ThumbsUp
+  ThumbsUp,
+  Clock
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
@@ -874,6 +875,24 @@ const CoreTeamDashboard = () => {
                   </div>
                 );
               })()}
+            </div>
+
+            {/* Influencer Roster CTA inside Reports section */}
+            <div className="bg-gradient-to-r from-pink-950/50 to-slate-900/80 p-6 rounded-3xl border border-pink-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h4 className="text-base font-extrabold text-white flex items-center gap-2">
+                  <Sparkles size={16} className="text-pink-400" />
+                  <span>Campus Influencer & Audition Roster</span>
+                </h4>
+                <p className="text-xs text-slate-400">Monitor student creators across all clubs for event promotions and outreach calls.</p>
+              </div>
+              <button
+                onClick={() => setIsInfluencerOpen(true)}
+                className="px-6 py-3 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs uppercase cursor-pointer shadow-md transition-all active:scale-95 whitespace-nowrap flex items-center gap-2"
+              >
+                <Sparkles size={14} />
+                <span>View Influencer Roster</span>
+              </button>
             </div>
           </div>
         )}

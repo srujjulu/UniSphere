@@ -111,11 +111,17 @@ const ClubSignInPage = () => {
     e.preventDefault();
     setErrorMsg('');
 
-    const cleanEmail = email.trim();
+    const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
 
     if (!cleanEmail) {
       setErrorMsg('Please enter your college email address');
+      return;
+    }
+
+    const isCollegeDomain = cleanEmail.endsWith('@cmr.edu.in') || cleanEmail.endsWith('@cmrtc.ac.in') || cleanEmail.endsWith('@cmrg.ac.in') || cleanEmail.endsWith('@cmr.ac.in');
+    if (!isCollegeDomain) {
+      setErrorMsg('Only official college email IDs (@cmr.edu.in or @cmrtc.ac.in) are authorized to log in');
       return;
     }
 

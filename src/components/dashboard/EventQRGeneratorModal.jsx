@@ -4,19 +4,15 @@ import { X, QrCode, Download, CheckCircle2, UserX, Users, BarChart3, RefreshCw, 
 import { getAttendanceMetrics, getStoredAttendanceRecords } from '../../utils/mockQRAttendance';
 
 const EventQRGeneratorModal = ({ isOpen, onClose, event, onToast }) => {
-  if (!isOpen || !event) return null;
-
-  const [metrics, setMetrics] = useState(() => getAttendanceMetrics(event.id));
-
-  const refreshData = () => {
-    const updated = getAttendanceMetrics(event.id);
-    setMetrics(updated);
-    if (onToast) onToast('Refreshed live attendance roster! 🔄', 'info');
-  };
+  const [metrics, setMetrics] = useState(() => (event?.id ? getAttendanceMetrics(event.id) : { totalRegistrations: 0, checkedIn: 0, absentCount: 0, attendanceRate: 0, records: [] }));
 
   useEffect(() => {
-    setMetrics(getAttendanceMetrics(event.id));
-  }, [event.id]);
+    if (event?.id) {
+      setMetrics(getAttendanceMetrics(event.id));
+    }
+  }, [event?.id]);
+
+  if (!isOpen || !event) return null;
 
   const handleDownloadQR = () => {
     if (onToast) onToast(`📄 Exported high-resolution QR Pass PNG for "${event.title}"!`, 'success');

@@ -12,7 +12,13 @@ import useAuth from '../../hooks/useAuth';
 const loginSchema = z.object({
   email: z.string()
     .min(1, { message: 'College Email is required' })
-    .email({ message: 'Invalid email address' }),
+    .email({ message: 'Invalid email address' })
+    .refine((val) => {
+      const lower = val.trim().toLowerCase();
+      return lower.endsWith('@cmr.edu.in') || lower.endsWith('@cmrtc.ac.in') || lower.endsWith('@cmrg.ac.in') || lower.endsWith('@cmr.ac.in');
+    }, {
+      message: 'Only official college emails (@cmr.edu.in / @cmrtc.ac.in) are permitted',
+    }),
   password: z.string()
     .min(4, { message: 'Password must be at least 4 characters' }),
 });

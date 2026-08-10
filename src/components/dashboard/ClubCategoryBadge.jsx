@@ -3,34 +3,34 @@ import { Sparkles, Terminal, Camera, BookOpen, Shield, Heart } from 'lucide-reac
 
 const categoryConfigs = {
   Cultural: {
-    colorClass: 'text-red-400 border-red-500/30 bg-red-500/10 hover:bg-red-500/15',
+    colorClass: 'text-rose-300 border-rose-500/20 bg-rose-500/10',
     icon: Sparkles,
   },
   Technical: {
-    colorClass: 'text-[#FF8A2A] border-[#FF8A2A]/30 bg-[#FF8A2A]/10 hover:bg-[#FF8A2A]/15',
+    colorClass: 'text-indigo-300 border-indigo-500/20 bg-indigo-500/10',
     icon: Terminal,
   },
   Photography: {
-    colorClass: 'text-violet-400 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/15',
+    colorClass: 'text-violet-300 border-violet-500/20 bg-violet-500/10',
     icon: Camera,
   },
   Literary: {
-    colorClass: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15',
+    colorClass: 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10',
     icon: BookOpen,
   },
   Defence: {
-    colorClass: 'text-[#4F8BFF] border-[#4F8BFF]/30 bg-[#4F8BFF]/10 hover:bg-[#4F8BFF]/15',
+    colorClass: 'text-sky-300 border-sky-500/20 bg-sky-500/10',
     icon: Shield,
   },
   Service: {
-    colorClass: 'text-[#D32F2F] border-[#D32F2F]/30 bg-[#D32F2F]/10 hover:bg-[#D32F2F]/15',
+    colorClass: 'text-amber-300 border-amber-500/20 bg-amber-500/10',
     icon: Heart,
   }
 };
 
 const ClubCategoryBadge = ({ category }) => {
   const config = categoryConfigs[category] || {
-    colorClass: 'text-slate-400 border-slate-500/30 bg-slate-500/10 hover:bg-slate-500/15',
+    colorClass: 'text-slate-300 border-slate-500/20 bg-slate-500/10',
     icon: Sparkles,
   };
 
@@ -38,11 +38,11 @@ const ClubCategoryBadge = ({ category }) => {
 
   return (
     <div className={`
-      inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] sm:text-[11px] 
-      font-bold tracking-[1.5px] uppercase select-none transition-colors duration-300 w-fit
+      inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] sm:text-[11px] 
+      font-bold tracking-wider uppercase select-none w-fit transition-colors
       ${config.colorClass}
     `}>
-      <Icon size={12} strokeWidth={2.5} />
+      <Icon size={12} strokeWidth={2.2} />
       <span>{category}</span>
     </div>
   );
@@ -50,3 +50,4 @@ const ClubCategoryBadge = ({ category }) => {
 
 export default ClubCategoryBadge;
 export { categoryConfigs };
+

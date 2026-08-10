@@ -24,7 +24,6 @@ import StudentPortfolio from './StudentPortfolio';
 import StudentCertificates from './StudentCertificates';
 import EventCalendar from './EventCalendar';
 import VolunteerTracker from './VolunteerTracker';
-import AlumniNetwork from './AlumniNetwork';
 import { mockClubs } from '../../utils/mockClubs';
 import { useAuth } from '../../context/AuthContext';
 import { getStoredRequests, saveRequest, getApprovedClubsForStudent } from '../../utils/mockRequests';
@@ -36,10 +35,22 @@ const mockAnnouncements = [
 ];
 
 const mockGalleryPhotos = [
-  { id: 'p1', title: 'Pegasus Dance Auditions 2025', url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&auto=format&fit=crop&q=80', club: 'AKRITI' },
-  { id: 'p2', title: 'CMR HackFest Winner Awards', url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&auto=format&fit=crop&q=80', club: 'Codeholics' },
-  { id: 'p3', title: 'NCC Independence Day Parade', url: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&auto=format&fit=crop&q=80', club: 'NCC Unit' },
-  { id: 'p4', title: 'Blood Donation Camp 2025', url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?w=600&auto=format&fit=crop&q=80', club: 'NSS Unit' }
+  { id: 'p1', title: 'Pegasus 2026 Live Concert', url: '/images/akriti/akriti-live-concert-stage.jpg', club: 'AKRITI' },
+  { id: 'p2', title: 'Flashmob 2K25 Dance Showcase', url: '/images/akriti/akriti-flashmob-2k25.jpg', club: 'AKRITI' },
+  { id: 'p3', title: 'Grand Raag Stage & Fireworks', url: '/images/akriti/akriti-grand-raag-concert.jpg', club: 'AKRITI' },
+  { id: 'p4', title: 'Traditional Cultural Day & Bathukamma', url: '/images/akriti/akriti-traditional-fest.jpg', club: 'AKRITI' },
+  { id: 'p5', title: 'Graduation Ceremony 2K26 Dignitaries Stage', url: '/images/fap/fap-graduation-ceremony-stage.jpg', club: 'FAP' },
+  { id: 'p6', title: 'Graduation Ceremony Medal & Degree Awards', url: '/images/fap/fap-graduation-ceremony-awards.jpg', club: 'FAP' },
+  { id: 'p7', title: 'Campus Fest Stage Anchoring Live Shoot', url: '/images/fap/fap-anchors-stage-event.jpg', club: 'FAP' },
+  { id: 'p8', title: 'Esperanza 2K26 Mr & Ms Freshers Winners', url: '/images/lexis/lexis-esperanza-freshers-winners.jpg', club: 'Lexis' },
+  { id: 'p9', title: 'Esperanza 2K26 Rampwalk & Cultural Night', url: '/images/lexis/lexis-esperanza-rampwalk.jpg', club: 'Lexis' },
+  { id: 'p10', title: 'Esperanza 2K26 Faculty Felicitation Stage', url: '/images/lexis/lexis-esperanza-faculty-stage.jpg', club: 'Lexis' },
+  { id: 'p11', title: 'ATC-V Annual Training Camp Trophy Victory', url: '/images/ncc/ncc-atc-camp-trophy-ceremony.jpg', club: 'NCC Unit' },
+  { id: 'p12', title: 'Candlelight Tribute Vigil at Main Entrance', url: '/images/ncc/ncc-candlelight-vigil-entrance.jpg', club: 'NCC Unit' },
+  { id: 'p13', title: 'Night Candlelight Memorial March', url: '/images/ncc/ncc-night-memorial-march.jpg', club: 'NCC Unit' },
+  { id: 'p14', title: 'Sustainable Campus Impact Summit 2026', url: '/images/nss/nss-sustainable-campus-awards.jpg', club: 'NSS Unit' },
+  { id: 'p15', title: 'Campus Clubs Inauguration & MOU Ceremony', url: '/images/nss/nss-campus-club-inauguration.jpg', club: 'NSS Unit' },
+  { id: 'p16', title: 'Hack The Verse - National Level Hackathon', url: '/images/codeholics/codeholics-hack-the-verse.png', club: 'Codeholics' }
 ];
 
 const StudentDashboard = () => {
@@ -113,7 +124,7 @@ const StudentDashboard = () => {
         )}
 
         {/* Top Header Banner */}
-        {activeSection !== 'my-portfolio' && activeSection !== 'alumni-network' && activeSection !== 'volunteer-hours' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && activeSection !== 'club-events' && (
+        {activeSection !== 'my-portfolio' && activeSection !== 'volunteer-hours' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && activeSection !== 'club-events' && (
           <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#0F172A]/90 via-indigo-950/40 to-[#0F172A]/90 p-8 rounded-[32px] border border-white/10 backdrop-blur-3xl shadow-2xl">
             <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -223,11 +234,6 @@ const StudentDashboard = () => {
               </div>
             </div>
           </div>
-        )}
-
-        {/* Section: Alumni Network */}
-        {activeSection === 'alumni-network' && (
-          <AlumniNetwork onToast={(msg, type) => triggerToast(msg)} />
         )}
 
         {/* Section: My Portfolio (Achievement Portfolio) */}

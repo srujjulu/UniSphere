@@ -48,7 +48,8 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
 
   useEffect(() => {
     if (initialClubId) setSelectedClubFilter(initialClubId);
-  }, [initialClubId]);
+    if (isOpen) setAlbums(getStoredAlbums());
+  }, [initialClubId, isOpen]);
 
   if (!isOpen) return null;
 

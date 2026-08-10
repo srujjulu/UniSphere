@@ -4,10 +4,10 @@ import { X, QrCode, Camera, CheckCircle2, ShieldCheck, Sparkles, Smartphone } fr
 import { markStudentPresent } from '../../utils/mockQRAttendance';
 
 const StudentQRScannerModal = ({ isOpen, onClose, event, studentRoll = '237R1A05BA', studentName = 'Student Member', onToast, onSuccess }) => {
-  if (!isOpen || !event) return null;
-
   const [isScanning, setIsScanning] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  if (!isOpen || !event) return null;
 
   const handleScanSimulation = () => {
     setIsScanning(true);
