@@ -142,7 +142,7 @@ const Dashboard = () => {
 
       {/* Layout Grid Details */}
       <div id="home" className="flex-1 flex flex-col gap-8 sm:gap-10 py-6 sm:py-8 w-full">
-        
+
         {/* Title Entrance Section */}
         <HeroSection />
 
