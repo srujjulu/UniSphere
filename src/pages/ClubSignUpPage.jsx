@@ -20,6 +20,7 @@ import Toast from '../components/ui/Toast';
 import { mockClubs } from '../utils/mockClubs';
 import { saveInfluencer } from '../utils/mockInfluencers';
 import { saveRequest } from '../utils/mockRequests';
+import { requestsApi } from '../services/api';
 import { 
   AkritiLogo,
   CodeClubLogo, 
@@ -213,18 +214,26 @@ const ClubSignUpPage = () => {
     const formattedInsta = instagram.startsWith('@') ? instagram : `@${instagram}`;
     const formattedYt = youtube.startsWith('@') ? youtube : `@${youtube}`;
 
-    // Save membership join request for club coordinators
-    saveRequest({
+    // Save membership join request to local storage and backend API
+    const reqPayload = {
       id: `req-${Date.now()}`,
       name: fullName.trim(),
+      studentName: fullName.trim(),
       rollNo: rollNo.trim().toUpperCase(),
+      studentRoll: rollNo.trim().toUpperCase(),
       branch: 'CMR Student',
       clubId: clubData.id,
       clubName: clubData.name,
       talent: talent,
       email: email.trim(),
+      studentEmail: email.trim(),
       status: 'pending',
       date: 'Just now'
+    };
+
+    saveRequest(reqPayload);
+    requestsApi.apply(reqPayload).catch(err => {
+      console.warn('Backend sync failed (local copy saved):', err);
     });
 
     // Register student to Campus Influencers Sheet

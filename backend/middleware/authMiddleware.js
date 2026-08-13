@@ -36,3 +36,35 @@ export const requireAuth = (req, res, next) => {
     return res.status(401).json({ success: false, error: 'Invalid or expired token. Please sign in again.' });
   }
 };
+
+export const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = findById('users', decoded.id);
+
+    if (user) {
+      req.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        rollNumber: user.rollNumber,
+        role: user.role,
+        assignedClub: user.assignedClub,
+        department: user.department
+      };
+    }
+  } catch (err) {
+    // Ignore invalid token in optional auth
+  }
+
+  next();
+};
+

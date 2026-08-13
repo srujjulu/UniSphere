@@ -1,3 +1,66 @@
+export const clubMasterDrives = {
+  akriti: {
+    id: 'akriti',
+    clubName: 'AKRITI Cultural Club',
+    shortName: 'AKRITI Cultural',
+    category: 'CULTURAL',
+    driveUrl: 'https://drive.google.com/drive/folders/1AKRITI_MasterDrive_CMRTC',
+    totalAlbums: 4,
+    color: 'from-pink-600 to-rose-600',
+    tagBg: 'bg-pink-500/20 text-pink-300 border-pink-500/40'
+  },
+  codeholics: {
+    id: 'codeholics',
+    clubName: 'Codeholics Tech Club',
+    shortName: 'Codeholics Tech',
+    category: 'TECHNICAL',
+    driveUrl: 'https://drive.google.com/drive/folders/1Codeholics_MasterDrive_CMRTC',
+    totalAlbums: 2,
+    color: 'from-blue-600 to-indigo-600',
+    tagBg: 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+  },
+  photography: {
+    id: 'photography',
+    clubName: 'Film & Photography Club (FAP)',
+    shortName: 'Film & Photo (FAP)',
+    category: 'PHOTOGRAPHY',
+    driveUrl: 'https://drive.google.com/drive/folders/1FAP_MasterDrive_CMRTC',
+    totalAlbums: 3,
+    color: 'from-purple-600 to-violet-600',
+    tagBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+  },
+  lexis: {
+    id: 'lexis',
+    clubName: 'The Lexis Literary Club',
+    shortName: 'The Lexis Club',
+    category: 'LITERARY',
+    driveUrl: 'https://drive.google.com/drive/folders/1Lexis_MasterDrive_CMRTC',
+    totalAlbums: 3,
+    color: 'from-emerald-600 to-teal-600',
+    tagBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+  },
+  ncc: {
+    id: 'ncc',
+    clubName: 'NCC Cadet Corps',
+    shortName: 'NCC Cadet Corps',
+    category: 'DEFENCE',
+    driveUrl: 'https://drive.google.com/drive/folders/1NCC_MasterDrive_CMRTC',
+    totalAlbums: 3,
+    color: 'from-amber-600 to-orange-600',
+    tagBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+  },
+  nss: {
+    id: 'nss',
+    clubName: 'NSS Service Scheme',
+    shortName: 'NSS Service Unit',
+    category: 'SERVICE',
+    driveUrl: 'https://drive.google.com/drive/folders/1NSS_MasterDrive_CMRTC',
+    totalAlbums: 2,
+    color: 'from-red-600 to-pink-600',
+    tagBg: 'bg-red-500/20 text-red-300 border-red-500/40'
+  }
+};
+
 export const initialAlbums = [
   {
     id: 'album-akriti-1',

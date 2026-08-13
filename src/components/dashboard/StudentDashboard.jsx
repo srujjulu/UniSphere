@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Home, 
@@ -27,6 +28,7 @@ import VolunteerTracker from './VolunteerTracker';
 import { mockClubs } from '../../utils/mockClubs';
 import { useAuth } from '../../context/AuthContext';
 import { getStoredRequests, saveRequest, getApprovedClubsForStudent } from '../../utils/mockRequests';
+import { requestsApi } from '../../services/api';
 
 const mockAnnouncements = [
   { id: '1', title: 'Pegasus 2026 Annual Cultural Fest Registrations Open!', date: 'August 03, 2026', club: 'AKRITI Club', urgency: 'High' },
@@ -54,6 +56,7 @@ const mockGalleryPhotos = [
 ];
 
 const StudentDashboard = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('home');
   const [requests, setRequests] = useState(getStoredRequests);
@@ -84,18 +87,27 @@ const StudentDashboard = () => {
   };
 
   const handleApplyToClub = (club) => {
-    saveRequest({
+    const reqPayload = {
       id: `req-${Date.now()}`,
       name: studentName,
+      studentName: studentName,
       rollNo: studentRoll,
+      studentRoll: studentRoll,
       branch: 'CMR Student',
       clubId: club.id,
       clubName: club.name,
       talent: club.category || 'General Member',
       email: user?.email || `${studentRoll.toLowerCase()}@cmr.edu.in`,
+      studentEmail: user?.email || `${studentRoll.toLowerCase()}@cmr.edu.in`,
       status: 'pending',
       date: 'Just now'
+    };
+
+    saveRequest(reqPayload);
+    requestsApi.apply(reqPayload).catch(err => {
+      console.warn('Backend sync failed (local copy saved):', err);
     });
+
     setRequests(getStoredRequests());
     triggerToast(`Submitted join application for ${club.name}! ⏳ Sent to ${club.name} coordinators.`);
   };
@@ -124,7 +136,7 @@ const StudentDashboard = () => {
         )}
 
         {/* Top Header Banner */}
-        {activeSection !== 'my-portfolio' && activeSection !== 'volunteer-hours' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && activeSection !== 'club-events' && (
+        {activeSection !== 'my-portfolio' && activeSection !== 'volunteer-hours' && activeSection !== 'my-certificates' && activeSection !== 'event-calendar' && (
           <div className="relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gradient-to-r from-[#0F172A]/90 via-indigo-950/40 to-[#0F172A]/90 p-8 rounded-[32px] border border-white/10 backdrop-blur-3xl shadow-2xl">
             <div className="absolute -top-24 -left-24 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -252,7 +264,7 @@ const StudentDashboard = () => {
         )}
 
         {/* Section: Event Calendar (Interactive Calendar View) */}
-        {(activeSection === 'event-calendar' || activeSection === 'club-events') && (
+        {activeSection === 'event-calendar' && (
           <EventCalendar onToast={(msg, type) => triggerToast(msg)} />
         )}
 
@@ -430,11 +442,11 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {/* Section: Club Events & Registration */}
-        {(activeSection === 'club-events' || activeSection === 'event-registration' || activeSection === 'my-registered-events') && (
+        {/* Section: Event Passes & Registration */}
+        {activeSection === 'event-registration' && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-5">
             <h3 className="text-xl font-black text-white flex items-center gap-2">
-              <Calendar size={20} className="text-blue-400" />
+              <TicketCheck size={20} className="text-blue-400" />
               <span>Upcoming Events & Registration Passes</span>
             </h3>
 

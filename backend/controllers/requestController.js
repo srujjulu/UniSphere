@@ -4,7 +4,7 @@ import { getCollection, find, insertOne, updateById, findById } from '../config/
 // @route POST /api/requests/apply
 export const applyToClub = (req, res) => {
   try {
-    const { clubId, talent, experience, studentName, studentRoll } = req.body;
+    const { clubId, talent, experience, studentName, studentRoll, studentEmail, name: reqName, rollNo: reqRoll, branch } = req.body;
 
     if (!clubId) {
       return res.status(400).json({ success: false, error: 'clubId is required.' });
@@ -15,14 +15,17 @@ export const applyToClub = (req, res) => {
       return res.status(404).json({ success: false, error: 'Target club not found.' });
     }
 
-    const rollNo = req.user?.rollNumber || studentRoll || (req.user?.email ? req.user.email.split('@')[0].toUpperCase() : 'STUDENT');
-    const name = req.user?.name || studentName || 'Student Member';
-    const email = req.user?.email || `${rollNo.toLowerCase()}@cmr.edu.in`;
+    const rollNo = req.user?.rollNumber || studentRoll || reqRoll || (req.user?.email ? req.user.email.split('@')[0].toUpperCase() : 'STUDENT');
+    const name = req.user?.name || studentName || reqName || 'Student Member';
+    const email = req.user?.email || studentEmail || `${rollNo.toLowerCase()}@cmr.edu.in`;
 
     // Check if already applied
     const existing = find('requests', (r) => 
       r.clubId === clubId && 
-      (r.studentRoll === rollNo || r.studentEmail === email)
+      ((r.studentRoll && r.studentRoll.toUpperCase() === rollNo.toUpperCase()) || 
+       (r.rollNo && r.rollNo.toUpperCase() === rollNo.toUpperCase()) ||
+       (r.studentEmail && r.studentEmail.toLowerCase() === email.toLowerCase()) ||
+       (r.email && r.email.toLowerCase() === email.toLowerCase()))
     );
 
     if (existing.length > 0) {
@@ -44,14 +47,20 @@ export const applyToClub = (req, res) => {
     }
 
     const newRequest = insertOne('requests', {
-      studentRoll: rollNo,
+      id: `req-${Date.now()}`,
+      name: name,
       studentName: name,
+      rollNo: rollNo,
+      studentRoll: rollNo,
+      email: email,
       studentEmail: email,
+      branch: branch || 'CMR Student',
       clubId,
       clubName: club.name,
-      talent: talent || 'Enthusiastic Learner',
-      experience: experience || 'General Member Applicant',
+      talent: talent || 'General Member',
+      experience: experience || 'Applicant',
       status: 'pending',
+      date: 'Just now',
       appliedAt: new Date().toISOString()
     });
 
@@ -77,7 +86,26 @@ export const getClubRequests = (req, res) => {
       requests = requests.filter((r) => r.clubId === clubId);
     }
 
-    return res.status(200).json({ success: true, count: requests.length, data: requests });
+    // Ensure all requests have normalized fields
+    const normalized = requests.map(r => ({
+      id: r.id,
+      name: r.name || r.studentName || 'Student Member',
+      studentName: r.name || r.studentName || 'Student Member',
+      rollNo: r.rollNo || r.studentRoll || 'STUDENT',
+      studentRoll: r.rollNo || r.studentRoll || 'STUDENT',
+      email: r.email || r.studentEmail || '',
+      studentEmail: r.email || r.studentEmail || '',
+      branch: r.branch || 'CMR Student',
+      clubId: r.clubId,
+      clubName: r.clubName || 'Club',
+      talent: r.talent || 'General Member',
+      experience: r.experience || '',
+      status: r.status || 'pending',
+      date: r.date || 'Recently',
+      appliedAt: r.appliedAt || new Date().toISOString()
+    }));
+
+    return res.status(200).json({ success: true, count: normalized.length, data: normalized });
   } catch (err) {
     return res.status(500).json({ success: false, error: 'Failed to fetch requests.' });
   }

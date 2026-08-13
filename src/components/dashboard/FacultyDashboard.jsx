@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Shield, 
   CheckSquare, 
@@ -20,6 +21,7 @@ import EventCalendar from './EventCalendar';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
+import { requestsApi } from '../../services/api';
 
 const pendingMajorEvents = [
   { id: 'fe1', title: 'Pegasus 2026 Annual Cultural Fest', club: 'AKRITI Club', budget: '₹1,50,000', venue: 'CMR Auditorium', status: 'pending' },
@@ -34,6 +36,20 @@ const FacultyDashboard = () => {
   const [facultyClubFilter, setFacultyClubFilter] = useState('all');
   const [isInfluencerOpen, setIsInfluencerOpen] = useState(false);
   const [toast, setToast] = useState('');
+
+  useEffect(() => {
+    requestsApi.getForClub('all').then(res => {
+      if (res?.data && Array.isArray(res.data)) {
+        const local = getStoredRequests();
+        const map = new Map();
+        res.data.forEach(item => map.set(item.id, item));
+        local.forEach(item => {
+          if (!map.has(item.id)) map.set(item.id, item);
+        });
+        setMemberRequests(Array.from(map.values()));
+      }
+    }).catch(() => {});
+  }, []);
 
   const handleVerifyCert = (certId, title) => {
     verifyCertificate(certId, 'Dr. Suresh Kumar (Faculty Coordinator)');
@@ -414,6 +430,35 @@ const FacultyDashboard = () => {
                 <Sparkles size={14} />
                 <span>View Influencer Roster</span>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Section: View Announcements */}
+        {activeSection === 'view-announcements' && (
+          <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+            <h3 className="text-xl font-black text-white flex items-center gap-2">
+              <Bell size={20} className="text-amber-400" />
+              <span>Campus & Club Announcements</span>
+            </h3>
+
+            <div className="space-y-3">
+              {[
+                { id: '1', title: 'Pegasus 2026 Annual Cultural Fest Registrations Open!', date: 'August 03, 2026', club: 'AKRITI Club', urgency: 'High' },
+                { id: '2', title: 'CMR HackFest 2026 36-Hour Hackathon Announced', date: 'August 02, 2026', club: 'Codeholics', urgency: 'Urgent' },
+                { id: '3', title: 'Swachh Bharat Cleanliness Drive at Medchal', date: 'July 28, 2026', club: 'NSS Unit', urgency: 'Normal' }
+              ].map((ann) => (
+                <div key={ann.id} className="p-4 rounded-2xl bg-slate-800/60 border border-slate-700 flex items-start justify-between">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-extrabold text-amber-400 uppercase tracking-wider">{ann.club}</span>
+                    <h4 className="text-sm font-bold text-white">{ann.title}</h4>
+                    <p className="text-xs text-slate-400">{ann.date}</p>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px]">
+                    {ann.urgency}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         )}

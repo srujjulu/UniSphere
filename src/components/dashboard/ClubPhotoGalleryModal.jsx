@@ -10,28 +10,37 @@ import {
   Images, 
   Edit3, 
   Clock, 
-  Folder
+  Folder,
+  Sparkles,
+  Shield,
+  Layers
 } from 'lucide-react';
 import { 
   getStoredAlbums, 
   saveNewAlbum, 
   updateAlbumDriveLink, 
-  deleteAlbum 
+  deleteAlbum,
+  clubMasterDrives
 } from '../../utils/mockGallery';
 import { useAuth } from '../../context/AuthContext';
 
 const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast }) => {
   const { user, isCoordinator } = useAuth();
-  const [albums, setAlbums] = useState(getStoredAlbums);
+  const isStudent = !user || user.role === 'student';
+  const isCoreTeam = user && user.role === 'core';
+  const assignedClubId = user?.assignedClub || (isCoreTeam ? 'codeholics' : 'all');
   
-  // Filtering & Sorting State
-  const [selectedClubFilter, setSelectedClubFilter] = useState(initialClubId);
+  // Default to assigned club for core team, or initialClubId / 'all' for others
+  const defaultClub = isCoreTeam ? (initialClubId !== 'all' ? initialClubId : assignedClubId) : initialClubId;
+
+  const [albums, setAlbums] = useState(getStoredAlbums);
+  const [selectedClubFilter, setSelectedClubFilter] = useState(defaultClub);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('newest'); // 'newest' | 'oldest'
 
   // Create Album Modal State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newClubId, setNewClubId] = useState('akriti');
+  const [newClubId, setNewClubId] = useState(isCoreTeam ? assignedClubId : 'akriti');
   const [newEventName, setNewEventName] = useState('');
   const [newEventDate, setNewEventDate] = useState('');
   const [newCoverUrl, setNewCoverUrl] = useState('');
@@ -44,12 +53,20 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
   const [editDriveUrl, setEditDriveUrl] = useState('');
   const [editCoverUrl, setEditCoverUrl] = useState('');
 
-  const canManage = isCoordinator || (user && user.role !== 'student');
+  const canManage = !isStudent && (isCoordinator || user?.role === 'core' || user?.role === 'admin' || user?.role === 'faculty');
 
   useEffect(() => {
-    if (initialClubId) setSelectedClubFilter(initialClubId);
+    if (initialClubId && initialClubId !== 'all') {
+      setSelectedClubFilter(initialClubId);
+      setNewClubId(initialClubId);
+    } else if (isCoreTeam) {
+      setSelectedClubFilter(assignedClubId);
+      setNewClubId(assignedClubId);
+    } else {
+      setSelectedClubFilter('all');
+    }
     if (isOpen) setAlbums(getStoredAlbums());
-  }, [initialClubId, isOpen]);
+  }, [initialClubId, isOpen, isCoreTeam, assignedClubId]);
 
   if (!isOpen) return null;
 
@@ -86,26 +103,18 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
       return;
     }
 
-    const clubNamesMap = {
-      akriti: 'AKRITI Cultural Club',
-      codeholics: 'Codeholics Tech Club',
-      photography: 'Film & Photography Club',
-      lexis: 'The Lexis Literary Club',
-      ncc: 'NCC Cadet Corps',
-      nss: 'NSS Service Scheme'
-    };
-
-    const defaultCover = newCoverUrl.trim() || 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80';
+    const clubMeta = clubMasterDrives[newClubId];
+    const defaultCover = newCoverUrl.trim() || '/images/codeholics/codeholics-hack-the-verse.png';
 
     const newAlbumObj = {
       id: `album-${Date.now()}`,
       clubId: newClubId,
-      clubName: clubNamesMap[newClubId] || 'Campus Club',
+      clubName: clubMeta?.clubName || 'Campus Club',
       eventName: newEventName.trim(),
       eventDate: newEventDate.trim(),
       coverImage: defaultCover,
       driveUrl: newDriveUrl.trim(),
-      uploadedBy: user?.name || 'Club Coordinator',
+      uploadedBy: `${user?.name || 'Coordinator'} (${clubMeta?.shortName || 'Club'})`,
       createdAt: new Date().toISOString().split('T')[0],
       photoCount: parseInt(newPhotoCount) || 150
     };
@@ -121,13 +130,19 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
     setNewDriveUrl('');
     setNewPhotoCount('150');
 
-    if (onToast) onToast(`Created Google Drive Album "${newAlbumObj.eventName}"! 📁`, 'success');
+    if (onToast) onToast(`Posted new Event Drive Album "${newAlbumObj.eventName}" for ${clubMeta?.shortName}! 📁`, 'success');
   };
 
   // Open Google Drive Album in New Tab
   const handleOpenDriveAlbum = (album) => {
     if (onToast) onToast(`Opening ${album.eventName} Google Drive Album... 📁`, 'info');
     window.open(album.driveUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  // Open Master Drive Link in New Tab
+  const handleOpenMasterDrive = (driveUrl, clubName) => {
+    if (onToast) onToast(`Opening ${clubName} Master Google Drive Folder... 📁`, 'info');
+    window.open(driveUrl, '_blank', 'noopener,noreferrer');
   };
 
   // Open Edit Drive Link Modal
@@ -155,6 +170,8 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
     setAlbums(updated);
     if (onToast) onToast(`Deleted Event Album "${eventName}"`, 'info');
   };
+
+  const activeClubMeta = clubMasterDrives[selectedClubFilter] || null;
 
   return (
     <AnimatePresence>
@@ -184,10 +201,10 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
 
               <div>
                 <span className="text-xs font-bold text-pink-400 tracking-wider uppercase flex items-center gap-1">
-                  <span>CMRTC Campus Portal</span> • <span>Google Drive Event Albums</span>
+                  <span>CMRTC Campus Portal</span> • <span>Club Google Drive Albums</span>
                 </span>
                 <h2 className="text-2xl font-black text-white tracking-tight">
-                  Event Photo Albums & Google Drive Gallery
+                  {isCoreTeam ? `${activeClubMeta?.clubName || 'Club'} Google Drive Gallery` : 'Campus Clubs Event Google Drive Hub'}
                 </h2>
               </div>
             </div>
@@ -195,11 +212,14 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
             <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
               {canManage && (
                 <button
-                  onClick={() => setIsCreateModalOpen(true)}
+                  onClick={() => {
+                    setNewClubId(selectedClubFilter !== 'all' ? selectedClubFilter : (isCoreTeam ? assignedClubId : 'akriti'));
+                    setIsCreateModalOpen(true);
+                  }}
                   className="px-4 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 whitespace-nowrap"
                 >
                   <FolderPlus size={16} />
-                  <span>Add Google Drive Album</span>
+                  <span>+ Post Event Drive Album</span>
                 </button>
               )}
 
@@ -211,6 +231,67 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
               </button>
             </div>
           </div>
+
+          {/* Core Coordinator Managed Club Banner */}
+          {isCoreTeam && activeClubMeta && (
+            <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 px-6 py-3 border-b border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-white">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-extrabold text-[10px] uppercase border border-pink-500/30">
+                  {activeClubMeta.category}
+                </span>
+                <span className="text-xs font-bold text-slate-200">
+                  Managing: <strong>{activeClubMeta.clubName}</strong> Official Event Albums
+                </span>
+              </div>
+
+              <button
+                onClick={() => handleOpenMasterDrive(activeClubMeta.driveUrl, activeClubMeta.clubName)}
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
+              >
+                <Folder size={14} />
+                <span>Open {activeClubMeta.shortName} Master Drive Folder</span>
+                <ExternalLink size={12} />
+              </button>
+            </div>
+          )}
+
+          {/* Student View: All Club Master Drive Quick Access Cards */}
+          {isStudent && (
+            <div className="bg-slate-100/90 p-4 border-b border-slate-200 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black uppercase text-slate-600 tracking-wider flex items-center gap-1.5">
+                  <Layers size={14} className="text-pink-600" />
+                  <span>Individual Club Google Drive Folders (Direct Access)</span>
+                </span>
+                <span className="text-[10px] font-bold text-slate-500">
+                  Click any club drive to open its full photo archive
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+                {Object.values(clubMasterDrives).map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => handleOpenMasterDrive(c.driveUrl, c.clubName)}
+                    className="p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-pink-500/40 hover:shadow-md transition-all text-left group cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 group-hover:bg-pink-50 group-hover:text-pink-600">
+                        {c.category}
+                      </span>
+                      <ExternalLink size={11} className="text-slate-400 group-hover:text-pink-600" />
+                    </div>
+                    <p className="font-extrabold text-slate-800 text-xs truncate group-hover:text-pink-600">
+                      {c.shortName}
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      {c.totalAlbums} Event Albums
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Search, Sort & Filters Bar */}
           <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-col lg:flex-row items-center justify-between gap-4">
@@ -274,81 +355,94 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
               <div className="text-center py-16 text-slate-400 space-y-2">
                 <Folder size={40} className="mx-auto text-slate-300" />
                 <p className="font-bold text-slate-600">No event albums found</p>
-                <p className="text-xs text-slate-400">Try adjusting your filters or add a Google Drive album link.</p>
+                <p className="text-xs text-slate-400">Try selecting another club filter or post a new Google Drive event album.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-                {filteredAlbums.map((album) => (
-                  <div
-                    key={album.id}
-                    className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
-                  >
-                    {/* Album Cover Image with Total Photos Counter Tag */}
-                    <div className="h-52 overflow-hidden relative bg-slate-900">
-                      <img
-                        src={album.coverImage}
-                        alt={album.eventName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      
-                      {/* Club Badge Tag */}
-                      <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-extrabold text-[10px] border border-white/20 shadow-md">
-                        {album.clubName.split(' ')[0]}
-                      </span>
+                {filteredAlbums.map((album) => {
+                  const clubMeta = clubMasterDrives[album.clubId] || null;
+                  const clubDisplayName = clubMeta?.shortName || album.clubName;
+                  const canEditThisAlbum = canManage && (!isCoreTeam || album.clubId === assignedClubId || selectedClubFilter === album.clubId);
 
-                      {/* Total Photos Tag */}
-                      <span className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-pink-600 text-white font-extrabold text-xs shadow-lg flex items-center gap-1.5 border border-pink-400/40">
-                        <Images size={13} />
-                        <span>{album.photoCount || 150}+ Photos</span>
-                      </span>
-                    </div>
+                  return (
+                    <div
+                      key={album.id}
+                      className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
+                    >
+                      {/* Album Cover Image with Total Photos Counter Tag */}
+                      <div className="h-52 overflow-hidden relative bg-slate-900">
+                        <img
+                          src={album.coverImage}
+                          alt={album.eventName}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        
+                        {/* Club Badge Tag */}
+                        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full font-extrabold text-[11px] shadow-md border ${
+                          album.clubId === 'akriti' ? 'bg-pink-600/90 text-white border-pink-400/30' :
+                          album.clubId === 'codeholics' ? 'bg-blue-600/90 text-white border-blue-400/30' :
+                          album.clubId === 'photography' ? 'bg-purple-600/90 text-white border-purple-400/30' :
+                          album.clubId === 'lexis' ? 'bg-emerald-600/90 text-white border-emerald-400/30' :
+                          album.clubId === 'ncc' ? 'bg-amber-600/90 text-white border-amber-400/30' :
+                          'bg-red-600/90 text-white border-red-400/30'
+                        }`}>
+                          {clubDisplayName}
+                        </span>
 
-                    {/* Content Details */}
-                    <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                      <div className="space-y-1">
-                        <h3 className="font-black text-slate-900 text-base leading-snug group-hover:text-pink-600 transition-colors">
-                          {album.eventName}
-                        </h3>
-                        <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
-                          <Calendar size={13} className="text-slate-400" />
-                          <span>{album.eventDate}</span>
-                        </p>
+                        {/* Total Photos Tag */}
+                        <span className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-pink-600 text-white font-extrabold text-xs shadow-lg flex items-center gap-1.5 border border-pink-400/40">
+                          <Images size={13} />
+                          <span>{album.photoCount || 150}+ Photos</span>
+                        </span>
                       </div>
 
-                      {/* View Album Button & Coordinator Actions */}
-                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                        <button
-                          onClick={() => handleOpenDriveAlbum(album)}
-                          className="flex-1 py-2.5 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
-                        >
-                          <Folder size={14} />
-                          <span>View Album (Google Drive)</span>
-                          <ExternalLink size={13} />
-                        </button>
+                      {/* Content Details */}
+                      <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                        <div className="space-y-1">
+                          <h3 className="font-black text-slate-900 text-base leading-snug group-hover:text-pink-600 transition-colors">
+                            {album.eventName}
+                          </h3>
+                          <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                            <Calendar size={13} className="text-slate-400" />
+                            <span>{album.eventDate}</span>
+                          </p>
+                        </div>
 
-                        {canManage && (
-                          <div className="flex items-center gap-1">
-                            <button
-                              onClick={() => handleStartEdit(album)}
-                              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-                              title="Edit Google Drive Link"
-                            >
-                              <Edit3 size={15} />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteAlbum(album.id, album.eventName)}
-                              className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
-                              title="Delete Album"
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                          </div>
-                        )}
+                        {/* View Album Button & Coordinator Actions */}
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                          <button
+                            onClick={() => handleOpenDriveAlbum(album)}
+                            className="flex-1 py-2.5 px-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer active:scale-95"
+                          >
+                            <Folder size={14} />
+                            <span>View Album (Google Drive)</span>
+                            <ExternalLink size={13} />
+                          </button>
+
+                          {canEditThisAlbum && (
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => handleStartEdit(album)}
+                                className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+                                title="Edit Google Drive Link"
+                              >
+                                <Edit3 size={15} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteAlbum(album.id, album.eventName)}
+                                className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                                title="Delete Album"
+                              >
+                                <Trash2 size={15} />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -361,7 +455,7 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
               <div className="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
                   <FolderPlus size={20} className="text-pink-600" />
-                  <span>Add Google Drive Event Album</span>
+                  <span>Post Event Album to Google Drive</span>
                 </h3>
                 <button onClick={() => setIsCreateModalOpen(false)} className="text-slate-400 hover:text-slate-700 p-1">
                   <X size={18} />
@@ -376,7 +470,7 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
                 )}
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Select Club *</label>
+                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Select Target Club *</label>
                   <select
                     value={newClubId}
                     onChange={(e) => setNewClubId(e.target.value)}
@@ -395,9 +489,10 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Event Name *</label>
                   <input
                     type="text"
+                    required
                     value={newEventName}
                     onChange={(e) => setNewEventName(e.target.value)}
-                    placeholder="e.g. Pegasus 2026 Dance Auditions"
+                    placeholder="e.g. Pegasus 2026 Dance Showcase"
                     className="w-full h-10 px-3.5 rounded-xl border border-slate-200 text-xs font-medium outline-none focus:border-pink-500"
                   />
                 </div>
@@ -406,6 +501,7 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Event Date *</label>
                   <input
                     type="text"
+                    required
                     value={newEventDate}
                     onChange={(e) => setNewEventDate(e.target.value)}
                     placeholder="e.g. August 15, 2026"
@@ -417,6 +513,7 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Google Drive Folder Link *</label>
                   <input
                     type="text"
+                    required
                     value={newDriveUrl}
                     onChange={(e) => setNewDriveUrl(e.target.value)}
                     placeholder="https://drive.google.com/drive/folders/..."
@@ -431,7 +528,7 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
                     type="text"
                     value={newCoverUrl}
                     onChange={(e) => setNewCoverUrl(e.target.value)}
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="/images/codeholics/codeholics-hack-the-verse.png"
                     className="w-full h-10 px-3.5 rounded-xl border border-slate-200 text-xs font-medium outline-none focus:border-pink-500"
                   />
                 </div>
@@ -511,3 +608,4 @@ const ClubPhotoGalleryModal = ({ isOpen, onClose, initialClubId = 'all', onToast
 };
 
 export default ClubPhotoGalleryModal;
+

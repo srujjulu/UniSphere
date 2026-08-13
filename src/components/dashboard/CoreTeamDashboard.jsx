@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Users, 
@@ -35,6 +35,7 @@ import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests
 import { saveCertificate } from '../../utils/mockCertificates';
 import { getEventFeedbackSummary, getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
 import { assignVolunteerHours } from '../../utils/mockVolunteerHours';
+import { requestsApi } from '../../services/api';
 
 const mockEventsList = [
   { id: 'ev1', title: 'CMR HackFest 2026', date: 'Sept 05-07, 2026', seats: '150/200', budget: '₹25,000' },
@@ -106,6 +107,32 @@ const CoreTeamDashboard = () => {
     triggerToast(`Uploaded & Issued Certificate for ${newCert.studentRoll}! 📄 Sent to Faculty Verification queue.`);
   };
 
+  // Load requests from backend server and merge with local storage
+  const fetchClubRequests = async () => {
+    try {
+      const res = await requestsApi.getForClub(selectedClubId);
+      if (res?.data && Array.isArray(res.data)) {
+        const local = getStoredRequests();
+        const map = new Map();
+        // Server data takes precedence
+        res.data.forEach(item => map.set(item.id, item));
+        // Include local items if not already present
+        local.forEach(item => {
+          if (!map.has(item.id)) {
+            map.set(item.id, item);
+          }
+        });
+        setAllMemberRequests(Array.from(map.values()));
+      }
+    } catch (err) {
+      console.warn('Backend requests fetch fallback:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchClubRequests();
+  }, [selectedClubId]);
+
   // Filter requests for currently selected club or all clubs
   const memberRequests = allMemberRequests.filter(
     r => (selectedClubId === 'all' || r.clubId === selectedClubId || !r.clubId) && r.status === 'pending'
@@ -124,14 +151,24 @@ const CoreTeamDashboard = () => {
     setTimeout(() => setToast(''), 3000);
   };
 
-  const handleApproveMember = (id, name) => {
+  const handleApproveMember = async (id, name) => {
     updateRequestStatus(id, 'approved');
+    try {
+      await requestsApi.updateStatus(id, 'approved');
+    } catch (e) {
+      console.warn('Backend status update fallback:', e);
+    }
     setAllMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'approved' } : m));
     triggerToast(`Approved ${name} into ${activeClub.name}! ✅`);
   };
 
-  const handleRejectMember = (id, name) => {
+  const handleRejectMember = async (id, name) => {
     updateRequestStatus(id, 'rejected');
+    try {
+      await requestsApi.updateStatus(id, 'rejected');
+    } catch (e) {
+      console.warn('Backend status update fallback:', e);
+    }
     setAllMemberRequests(prev => prev.map(m => m.id === id ? { ...m, status: 'rejected' } : m));
     triggerToast(`Rejected membership request for ${name}. ❌`);
   };
@@ -294,8 +331,8 @@ const CoreTeamDashboard = () => {
                   {memberRequests.map((req) => (
                     <div key={req.id} className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between">
                       <div>
-                        <h4 className="font-bold text-white text-xs">{req.name} <span className="text-slate-400">({req.rollNo})</span></h4>
-                        <p className="text-[11px] text-slate-400">{req.branch} • Domain: <span className="text-pink-400 font-bold">{req.talent}</span></p>
+                        <h4 className="font-bold text-white text-xs">{req.name || req.studentName} <span className="text-slate-400">({req.rollNo || req.studentRoll})</span></h4>
+                        <p className="text-[11px] text-slate-400">{req.branch || 'CMR Student'} • Domain: <span className="text-pink-400 font-bold">{req.talent || 'General'}</span></p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
@@ -616,7 +653,7 @@ const CoreTeamDashboard = () => {
           </div>
         )}
         {/* Section: Manage Club & Club Settings */}
-        {(activeSection === 'manage-club' || activeSection === 'club-settings') && (
+        {(activeSection === 'manage-club' || activeSection === 'club-settings' || activeSection === 'core-team') && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-5">
             <h3 className="text-xl font-black text-white flex items-center gap-2">
               <Settings size={20} className="text-pink-400" />
@@ -662,7 +699,7 @@ const CoreTeamDashboard = () => {
         )}
 
         {/* Section: Full Approve / Reject Members Queue */}
-        {activeSection === 'approve-members' && (
+        {(activeSection === 'approve-members' || activeSection === 'membership-requests') && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-xl font-black text-white flex items-center gap-2">
@@ -904,7 +941,7 @@ const CoreTeamDashboard = () => {
             setIsGalleryOpen(false);
             if (activeSection === 'upload-photos') setActiveSection('dashboard');
           }}
-          initialClubId="all"
+          initialClubId={selectedClubId || activeClub.id}
           onToast={(msg) => triggerToast(msg)}
         />
 

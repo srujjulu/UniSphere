@@ -8,8 +8,8 @@
       "role": "student",
       "department": "CSE (AI & ML)",
       "year": "3rd Year",
-      "password": "$2b$10$PxSBnpdjrVygtP82qQtPauRxSCnAc5xyqcsXDgGdXrCzdvfCkjjpO",
-      "createdAt": "2026-08-10T09:33:25.542Z"
+      "password": "$2b$10$QIPojFPZqHNm.Hjg/Eq6DeI1ibgpl1aSZYoOh2GNN2J2XWJUe2YcK",
+      "createdAt": "2026-08-10T14:45:18.047Z"
     },
     {
       "id": "usr-core-1",
@@ -20,8 +20,8 @@
       "assignedClub": "akriti",
       "department": "CSE",
       "year": "4th Year",
-      "password": "$2b$10$PxSBnpdjrVygtP82qQtPauRxSCnAc5xyqcsXDgGdXrCzdvfCkjjpO",
-      "createdAt": "2026-08-10T09:33:25.555Z"
+      "password": "$2b$10$QIPojFPZqHNm.Hjg/Eq6DeI1ibgpl1aSZYoOh2GNN2J2XWJUe2YcK",
+      "createdAt": "2026-08-10T14:45:18.048Z"
     },
     {
       "id": "usr-faculty-1",
@@ -31,8 +31,8 @@
       "role": "faculty",
       "assignedClub": "all",
       "department": "CSE Department Head",
-      "password": "$2b$10$PxSBnpdjrVygtP82qQtPauRxSCnAc5xyqcsXDgGdXrCzdvfCkjjpO",
-      "createdAt": "2026-08-10T09:33:25.555Z"
+      "password": "$2b$10$QIPojFPZqHNm.Hjg/Eq6DeI1ibgpl1aSZYoOh2GNN2J2XWJUe2YcK",
+      "createdAt": "2026-08-10T14:45:18.048Z"
     },
     {
       "id": "usr-admin-1",
@@ -42,8 +42,8 @@
       "role": "admin",
       "assignedClub": "all",
       "department": "Directorate of Student Affairs",
-      "password": "$2b$10$PxSBnpdjrVygtP82qQtPauRxSCnAc5xyqcsXDgGdXrCzdvfCkjjpO",
-      "createdAt": "2026-08-10T09:33:25.555Z"
+      "password": "$2b$10$QIPojFPZqHNm.Hjg/Eq6DeI1ibgpl1aSZYoOh2GNN2J2XWJUe2YcK",
+      "createdAt": "2026-08-10T14:45:18.048Z"
     }
   ],
   "clubs": [
@@ -134,7 +134,7 @@
     },
     {
       "id": "nss",
-      "name: "NSS Service Scheme Unit",
+      "name": "NSS Service Scheme Unit",
       "category": "Social Impact & Volunteering",
       "tagline": "Not Me But You",
       "description": "National Service Scheme dedicated to blood donation drives, village empowerment, and green sustainability.",
@@ -148,6 +148,167 @@
       "instagram": "https://instagram.com/nss_unit_cmrtc",
       "youtube": "https://youtube.com/@NssServiceCMRTC",
       "established": "2011"
+    }
+  ],
+  "requests": [
+    {
+      "id": "req-1786515171460",
+      "createdAt": "2026-08-12T06:12:51.479Z",
+      "name": "Ananya Verma",
+      "studentName": "Ananya Verma",
+      "rollNo": "237R1A0588",
+      "studentRoll": "237R1A0588",
+      "email": "ananya.v@cmr.edu.in",
+      "studentEmail": "ananya.v@cmr.edu.in",
+      "branch": "CSE 3rd Yr",
+      "clubId": "codeholics",
+      "clubName": "Codeholics Tech Club",
+      "talent": "Full Stack & AI",
+      "experience": "Applicant",
+      "status": "pending",
+      "date": "Just now",
+      "appliedAt": "2026-08-12T06:12:51.461Z"
+    },
+    {
+      "id": "req-1",
+      "studentRoll": "237R1A05BA",
+      "studentName": "Rohan Sharma",
+      "studentEmail": "student@cmr.edu.in",
+      "clubId": "akriti",
+      "clubName": "Akriti Cultural Club",
+      "status": "approved",
+      "appliedAt": "2026-08-07T14:45:18.048Z"
+    },
+    {
+      "id": "req-2",
+      "studentRoll": "237R1A05BA",
+      "studentName": "Rohan Sharma",
+      "studentEmail": "student@cmr.edu.in",
+      "clubId": "codeholics",
+      "clubName": "Codeholics Tech Club",
+      "status": "approved",
+      "appliedAt": "2026-08-08T14:45:18.048Z"
+    },
+    {
+      "id": "req-3",
+      "studentRoll": "237R1A0512",
+      "studentName": "Sneha Patel",
+      "studentEmail": "sneha@cmr.edu.in",
+      "clubId": "akriti",
+      "clubName": "Akriti Cultural Club",
+      "status": "pending",
+      "appliedAt": "2026-08-10T14:45:18.048Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "ev-akriti-1",
+      "clubId": "akriti",
+      "title": "Pegasus 2026 Mega Cultural Concert",
+      "date": "December 15-17, 2026 • 09:30 AM",
+      "venue": "CMRTC Main Auditorium",
+      "tag": "Inter-College Fest",
+      "desc": "The flagship annual cultural fest of CMRTC featuring dance battles, fashion shows, and musical nights.",
+      "seatsLimit": 500,
+      "seatsBooked": 420,
+      "coverImage": "/images/akriti/akriti-live-concert-stage.jpg",
+      "status": "Registration Open"
+    },
+    {
+      "id": "ev-codeholics-1",
+      "clubId": "codeholics",
+      "title": "Hack The Verse 2026 - National Hackathon",
+      "date": "September 05-07, 2026 • 09:00 AM",
+      "venue": "CMRTC Main Auditorium & Innovation Hub",
+      "tag": "36-Hour Hackathon",
+      "desc": "36-hour non-stop national hackathon with cash prizes, cloud credits, and startup incubation grants.",
+      "seatsLimit": 300,
+      "seatsBooked": 280,
+      "coverImage": "/images/codeholics/codeholics-hack-the-verse.png",
+      "status": "Registration Open"
+    },
+    {
+      "id": "ev-photography-1",
+      "clubId": "photography",
+      "title": "Graduation Ceremony 2K26 Live Coverage",
+      "date": "September 12, 2026 • 05:00 PM",
+      "venue": "CMRTC Main Auditorium",
+      "tag": "Official Shoot",
+      "desc": "Complete media coverage of graduation walk, diploma presentations, and stage photography.",
+      "seatsLimit": 250,
+      "seatsBooked": 220,
+      "coverImage": "/images/fap/fap-graduation-ceremony-stage.jpg",
+      "status": "Registration Open"
+    },
+    {
+      "id": "ev-lexis-1",
+      "clubId": "lexis",
+      "title": "Esperanza 2K26 Mr & Ms Freshers Gala",
+      "date": "August 30, 2026 • 10:00 AM",
+      "venue": "Main Auditorium Stage",
+      "tag": "Freshers Gala",
+      "desc": "Flagship annual talent hunt, personality rounds, and sash crowning ceremony.",
+      "seatsLimit": 120,
+      "seatsBooked": 110,
+      "coverImage": "/images/lexis/lexis-esperanza-freshers-winners.jpg",
+      "status": "Registration Open"
+    },
+    {
+      "id": "ev-ncc-1",
+      "clubId": "ncc",
+      "title": "Annual Training Camp (ATC-V) Drill",
+      "date": "August 15, 2026 • 07:00 AM",
+      "venue": "Main Parade Ground & Camp Field",
+      "tag": "ATC Camp",
+      "desc": "Ceremonial parade drill, troop inspections, and trophy felicitation for outstanding cadets.",
+      "seatsLimit": 210,
+      "seatsBooked": 210,
+      "coverImage": "/images/ncc/ncc-atc-camp-trophy-ceremony.jpg",
+      "status": "Registration Open"
+    },
+    {
+      "id": "ev-nss-1",
+      "clubId": "nss",
+      "title": "Sustainable Campus Impact Summit 2026",
+      "date": "August 20, 2026 • 08:00 AM",
+      "venue": "Main Auditorium & Eco Hall",
+      "tag": "Sustainability Summit",
+      "desc": "National green campus conference, eco-awards presentation, and certificate distribution.",
+      "seatsLimit": 200,
+      "seatsBooked": 180,
+      "coverImage": "/images/nss/nss-sustainable-campus-awards.jpg",
+      "status": "Registration Open"
+    }
+  ],
+  "registrations": [],
+  "certificates": [
+    {
+      "id": "cert-1",
+      "credentialId": "CMRTC-2026-AKRITI-101",
+      "title": "Certificate of Excellence & Winner",
+      "eventName": "Pegasus 2025 Dance Auditions",
+      "studentRoll": "237R1A05BA",
+      "studentName": "Rohan Sharma",
+      "clubId": "akriti",
+      "clubName": "AKRITI Cultural Club",
+      "issueDate": "Dec 18, 2025",
+      "status": "verified",
+      "verifiedBy": "Dr. M. Sravani (Faculty Coordinator)",
+      "description": "Awarded 1st Place in Solo Contemporary Dance Showcase at Pegasus 2025."
+    },
+    {
+      "id": "cert-2",
+      "credentialId": "CMRTC-2026-CODE-204",
+      "title": "Certificate of National Hackathon Runner Up",
+      "eventName": "Hack The Verse National Hackathon",
+      "studentRoll": "237R1A05BA",
+      "studentName": "Rohan Sharma",
+      "clubId": "codeholics",
+      "clubName": "Codeholics Tech Club",
+      "issueDate": "Sep 08, 2025",
+      "status": "verified",
+      "verifiedBy": "Dr. K. Srinivas Rao (Prof - CSE)",
+      "description": "Awarded 2nd Place in AI Agent Track at Hack The Verse 2025."
     }
   ],
   "albums": [
@@ -251,149 +412,6 @@
       "photoCount": 310
     }
   ],
-  "events": [
-    {
-      "id": "ev-akriti-1",
-      "clubId": "akriti",
-      "title": "Pegasus 2026 Mega Cultural Concert",
-      "date": "December 15-17, 2026 • 09:30 AM",
-      "venue": "CMRTC Main Auditorium",
-      "tag": "Inter-College Fest",
-      "desc": "The flagship annual cultural fest of CMRTC featuring dance battles, fashion shows, and musical nights.",
-      "seatsLimit": 500,
-      "seatsBooked": 420,
-      "coverImage": "/images/akriti/akriti-live-concert-stage.jpg",
-      "status": "Registration Open"
-    },
-    {
-      "id": "ev-codeholics-1",
-      "clubId": "codeholics",
-      "title": "Hack The Verse 2026 - National Hackathon",
-      "date": "September 05-07, 2026 • 09:00 AM",
-      "venue": "CMRTC Main Auditorium & Innovation Hub",
-      "tag": "36-Hour Hackathon",
-      "desc": "36-hour non-stop national hackathon with cash prizes, cloud credits, and startup incubation grants.",
-      "seatsLimit": 300,
-      "seatsBooked": 280,
-      "coverImage": "/images/codeholics/codeholics-hack-the-verse.png",
-      "status": "Registration Open"
-    },
-    {
-      "id": "ev-photography-1",
-      "clubId": "photography",
-      "title": "Graduation Ceremony 2K26 Live Coverage",
-      "date": "September 12, 2026 • 05:00 PM",
-      "venue": "CMRTC Main Auditorium",
-      "tag": "Official Shoot",
-      "desc": "Complete media coverage of graduation walk, diploma presentations, and stage photography.",
-      "seatsLimit": 250,
-      "seatsBooked": 220,
-      "coverImage": "/images/fap/fap-graduation-ceremony-stage.jpg",
-      "status": "Registration Open"
-    },
-    {
-      "id": "ev-lexis-1",
-      "clubId": "lexis",
-      "title": "Esperanza 2K26 Mr & Ms Freshers Gala",
-      "date": "August 30, 2026 • 10:00 AM",
-      "venue": "Main Auditorium Stage",
-      "tag": "Freshers Gala",
-      "desc": "Flagship annual talent hunt, personality rounds, and sash crowning ceremony.",
-      "seatsLimit": 120,
-      "seatsBooked": 110,
-      "coverImage": "/images/lexis/lexis-esperanza-freshers-winners.jpg",
-      "status": "Registration Open"
-    },
-    {
-      "id": "ev-ncc-1",
-      "clubId": "ncc",
-      "title": "Annual Training Camp (ATC-V) Drill",
-      "date": "August 15, 2026 • 07:00 AM",
-      "venue": "Main Parade Ground & Camp Field",
-      "tag": "ATC Camp",
-      "desc": "Ceremonial parade drill, troop inspections, and trophy felicitation for outstanding cadets.",
-      "seatsLimit": 210,
-      "seatsBooked": 210,
-      "coverImage": "/images/ncc/ncc-atc-camp-trophy-ceremony.jpg",
-      "status": "Registration Open"
-    },
-    {
-      "id": "ev-nss-1",
-      "clubId": "nss",
-      "title": "Sustainable Campus Impact Summit 2026",
-      "date": "August 20, 2026 • 08:00 AM",
-      "venue": "Main Auditorium & Eco Hall",
-      "tag": "Sustainability Summit",
-      "desc": "National green campus conference, eco-awards presentation, and certificate distribution.",
-      "seatsLimit": 200,
-      "seatsBooked": 180,
-      "coverImage": "/images/nss/nss-sustainable-campus-awards.jpg",
-      "status": "Registration Open"
-    }
-  ],
-  "certificates": [
-    {
-      "id": "cert-1",
-      "credentialId": "CMRTC-2026-AKRITI-101",
-      "title": "Certificate of Excellence & Winner",
-      "eventName": "Pegasus 2025 Dance Auditions",
-      "studentRoll": "237R1A05BA",
-      "studentName": "Rohan Sharma",
-      "clubId": "akriti",
-      "clubName": "AKRITI Cultural Club",
-      "issueDate": "Dec 18, 2025",
-      "status": "verified",
-      "verifiedBy": "Dr. M. Sravani (Faculty Coordinator)",
-      "description": "Awarded 1st Place in Solo Contemporary Dance Showcase at Pegasus 2025."
-    },
-    {
-      "id": "cert-2",
-      "credentialId": "CMRTC-2026-CODE-204",
-      "title": "Certificate of National Hackathon Runner Up",
-      "eventName": "Hack The Verse National Hackathon",
-      "studentRoll": "237R1A05BA",
-      "studentName": "Rohan Sharma",
-      "clubId": "codeholics",
-      "clubName": "Codeholics Tech Club",
-      "issueDate": "Sep 08, 2025",
-      "status": "verified",
-      "verifiedBy": "Dr. K. Srinivas Rao (Prof - CSE)",
-      "description": "Awarded 2nd Place in AI Agent Track at Hack The Verse 2025."
-    }
-  ],
-  "requests": [
-    {
-      "id": "req-1",
-      "studentRoll": "237R1A05BA",
-      "studentName": "Rohan Sharma",
-      "studentEmail": "student@cmr.edu.in",
-      "clubId": "akriti",
-      "clubName": "Akriti Cultural Club",
-      "status": "approved",
-      "appliedAt": "2026-08-07T09:33:25.555Z"
-    },
-    {
-      "id": "req-2",
-      "studentRoll": "237R1A05BA",
-      "studentName": "Rohan Sharma",
-      "studentEmail": "student@cmr.edu.in",
-      "clubId": "codeholics",
-      "clubName": "Codeholics Tech Club",
-      "status": "approved",
-      "appliedAt": "2026-08-08T09:33:25.555Z"
-    },
-    {
-      "id": "req-3",
-      "studentRoll": "237R1A0512",
-      "studentName": "Sneha Patel",
-      "studentEmail": "sneha@cmr.edu.in",
-      "clubId": "akriti",
-      "clubName": "Akriti Cultural Club",
-      "status": "pending",
-      "appliedAt": "2026-08-10T09:33:25.555Z"
-    }
-  ],
-  "registrations": [],
   "volunteerLogs": [],
   "feedbacks": [],
   "notifications": []

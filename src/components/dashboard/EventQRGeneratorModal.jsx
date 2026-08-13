@@ -18,6 +18,13 @@ const EventQRGeneratorModal = ({ isOpen, onClose, event, onToast }) => {
     if (onToast) onToast(`📄 Exported high-resolution QR Pass PNG for "${event.title}"!`, 'success');
   };
 
+  const refreshData = () => {
+    if (event?.id) {
+      setMetrics(getAttendanceMetrics(event.id));
+      if (onToast) onToast('🔄 Attendance roster updated!', 'info');
+    }
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-md font-sans">
