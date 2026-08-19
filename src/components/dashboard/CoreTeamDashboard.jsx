@@ -25,6 +25,7 @@ import {
   Clock
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
+import DhondiFooter from '../layout/DhondiFooter';
 import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
@@ -197,7 +198,8 @@ const CoreTeamDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 flex font-sans select-none overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans select-none overflow-x-hidden">
+      {/* Role Sidebar */}
       <RoleSidebar activeSection={activeSection} setActiveSection={setActiveSection} currentRole="core" />
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
@@ -961,6 +963,8 @@ const CoreTeamDashboard = () => {
           event={selectedQREvent || { id: 'cal-4', title: 'CMR HackFest 2026' }}
           onToast={(msg, type) => triggerToast(msg)}
         />
+
+        <DhondiFooter className="mt-8 pt-4 border-t border-slate-200" />
       </main>
     </div>
   );

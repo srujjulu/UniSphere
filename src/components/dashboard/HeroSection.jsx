@@ -25,21 +25,21 @@ const HeroSection = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1, duration: 0.4 }}
-        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-bold text-indigo-300 shadow-sm"
+        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 shadow-xs"
       >
-        <span className="flex h-2 w-2 rounded-full bg-indigo-400" />
+        <span className="flex h-2 w-2 rounded-full bg-blue-600" />
         <span>CMR Technical Campus</span>
-        <span className="text-slate-500">•</span>
-        <span className="text-indigo-200 font-semibold">NAAC A+ Autonomous Institution</span>
-        <ShieldCheck size={14} className="text-emerald-400 ml-0.5" />
+        <span className="text-slate-300">•</span>
+        <span className="text-blue-900 font-semibold">NAAC A+ Autonomous Institution</span>
+        <ShieldCheck size={14} className="text-emerald-600 ml-0.5" />
       </motion.div>
 
       {/* Main Punchy Editorial Headline */}
       <div className="space-y-4 max-w-4xl">
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
-          Where Campus Life <span className="text-gradient-indigo">Comes Alive</span>
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
+          Where Campus Life <span className="text-blue-600">Comes Alive</span>
         </h1>
-        <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
+        <p className="text-slate-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
           Discover, collaborate, and lead across 6 official student organizations at CMRTC. From technical hackathons and cultural fests to community outreach and leadership drills.
         </p>
       </div>
@@ -48,7 +48,7 @@ const HeroSection = () => {
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
         <button
           onClick={handleExploreClick}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition-all cursor-pointer active:scale-95"
+          className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95"
         >
           <Compass size={16} />
           <span>Explore Clubs</span>
@@ -57,7 +57,7 @@ const HeroSection = () => {
         {user && (
           <button
             onClick={() => navigate('/dashboard')}
-            className="px-6 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-slate-200 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer active:scale-95"
+            className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer active:scale-95 shadow-xs"
           >
             <span>Go to My Dashboard</span>
             <ArrowRight size={16} />
@@ -67,36 +67,36 @@ const HeroSection = () => {
 
       {/* College Quick Highlights Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full pt-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0E1526]/80 border border-white/[0.07] backdrop-blur-md space-y-1 text-left transition-all hover:border-white/[0.15]">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2 border border-blue-100">
             <Users size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">10,000+</p>
-          <p className="text-[11px] text-slate-400 font-semibold tracking-wide">Campus Students</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">10,000+</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Campus Students</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0E1526]/80 border border-white/[0.07] backdrop-blur-md space-y-1 text-left transition-all hover:border-white/[0.15]">
-          <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 border border-indigo-100">
             <Sparkles size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">6 Premier</p>
-          <p className="text-[11px] text-slate-400 font-semibold tracking-wide">Student Clubs</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">6 Premier</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Student Clubs</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0E1526]/80 border border-white/[0.07] backdrop-blur-md space-y-1 text-left transition-all hover:border-white/[0.15]">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
+          <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2 border border-amber-100">
             <Calendar size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-white font-mono">50+ Annual</p>
-          <p className="text-[11px] text-slate-400 font-semibold tracking-wide">Events & Fests</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">50+ Annual</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Events & Fests</p>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0E1526]/80 border border-white/[0.07] backdrop-blur-md space-y-1 text-left transition-all hover:border-white/[0.15]">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
+          <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 border border-emerald-100">
             <Award size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">NAAC A+</p>
-          <p className="text-[11px] text-slate-400 font-semibold tracking-wide">Autonomous Grade</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600 font-mono">NAAC A+</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Autonomous Grade</p>
         </div>
       </div>
     </motion.section>

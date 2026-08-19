@@ -3,27 +3,27 @@ import { Sparkles, Terminal, Camera, BookOpen, Shield, Heart } from 'lucide-reac
 
 const categoryConfigs = {
   Cultural: {
-    colorClass: 'text-rose-300 border-rose-500/20 bg-rose-500/10',
+    colorClass: 'text-rose-700 border-rose-200 bg-rose-50',
     icon: Sparkles,
   },
   Technical: {
-    colorClass: 'text-indigo-300 border-indigo-500/20 bg-indigo-500/10',
+    colorClass: 'text-blue-700 border-blue-200 bg-blue-50',
     icon: Terminal,
   },
   Photography: {
-    colorClass: 'text-violet-300 border-violet-500/20 bg-violet-500/10',
+    colorClass: 'text-purple-700 border-purple-200 bg-purple-50',
     icon: Camera,
   },
   Literary: {
-    colorClass: 'text-emerald-300 border-emerald-500/20 bg-emerald-500/10',
+    colorClass: 'text-emerald-700 border-emerald-200 bg-emerald-50',
     icon: BookOpen,
   },
   Defence: {
-    colorClass: 'text-sky-300 border-sky-500/20 bg-sky-500/10',
+    colorClass: 'text-sky-700 border-sky-200 bg-sky-50',
     icon: Shield,
   },
   Service: {
-    colorClass: 'text-amber-300 border-amber-500/20 bg-amber-500/10',
+    colorClass: 'text-amber-700 border-amber-200 bg-amber-50',
     icon: Heart,
   }
 };

@@ -16,6 +16,7 @@ import {
   Award
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
+import DhondiFooter from '../layout/DhondiFooter';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
@@ -95,7 +96,8 @@ const FacultyDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 flex font-sans select-none overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans select-none overflow-x-hidden">
+      {/* Role Sidebar */}
       <RoleSidebar activeSection={activeSection} setActiveSection={setActiveSection} currentRole="faculty" />
 
       <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-7xl mx-auto space-y-6">
@@ -471,6 +473,8 @@ const FacultyDashboard = () => {
           currentClubId="all"
           onToast={(msg) => triggerToast(msg)}
         />
+
+        <DhondiFooter className="mt-8 pt-4 border-t border-slate-200" />
       </main>
     </div>
   );

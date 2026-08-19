@@ -148,16 +148,16 @@ const LoginForm = ({ onSuccess }) => {
       </motion.div>
 
       {/* Quick Demo Role Selector Pills */}
-      <motion.div variants={itemVariants} className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800 space-y-2">
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-          <Sparkles size={12} className="text-yellow-400" />
-          <span>Quick Demo Logins (Auto Role Detection):</span>
+      <motion.div variants={itemVariants} className="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2">
+        <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
+          <Sparkles size={12} className="text-amber-500" />
+          <span>Quick Demo Logins:</span>
         </span>
         <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
             onClick={() => handleQuickDemo('student@cmr.edu.in', 'Cmrtc#Student2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
           >
             <GraduationCap size={12} />
             <span>Student Demo</span>
@@ -165,7 +165,7 @@ const LoginForm = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => handleQuickDemo('core@cmr.edu.in', 'Cmrtc#Core2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
           >
             <UserCheck size={12} />
             <span>Core Team Demo</span>
@@ -173,7 +173,7 @@ const LoginForm = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => handleQuickDemo('faculty@cmr.edu.in', 'Cmrtc#Faculty2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
           >
             <Shield size={12} />
             <span>Faculty Demo</span>
@@ -181,7 +181,7 @@ const LoginForm = ({ onSuccess }) => {
           <button
             type="button"
             onClick={() => handleQuickDemo('admin@cmr.edu.in', 'Cmrtc#Admin2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
           >
             <Crown size={12} />
             <span>Admin Demo</span>
@@ -191,25 +191,25 @@ const LoginForm = ({ onSuccess }) => {
 
       {/* Remember me & Forgot Password */}
       <motion.div variants={itemVariants} className="flex items-center justify-between select-none">
-        <label className="flex items-center gap-3 cursor-pointer group text-xs text-[#94A3B8] hover:text-white">
+        <label className="flex items-center gap-2.5 cursor-pointer group text-xs text-slate-600 hover:text-slate-900">
           <input 
             type="checkbox" 
             checked={rememberMe} 
             onChange={(e) => setRememberMe(e.target.checked)} 
-            className="rounded border-slate-700 bg-[#0F172A] text-[#3366FF]" 
+            className="rounded border-slate-300 text-blue-600" 
           />
-          <span className="font-medium">Remember Me</span>
+          <span className="font-semibold">Remember Me</span>
         </label>
 
         <a 
           href="#forgot" 
           onMouseEnter={() => setIsForgotHovered(true)}
           onMouseLeave={() => setIsForgotHovered(false)}
-          className="text-xs font-semibold text-[#94A3B8] hover:text-[#3366FF] relative transition-colors duration-300 focus:outline-none"
+          className="text-xs font-semibold text-slate-500 hover:text-blue-600 relative transition-colors duration-200 focus:outline-none"
         >
           Forgot Password?
           <span 
-            className="absolute bottom-0 left-0 w-full h-[1.5px] bg-[#3366FF] origin-left transition-transform duration-300 ease-out" 
+            className="absolute bottom-0 left-0 w-full h-[1.5px] bg-blue-600 origin-left transition-transform duration-200 ease-out" 
             style={{ transform: isForgotHovered ? 'scaleX(1)' : 'scaleX(0)' }} 
           />
         </a>
@@ -218,7 +218,7 @@ const LoginForm = ({ onSuccess }) => {
       {/* Submit Button */}
       <motion.div variants={itemVariants} className="mt-1">
         <SubmitButton status={submitStatus}>
-          Authenticate Role & Dashboard &rarr;
+          Sign In to Portal &rarr;
         </SubmitButton>
       </motion.div>
     </motion.form>

@@ -47,21 +47,21 @@ const LoginPage = () => {
       </motion.div>
 
       {/* Verified Institutional Tag */}
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-300 mb-3">
-        <ShieldCheck size={14} className="text-emerald-400" />
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-3 shadow-xs">
+        <ShieldCheck size={14} className="text-emerald-600" />
         <span>CMR Technical Campus · NAAC A+</span>
       </div>
 
       {/* Hero Heading */}
       <motion.h1 
         style={headingStyle}
-        className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-3 tracking-tight leading-tight"
+        className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-3 tracking-tight leading-tight"
       >
-        Student Club <span className="text-gradient-indigo">Community Portal</span>
+        Student Club <span className="text-blue-600">Portal</span>
       </motion.h1>
 
       {/* Description */}
-      <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-[420px] mx-auto mb-6 font-normal">
+      <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-[420px] mx-auto mb-6 font-normal">
         Connect with campus leaders, register for flagship events, track volunteer hours, and access verified certifications.
       </p>
 

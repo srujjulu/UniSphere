@@ -55,9 +55,9 @@ const SocialLogin = () => {
   return (
     <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center gap-4">
-        <div className="h-[1px] bg-slate-800 flex-1" />
-        <span className="text-[11px] font-bold tracking-[2px] text-slate-500 uppercase">Or continue with</span>
-        <div className="h-[1px] bg-slate-800 flex-1" />
+        <div className="h-[1px] bg-slate-200 flex-1" />
+        <span className="text-[11px] font-bold tracking-[1.5px] text-slate-500 uppercase">Or continue with</span>
+        <div className="h-[1px] bg-slate-200 flex-1" />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -65,9 +65,9 @@ const SocialLogin = () => {
           <motion.button
             key={p.name}
             type="button"
-            whileHover={{ scale: 1.03, y: -2, backgroundColor: '#222839' }}
+            whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            className="h-[46px] sm:h-[48px] rounded-2xl bg-[#1A2030] flex items-center justify-center gap-2 border border-slate-800 hover:border-slate-700 cursor-pointer focus:outline-none focus-ring text-xs sm:text-sm font-semibold text-slate-300 hover:text-white"
+            className="h-[46px] sm:h-[48px] rounded-2xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center gap-2 border border-slate-200 hover:border-slate-300 cursor-pointer focus:outline-none text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
           >
             {p.icon}
             <span className="hidden sm:inline">{p.name}</span>

@@ -26,7 +26,7 @@ const AuthLayout = ({ children, leftPanelContent }) => {
 
   return (
     <div 
-      className="flex flex-col lg:flex-row min-h-screen w-full overflow-x-hidden bg-[#080C16] text-white selection:bg-indigo-500/30 selection:text-white"
+      className="flex flex-col lg:flex-row min-h-screen w-full overflow-x-hidden bg-[#F8FAFC] text-slate-900 selection:bg-blue-500 selection:text-white"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -35,13 +35,13 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full py-10 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:min-h-screen relative flex flex-col justify-center items-center overflow-hidden border-b border-white/[0.08] lg:border-b-0 lg:border-r bg-[#0B101E]/90 select-none"
+        className="w-full py-10 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:min-h-screen relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-200 lg:border-b-0 lg:border-r bg-white select-none"
       >
-        {/* Subtle Ambient Spotlight */}
+        {/* Subtle Ambient Glow */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-30"
           style={{
-            background: 'radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.18), transparent 70%)'
+            background: 'radial-gradient(circle at 50% 40%, rgba(37, 99, 235, 0.12), transparent 70%)'
           }}
         />
 
@@ -56,9 +56,9 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:min-h-screen relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto justify-center py-8 lg:py-12"
+        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:min-h-screen relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto justify-center py-8 lg:py-12 bg-[#F8FAFC]"
       >
-        <div className="w-full max-w-[440px] mx-auto">
+        <div className="w-full max-w-[440px] mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
           {children}
         </div>
       </motion.div>

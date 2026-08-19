@@ -16,7 +16,7 @@ const AuthTabs = ({ activeTab, onChange }) => {
 
   return (
     <div 
-      className="w-full bg-[#1A2030] p-1.5 rounded-2xl flex relative select-none"
+      className="w-full bg-slate-100 p-1.5 rounded-2xl flex relative select-none border border-slate-200"
       role="tablist"
       aria-label="Authentication Options"
     >
@@ -33,16 +33,16 @@ const AuthTabs = ({ activeTab, onChange }) => {
             onClick={() => onChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, tab.id)}
             className={`
-              flex-1 py-3.5 text-[15px] font-semibold rounded-xl relative z-10 
-              transition-colors duration-300 cursor-pointer focus:outline-none
-              ${isActive ? 'text-white font-bold' : 'text-slate-400 hover:text-white'}
+              flex-1 py-3 text-[14px] font-semibold rounded-xl relative z-10 
+              transition-colors duration-200 cursor-pointer focus:outline-none
+              ${isActive ? 'text-blue-700 font-bold' : 'text-slate-500 hover:text-slate-800'}
             `}
           >
             {/* Sliding Pill Background using layoutId */}
             {isActive && (
               <motion.div
                 layoutId="activeTabPill"
-                className="absolute inset-0 bg-[#3366FF] rounded-xl -z-10 shadow-[0_4px_15px_rgba(51,102,255,0.3)]"
+                className="absolute inset-0 bg-white rounded-xl -z-10 shadow-sm border border-slate-200"
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
               />
             )}

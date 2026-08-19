@@ -27,20 +27,20 @@ const StatsBar = ({ totalVisits }) => {
     { 
       label: 'Live active visitors', 
       value: 36, 
-      color: 'text-emerald-400',
+      color: 'text-emerald-600',
       icon: Users,
       hasDot: true 
     },
     { 
       label: 'Total club impressions', 
       value: totalVisits !== undefined ? totalVisits : 5904, 
-      color: 'text-indigo-400',
+      color: 'text-blue-600',
       icon: Eye
     },
     { 
       label: 'Official campus clubs', 
       value: 6, 
-      color: 'text-amber-400',
+      color: 'text-amber-600',
       icon: Compass 
     }
   ];
@@ -50,14 +50,14 @@ const StatsBar = ({ totalVisits }) => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-      className="w-full rounded-2xl border border-white/[0.08] backdrop-blur-xl bg-[#0E1526]/60 flex flex-col md:flex-row items-center justify-between px-6 sm:px-8 py-3.5 gap-4 md:gap-0 shadow-lg"
+      className="w-full rounded-2xl border border-slate-200 bg-white flex flex-col md:flex-row items-center justify-between px-6 sm:px-8 py-3.5 gap-4 md:gap-0 shadow-xs"
     >
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <React.Fragment key={stat.label}>
             <div className="flex items-center gap-3.5 py-1">
-              <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-slate-400">
+              <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500">
                 <Icon size={16} />
               </div>
 
@@ -73,14 +73,14 @@ const StatsBar = ({ totalVisits }) => {
                     <AnimatedCounter value={stat.value} />
                   </span>
                 </div>
-                <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">
+                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-0.5">
                   {stat.label}
                 </span>
               </div>
             </div>
 
             {index < stats.length - 1 && (
-              <div className="hidden md:block w-[1px] h-8 bg-white/[0.08]" />
+              <div className="hidden md:block w-[1px] h-8 bg-slate-200" />
             )}
           </React.Fragment>
         );
