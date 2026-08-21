@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuth from '../../hooks/useAuth';
 import { LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
-import NotificationCenter from './NotificationCenter';
 import LiveClock from './LiveClock';
 
 const roleLabels = {
@@ -119,8 +118,6 @@ const Navbar = () => {
 
         {user ? (
           <div className="flex items-center gap-2.5">
-            <NotificationCenter />
-
             {/* Clean Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button

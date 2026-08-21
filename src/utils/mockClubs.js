@@ -110,27 +110,73 @@ export const isClubAtMaxCapacity = (clubId) => {
   return (club?.membersCount || 0) >= CLUB_MAX_MEMBERS;
 };
 
+export const getClubSettings = (clubId) => {
+  const defaultClub = mockClubs.find((c) => c.id === clubId);
+  const fallback = {
+    name: defaultClub?.name || 'Club',
+    subtitle: defaultClub?.subtitle || 'Official Campus Student Club',
+    recruitment: 'open'
+  };
+
+  if (typeof window === 'undefined') return fallback;
+  const stored = localStorage.getItem(`cmrtc_club_settings_${clubId}`);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      return {
+        name: parsed.name || defaultClub?.name || 'Club',
+        subtitle: parsed.subtitle || defaultClub?.subtitle || 'Official Campus Student Club',
+        recruitment: parsed.recruitment || 'open'
+      };
+    } catch {
+      return fallback;
+    }
+  }
+  return fallback;
+};
+
+export const saveClubSettings = (clubId, settings) => {
+  if (typeof window === 'undefined') return;
+  const current = getClubSettings(clubId);
+  const updated = {
+    ...current,
+    ...settings,
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem(`cmrtc_club_settings_${clubId}`, JSON.stringify(updated));
+  return updated;
+};
+
+export const isClubRecruitmentOpen = (clubId) => {
+  const settings = getClubSettings(clubId);
+  return settings.recruitment === 'open';
+};
+
 export const getStoredClubs = () => {
   if (typeof window === 'undefined') return mockClubs;
   const stored = localStorage.getItem('cmrtc_clubs_views');
+  let parsedViews = {};
   if (stored) {
     try {
-      const parsedViews = JSON.parse(stored);
-      return mockClubs.map((club) => ({
-        ...club,
-        views: parsedViews[club.id] !== undefined ? parsedViews[club.id] : club.views,
-      }));
-    } catch {
-      return mockClubs;
-    }
+      parsedViews = JSON.parse(stored);
+    } catch {}
   }
-  return mockClubs;
+
+  return mockClubs.map((club) => {
+    const customConfig = getClubSettings(club.id);
+    return {
+      ...club,
+      name: customConfig.name || club.name,
+      subtitle: customConfig.subtitle || club.subtitle,
+      recruitment: customConfig.recruitment || 'open',
+      views: parsedViews[club.id] !== undefined ? parsedViews[club.id] : club.views,
+    };
+  });
 };
 
 export const incrementClubViews = (clubId) => {
   if (typeof window === 'undefined') return 0;
 
-  // Check if this user/device has already viewed/joined this club
   let viewedList = [];
   try {
     const viewedStored = localStorage.getItem('cmrtc_user_viewed_clubs');
@@ -147,17 +193,14 @@ export const incrementClubViews = (clubId) => {
   const baseViews = currentClub ? currentClub.views : 0;
   const currentViews = viewsObj[clubId] !== undefined ? viewsObj[clubId] : baseViews;
 
-  // If user already viewed this club, don't increment again
   if (viewedList.includes(clubId)) {
     return currentViews;
   }
 
-  // Unique new visitor for this club!
   const newViews = currentViews + 1;
   viewsObj[clubId] = newViews;
   localStorage.setItem('cmrtc_clubs_views', JSON.stringify(viewsObj));
 
-  // Mark this club as viewed by current user
   viewedList.push(clubId);
   localStorage.setItem('cmrtc_user_viewed_clubs', JSON.stringify(viewedList));
 
@@ -166,3 +209,40 @@ export const incrementClubViews = (clubId) => {
   }
   return newViews;
 };
+
+export const DEFAULT_SYSTEM_CONFIG = {
+  portalName: 'UniSphere - CMRTC Official Student Clubs Portal',
+  emailDomain: '@cmr.edu.in',
+  academicYear: '2026-2027',
+  recruitmentStatus: 'open',
+  maintenanceMode: 'live',
+  maxUploadLimit: '15'
+};
+
+export const getGlobalSystemConfig = () => {
+  if (typeof window === 'undefined') return DEFAULT_SYSTEM_CONFIG;
+  try {
+    const stored = localStorage.getItem('cmrtc_global_system_config');
+    if (stored) return { ...DEFAULT_SYSTEM_CONFIG, ...JSON.parse(stored) };
+  } catch {}
+  return DEFAULT_SYSTEM_CONFIG;
+};
+
+export const saveGlobalSystemConfig = (config) => {
+  if (typeof window === 'undefined') return DEFAULT_SYSTEM_CONFIG;
+  const current = getGlobalSystemConfig();
+  const updated = { ...current, ...config, savedAt: new Date().toISOString() };
+  localStorage.setItem('cmrtc_global_system_config', JSON.stringify(updated));
+
+  // If recruitmentStatus changed, update recruitment on all clubs
+  if (config.recruitmentStatus) {
+    mockClubs.forEach(club => {
+      saveClubSettings(club.id, { recruitment: config.recruitmentStatus });
+    });
+  }
+
+  window.dispatchEvent(new Event('storage'));
+  return updated;
+};
+
+

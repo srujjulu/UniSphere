@@ -32,13 +32,13 @@ const ClubGrid = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-full items-stretch justify-items-stretch"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-full items-stretch"
     >
       {clubs.map((club) => (
         <motion.div 
           key={club.id} 
           variants={cardWrapperVariants}
-          className="flex h-full"
+          className="flex h-full w-full"
         >
           <ClubCard
             club={club}

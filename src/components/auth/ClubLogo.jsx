@@ -13,11 +13,11 @@ const ClubLogo = ({ svg, name, index = 0 }) => {
       }}
       whileHover={{ 
         scale: 1.12, 
-        y: -10, 
-        rotate: 3,
-        boxShadow: "0 12px 28px -5px rgba(255, 140, 50, 0.3)"
+        y: -6, 
+        rotate: 2,
+        boxShadow: "0 12px 24px -4px rgba(37, 99, 235, 0.22)"
       }}
-      className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.15)] cursor-pointer overflow-hidden p-2 select-none"
+      className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center shadow-md hover:shadow-xl border border-slate-100 cursor-pointer overflow-hidden p-2 sm:p-2.5 select-none transition-shadow duration-300"
       title={name}
       aria-label={`${name} Logo`}
       role="img"

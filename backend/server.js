@@ -13,6 +13,7 @@ import certificateRoutes from './routes/certificateRoutes.js';
 import galleryRoutes from './routes/galleryRoutes.js';
 import volunteerRoutes from './routes/volunteerRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
+import exportRoutes from './routes/exportRoutes.js';
 
 dotenv.config();
 
@@ -88,6 +89,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/volunteer-hours', volunteerRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/exports', exportRoutes);
 
 // Global 404 Handler for API
 app.use('/api/*', (req, res) => {

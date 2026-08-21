@@ -30,23 +30,23 @@ const SubmitButton = ({
   // Determine classes based on status
   const getButtonBg = () => {
     if (status === 'success') {
-      return 'bg-gradient-to-r from-emerald-500 to-green-600 shadow-[0_4px_25px_rgba(16,185,129,0.4)]';
+      return 'bg-gradient-to-r from-emerald-500 to-green-600 shadow-[0_4px_20px_rgba(16,185,129,0.35)]';
     }
-    return 'bg-gradient-to-r from-[#3366FF] to-[#FF8C32] hover:shadow-[0_8px_30px_rgba(255,140,50,0.5)] shadow-[0_4px_20px_rgba(255,140,50,0.3)]';
+    return 'bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-[0_4px_20px_rgba(37,99,235,0.28)] hover:shadow-[0_6px_25px_rgba(37,99,235,0.38)]';
   };
 
   return (
     <motion.button
       variants={shakeVariants}
       animate={shouldShake ? "shake" : "idle"}
-      whileHover={status === 'idle' ? { y: -2, scale: 1.01 } : {}}
-      whileTap={status === 'idle' ? { scale: 0.98 } : {}}
+      whileHover={status === 'idle' ? { y: -1, scale: 1.005 } : {}}
+      whileTap={status === 'idle' ? { scale: 0.985 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
       type="submit"
       disabled={status === 'loading' || status === 'success' || disabled}
       onClick={onClick}
       className={`
-        w-full h-[62px] rounded-[18px] text-white font-bold text-lg cursor-pointer
+        w-full h-[52px] rounded-[16px] text-white font-bold text-base cursor-pointer
         relative overflow-hidden flex items-center justify-center select-none
         border-none outline-none focus-ring transition-all duration-300
         ${getButtonBg()}

@@ -2,18 +2,6 @@ import { mockClubs, isClubAtMaxCapacity } from './mockClubs';
 
 export const initialRequests = [
   { 
-    id: 'req-lexis-1', 
-    name: 'Student 237R1A05BA', 
-    rollNo: '237R1A05BA', 
-    branch: 'CSE 2nd Yr', 
-    clubId: 'lexis',
-    clubName: 'Lexis Club',
-    talent: 'Debating & Public Speaking', 
-    email: '237r1a05ba@cmr.edu.in',
-    status: 'pending',
-    date: 'Today'
-  },
-  { 
     id: 'req-code-1', 
     name: 'Rahul Sharma', 
     rollNo: '237R1A0512', 
@@ -89,6 +77,7 @@ export const getStoredRequests = () => {
 };
 
 export const CLUB_MAX_LIMIT = 50;
+export const MAX_CLUBS_PER_STUDENT = 2;
 
 export const saveRequest = (newRequest) => {
   if (typeof window === 'undefined') return { success: true };
@@ -103,14 +92,33 @@ export const saveRequest = (newRequest) => {
   }
 
   const current = getStoredRequests();
+  const studentRollUpper = (newRequest.rollNo || '').toUpperCase();
+  const studentEmailLower = (newRequest.email || '').toLowerCase();
+
+  // Check how many clubs this student has already joined or applied for
+  const studentActiveClubs = current.filter(r => {
+    const isSameStudent = 
+      (r.rollNo && r.rollNo.toUpperCase() === studentRollUpper) || 
+      (r.email && r.email.toLowerCase() === studentEmailLower);
+    const isApprovedOrPending = r.status === 'approved' || r.status === 'pending';
+    return isSameStudent && isApprovedOrPending && r.clubId !== newRequest.clubId;
+  });
+
+  if (studentActiveClubs.length >= MAX_CLUBS_PER_STUDENT) {
+    return {
+      success: false,
+      error: `Membership Limit: You can only join a maximum of ${MAX_CLUBS_PER_STUDENT} campus clubs.`
+    };
+  }
+
   // Avoid duplicate rollNo for same club
   const exists = current.some(
-    r => r.rollNo.toUpperCase() === newRequest.rollNo.toUpperCase() && r.clubId === newRequest.clubId
+    r => (r.rollNo?.toUpperCase() === studentRollUpper || (r.email && r.email.toLowerCase() === studentEmailLower)) && r.clubId === newRequest.clubId
   );
   let updated;
   if (exists) {
     updated = current.map(r => 
-      (r.rollNo.toUpperCase() === newRequest.rollNo.toUpperCase() && r.clubId === newRequest.clubId) 
+      ((r.rollNo?.toUpperCase() === studentRollUpper || (r.email && r.email.toLowerCase() === studentEmailLower)) && r.clubId === newRequest.clubId) 
         ? { ...r, ...newRequest, status: 'pending' } 
         : r
     );
@@ -154,9 +162,9 @@ export const getStudentClubStatus = (rollNoOrEmail, clubId) => {
 };
 
 export const getApprovedClubsForStudent = (rollNoOrEmail) => {
-  if (typeof window === 'undefined') return ['akriti'];
+  if (typeof window === 'undefined') return [];
   const all = getStoredRequests();
-  if (!rollNoOrEmail) return ['akriti'];
+  if (!rollNoOrEmail) return [];
   const searchStr = rollNoOrEmail.trim().toLowerCase();
   const approvedFromRequests = all
     .filter(r => 
@@ -167,5 +175,19 @@ export const getApprovedClubsForStudent = (rollNoOrEmail) => {
     )
     .map(r => r.clubId);
 
-  return Array.from(new Set(['akriti', ...approvedFromRequests]));
+  return Array.from(new Set(approvedFromRequests));
+};
+
+export const cancelStudentClubRequest = (clubId, rollNoOrEmail) => {
+  if (typeof window === 'undefined') return { success: true };
+  const current = getStoredRequests();
+  const searchStr = (rollNoOrEmail || '').trim().toLowerCase();
+  const updated = current.filter(r => {
+    if (r.clubId !== clubId) return true;
+    const matchRoll = r.rollNo && r.rollNo.toLowerCase() === searchStr;
+    const matchEmail = r.email && r.email.toLowerCase() === searchStr;
+    return !(matchRoll || matchEmail);
+  });
+  localStorage.setItem('cmrtc_club_member_requests', JSON.stringify(updated));
+  return { success: true, data: updated };
 };

@@ -1,7 +1,7 @@
 export const initialVolunteerData = {
   '237R1A05BA': {
     studentRoll: '237R1A05BA',
-    studentName: 'Student Member',
+    studentName: 'Srujanya Maringanti',
     department: 'Computer Science & Engineering',
     totalHours: 32,
     history: [
@@ -93,16 +93,59 @@ export const getStoredVolunteerRecords = () => {
   return initialVolunteerData;
 };
 
-export const getStudentVolunteerRecord = (studentRoll = '237R1A05BA') => {
+export const getStudentVolunteerRecord = (studentRoll = '237R1A05BA', studentName = 'Student Member', department = 'Computer Science & Engineering (CSE)') => {
   const all = getStoredVolunteerRecords();
   const rollUpper = studentRoll.toUpperCase();
-  return all[rollUpper] || {
+  if (all[rollUpper]) {
+    return all[rollUpper];
+  }
+
+  // Generate dynamic initial volunteer record for this student
+  const defaultRecord = {
     studentRoll: rollUpper,
-    studentName: 'Student Member',
-    department: 'Computer Science & Engineering',
-    totalHours: 0,
-    history: []
+    studentName: studentName || 'Student Member',
+    department: department || 'Computer Science & Engineering',
+    totalHours: 32,
+    history: [
+      {
+        id: `vol-${rollUpper}-1`,
+        eventTitle: 'Swachh Bharat Cleanliness & Greenery Drive',
+        clubName: 'NSS Unit CMRTC',
+        hours: 8,
+        date: 'July 28, 2026',
+        assignedBy: 'Dr. Suresh Kumar (NSS Officer)'
+      },
+      {
+        id: `vol-${rollUpper}-2`,
+        eventTitle: 'Republic Day Parade & Rifle Drill Training',
+        clubName: 'NCC Cadet Corps CMRTC',
+        hours: 12,
+        date: 'May 20, 2026',
+        assignedBy: 'Col. K. V. Sharma (Unit Commander)'
+      },
+      {
+        id: `vol-${rollUpper}-3`,
+        eventTitle: 'Mega Blood Donation & Health Screening Camp',
+        clubName: 'NSS Unit & Red Cross',
+        hours: 12,
+        date: 'March 14, 2026',
+        assignedBy: 'Prof. Anitha Rao (Faculty Lead)'
+      }
+    ]
   };
+
+  const updatedAll = {
+    ...all,
+    [rollUpper]: defaultRecord
+  };
+
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('cmrtc_volunteer_hours_data', JSON.stringify(updatedAll));
+    } catch {}
+  }
+
+  return defaultRecord;
 };
 
 export const assignVolunteerHours = ({ studentRoll = '237R1A05BA', studentName = 'Student Member', eventTitle, clubName = 'NSS Unit CMRTC', hours = 8, assignedBy = 'Faculty Coordinator' }) => {

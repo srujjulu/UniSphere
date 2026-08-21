@@ -36,16 +36,16 @@ const ClubCard = ({
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full rounded-2xl bg-white hover:bg-slate-50/50 border border-slate-200 hover:border-blue-300 p-6 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-200 text-left group relative overflow-hidden"
+      className="w-full h-full rounded-2xl bg-white hover:bg-slate-50/50 border border-slate-200 hover:border-blue-300 p-6 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-200 text-left group relative overflow-hidden"
     >
       {/* Top subtle highlight shimmer on hover */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       {/* Main card info container */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3.5 flex-1">
         {/* Top line: Logo and Category badge */}
         <div className="flex justify-between items-start">
-          <div className="w-12 h-12 rounded-xl bg-slate-50 p-2 shadow-xs border border-slate-200 flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+          <div className="w-12 h-12 rounded-xl bg-slate-50 p-2 shadow-xs border border-slate-200 flex items-center justify-center transition-transform duration-200 group-hover:scale-105 shrink-0">
             {logoSvg}
           </div>
           <ClubCategoryBadge category={club.category} />
@@ -56,7 +56,7 @@ const ClubCard = ({
           <h3 className="text-lg font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-blue-600 transition-colors">
             {club.name}
           </h3>
-          <p className="text-xs text-slate-600 font-normal line-clamp-2 leading-relaxed">
+          <p className="text-xs text-slate-600 font-normal line-clamp-2 leading-relaxed min-h-[2.5rem]">
             {club.subtitle || club.description}
           </p>
         </div>
@@ -100,7 +100,7 @@ const ClubCard = ({
         )}
 
         {/* Stats Section */}
-        <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-[11px] text-slate-500 font-mono">
+        <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-[11px] text-slate-500 font-mono mt-auto">
           <div className="flex items-center gap-1.5">
             <Eye size={13} className="text-slate-400" />
             <span>{(club.views || 0).toLocaleString()} views</span>
@@ -113,17 +113,13 @@ const ClubCard = ({
       </div>
 
       {/* Action CTA */}
-      <div className="mt-5 pt-1">
+      <div className="mt-4 pt-1">
         <button
           type="button"
           onClick={() => onMoreClick(club)}
-          className={`w-full py-2.5 px-4 rounded-xl border font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shadow-xs active:scale-98 ${
-            isCoreTeam && club.membersCount >= 50
-              ? 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-600'
-              : 'bg-slate-50 group-hover:bg-blue-600 border-slate-200 group-hover:border-transparent text-slate-700 group-hover:text-white'
-          }`}
+          className="w-full py-2.5 px-4 rounded-xl border border-slate-200 group-hover:border-transparent bg-slate-50 group-hover:bg-blue-600 text-slate-700 group-hover:text-white font-bold text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shadow-xs active:scale-98"
         >
-          <span>{isCoreTeam && club.membersCount >= 50 ? 'View Club (Full)' : 'Explore Club Hub'}</span>
+          <span>Explore Club Hub</span>
           <ArrowUpRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </button>
       </div>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, QrCode, Download, CheckCircle2, UserX, Users, BarChart3, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
-import { getAttendanceMetrics, getStoredAttendanceRecords } from '../../utils/mockQRAttendance';
+import { X, QrCode, Download, CheckCircle2, UserX, Users, BarChart3, RefreshCw, ShieldCheck, Sparkles, UserCheck, Plus } from 'lucide-react';
+import { getAttendanceMetrics, getStoredAttendanceRecords, markStudentPresent } from '../../utils/mockQRAttendance';
 
 const EventQRGeneratorModal = ({ isOpen, onClose, event, onToast }) => {
-  const [metrics, setMetrics] = useState(() => (event?.id ? getAttendanceMetrics(event.id) : { totalRegistrations: 0, checkedIn: 0, absentCount: 0, attendanceRate: 0, records: [] }));
+  const [metrics, setMetrics] = useState(() => (event?.id ? getAttendanceMetrics(event.id) : { total: 0, presentCount: 0, absentCount: 0, percentage: 0, presentList: [], absentList: [] }));
+  const [manualRoll, setManualRoll] = useState('');
 
   useEffect(() => {
     if (event?.id) {
@@ -15,7 +16,67 @@ const EventQRGeneratorModal = ({ isOpen, onClose, event, onToast }) => {
   if (!isOpen || !event) return null;
 
   const handleDownloadQR = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 450;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 400, 450);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(50, 50, 300, 300);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(70, 70, 60, 60);
+        ctx.fillRect(270, 70, 60, 60);
+        ctx.fillRect(70, 270, 60, 60);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(85, 85, 30, 30);
+        ctx.fillRect(285, 85, 30, 30);
+        ctx.fillRect(85, 285, 30, 30);
+        ctx.fillStyle = '#db2777';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(event.title || 'Event QR Pass', 200, 380);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '12px monospace';
+        ctx.fillText(metrics.payload, 200, 410);
+
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = `${(event.title || 'Event').replace(/[^a-zA-Z0-9]/g, '_')}_QR_Pass.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    } catch {}
     if (onToast) onToast(`📄 Exported high-resolution QR Pass PNG for "${event.title}"!`, 'success');
+  };
+
+  const handleRecordManualAttendance = (e) => {
+    e.preventDefault();
+    const roll = manualRoll.trim().toUpperCase();
+    if (!roll) return;
+
+    // Prevent duplicate attendance
+    const alreadyPresent = metrics.presentList?.some(a => a.rollNo.toUpperCase() === roll);
+    if (alreadyPresent) {
+      if (onToast) onToast(`⚠️ Student ${roll} is already marked Present for this event!`, 'error');
+      return;
+    }
+
+    // Resolve name from registered users if possible
+    let resolvedName = `Student ${roll}`;
+    try {
+      const regUsers = JSON.parse(localStorage.getItem('cmrtc_registered_users') || '[]');
+      const match = regUsers.find(u => u.rollNo?.toUpperCase() === roll);
+      if (match?.name) resolvedName = match.name;
+    } catch {}
+
+    markStudentPresent(event.id, roll, resolvedName);
+    setMetrics(getAttendanceMetrics(event.id));
+    setManualRoll('');
+    if (onToast) onToast(`Marked ${resolvedName} (${roll}) Present for ${event.title}! ✅`, 'success');
   };
 
   const refreshData = () => {
@@ -135,6 +196,24 @@ const EventQRGeneratorModal = ({ isOpen, onClose, event, onToast }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* Manual Attendance Entry Box */}
+                <form onSubmit={handleRecordManualAttendance} className="p-3 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={manualRoll}
+                    onChange={(e) => setManualRoll(e.target.value)}
+                    placeholder="Enter Student Roll No. (e.g. 237R1A05BA)"
+                    className="flex-1 h-9 px-3 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-pink-300 outline-none focus:border-pink-500"
+                  />
+                  <button
+                    type="submit"
+                    className="px-3.5 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
+                  >
+                    <Plus size={14} />
+                    <span>Mark Present</span>
+                  </button>
+                </form>
 
                 {/* Present Students Roster List */}
                 <div className="space-y-2">

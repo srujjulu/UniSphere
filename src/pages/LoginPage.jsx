@@ -41,32 +41,32 @@ const LoginPage = () => {
       {/* College Logo Card */}
       <motion.div 
         style={logoStyle}
-        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white shadow-xl flex items-center justify-center p-2 mb-4 border border-white/20 overflow-hidden"
+        className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-3xl bg-white shadow-2xl flex items-center justify-center p-3.5 sm:p-4 mb-5 border border-slate-100 overflow-hidden"
       >
         <CmrLogo />
       </motion.div>
 
       {/* Verified Institutional Tag */}
-      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-3 shadow-xs">
-        <ShieldCheck size={14} className="text-emerald-600" />
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs sm:text-sm font-bold text-blue-700 mb-4 shadow-2xs">
+        <ShieldCheck size={16} className="text-emerald-600" />
         <span>CMR Technical Campus · NAAC A+</span>
       </div>
 
       {/* Hero Heading */}
       <motion.h1 
         style={headingStyle}
-        className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-3 tracking-tight leading-tight"
+        className="text-4xl sm:text-5xl lg:text-[52px] font-black text-slate-900 mb-4 tracking-tight leading-[1.12]"
       >
         Student Club <span className="text-blue-600">Portal</span>
       </motion.h1>
 
       {/* Description */}
-      <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-[420px] mx-auto mb-6 font-normal">
+      <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-[460px] mx-auto mb-7 font-normal">
         Connect with campus leaders, register for flagship events, track volunteer hours, and access verified certifications.
       </p>
 
       {/* Club Logos Row */}
-      <div className="flex gap-2.5 sm:gap-3 items-center justify-center flex-wrap mt-1">
+      <div className="flex gap-2.5 sm:gap-3 items-center justify-center flex-wrap max-w-lg mx-auto mt-1">
         <ClubLogo name="Code Club" svg={<CodeClubLogo />} index={0} />
         <ClubLogo name="Photo Club" svg={<PhotoClubLogo />} index={1} />
         <ClubLogo name="Eco Club" svg={<EcoClubLogo />} index={2} />
@@ -102,7 +102,7 @@ const LoginPage = () => {
         variants={formWrapperVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col gap-5 sm:gap-6 bg-[#0E1526]/70 p-6 sm:p-8 rounded-3xl border border-white/[0.08] backdrop-blur-xl shadow-xl"
+        className="flex flex-col gap-5 sm:gap-6 bg-white p-8 sm:p-10 rounded-[32px] border border-slate-200/90 shadow-2xl shadow-slate-200/60"
       >
         {/* Auth Tabs */}
         <motion.div variants={formItemVariants}>
@@ -111,10 +111,10 @@ const LoginPage = () => {
 
         {/* Welcome Headers */}
         <motion.div variants={formItemVariants} className="text-left select-none">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             {activeTab === 'signin' ? 'Welcome Back' : 'Create Student Account'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 font-normal mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
             {activeTab === 'signin' 
               ? 'Log in to manage your campus club memberships' 
               : 'Join the campus club network with your CMR ID'}
@@ -155,14 +155,14 @@ const LoginPage = () => {
 
         {/* Bottom Switch Link */}
         <motion.div variants={formItemVariants} className="text-center">
-          <p className="text-xs text-slate-400 font-medium select-none">
+          <p className="text-xs text-slate-500 font-medium select-none">
             {activeTab === 'signin' ? (
               <>
                 New to CMR Clubs?{' '}
                 <button
                   type="button"
                   onClick={() => setActiveTab('register')}
-                  className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors cursor-pointer"
+                  className="text-blue-600 font-bold hover:text-blue-700 transition-colors cursor-pointer"
                 >
                   Create an account &rarr;
                 </button>
@@ -173,7 +173,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab('signin')}
-                  className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors cursor-pointer"
+                  className="text-blue-600 font-bold hover:text-blue-700 transition-colors cursor-pointer"
                 >
                   Sign In &rarr;
                 </button>

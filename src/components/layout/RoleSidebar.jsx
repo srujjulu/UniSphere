@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NotificationCenter from './NotificationCenter';
-import ProfileDropdown from './ProfileDropdown';
 import { 
   Home, 
   Compass, 
@@ -106,16 +104,32 @@ const roleIcons = {
   admin: Crown
 };
 
-const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' }) => {
+const RoleSidebar = ({ 
+  activeSection, 
+  setActiveSection, 
+  onSelectSection, 
+  currentRole = 'student', 
+  role 
+}) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(true);
 
-  const effectiveRole = user?.role || currentRole;
+  const effectiveRole = role || user?.role || currentRole;
   const menuItems = menuByRole[effectiveRole] || menuByRole.student;
   const RoleIcon = roleIcons[effectiveRole] || GraduationCap;
+
+  const handleSelect = (sectionId) => {
+    if (typeof setActiveSection === 'function') {
+      setActiveSection(sectionId);
+    }
+    if (typeof onSelectSection === 'function') {
+      onSelectSection(sectionId);
+    }
+    setIsOpenMobile(false);
+  };
 
   return (
     <>
@@ -140,7 +154,7 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
 
       {/* Sidebar Drawer */}
       <aside className={`
-        fixed lg:static top-0 left-0 h-full ${isPinned ? 'w-64' : 'w-20'} bg-white border-r border-slate-200 p-4 flex flex-col justify-between z-50 transition-all duration-200 select-none shadow-xs
+        fixed lg:sticky top-0 left-0 h-screen ${isPinned ? 'w-64' : 'w-20'} bg-white border-r border-slate-200 p-4 flex flex-col justify-between z-50 transition-all duration-200 select-none shadow-xs shrink-0
         ${isOpenMobile ? 'translate-x-0 !w-64' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="space-y-4">
@@ -195,10 +209,7 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
               return (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setIsOpenMobile(false);
-                  }}
+                  onClick={() => handleSelect(item.id)}
                   title={item.label}
                   className={`
                     w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between transition-all duration-150 cursor-pointer
@@ -221,10 +232,7 @@ const RoleSidebar = ({ activeSection, setActiveSection, currentRole = 'student' 
         {/* Bottom Profile & Logout Action Controls */}
         <div className="pt-3 border-t border-slate-100 space-y-1">
           <button
-            onClick={() => {
-              setActiveSection('my-profile');
-              setIsOpenMobile(false);
-            }}
+            onClick={() => handleSelect('my-profile')}
             title="Profile"
             className="w-full px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2.5 transition-colors cursor-pointer"
           >

@@ -3,9 +3,9 @@
 
 @layer base {
   :root {
-    --bg-base: #F8FAFC;
+    --bg-base: #FFFFFF;
     --bg-surface: #FFFFFF;
-    --bg-surface-raised: #F1F5F9;
+    --bg-surface-raised: #F8FAFC;
     --border-subtle: #E2E8F0;
     --border-hover: #CBD5E1;
     --text-primary: #0F172A;
@@ -18,11 +18,10 @@
 
   body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--bg-base);
+    background-color: #FFFFFF;
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(241, 245, 249, 0.8) 0%, transparent 60%),
-      radial-gradient(circle at 90% 90%, rgba(226, 232, 240, 0.4) 0%, transparent 50%);
-    color: #1E293B;
+      radial-gradient(ellipse at 50% 0%, rgba(240, 247, 255, 0.7) 0%, rgba(255, 255, 255, 0.95) 70%);
+    color: #0F172A;
     overflow-x: hidden;
     letter-spacing: -0.01em;
   }

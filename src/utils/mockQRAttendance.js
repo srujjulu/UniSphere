@@ -5,7 +5,7 @@ export const initialAttendanceData = {
     clubName: 'Codeholics Tech Club',
     qrCodePayload: 'UNISPHERE_QR_CMRTC_HACKFEST_2026_CODEHOLICS',
     attendees: [
-      { rollNo: '237R1A05BA', name: 'Student Member', status: 'present', scannedAt: 'Sept 05, 2026 • 09:14 AM' },
+      { rollNo: '237R1A05BA', name: 'Srujanya Maringanti', status: 'present', scannedAt: 'Sept 05, 2026 • 09:14 AM' },
       { rollNo: '237R1A0501', name: 'Ananya Sharma', status: 'present', scannedAt: 'Sept 05, 2026 • 09:05 AM' },
       { rollNo: '237R1A0512', name: 'Rahul Verma', status: 'present', scannedAt: 'Sept 05, 2026 • 09:22 AM' },
       { rollNo: '237R1A0544', name: 'Priya Reddy', status: 'absent', scannedAt: '-' },
@@ -18,7 +18,7 @@ export const initialAttendanceData = {
     clubName: 'The Lexis Club',
     qrCodePayload: 'UNISPHERE_QR_CMRTC_LEXIS_MUN_2026',
     attendees: [
-      { rollNo: '237R1A05BA', name: 'Student Member', status: 'present', scannedAt: 'Aug 30, 2026 • 10:02 AM' },
+      { rollNo: '237R1A05BA', name: 'Srujanya Maringanti', status: 'present', scannedAt: 'Aug 30, 2026 • 10:02 AM' },
       { rollNo: '237R1A0505', name: 'Sneha Kapur', status: 'present', scannedAt: 'Aug 30, 2026 • 09:58 AM' },
       { rollNo: '237R1A0519', name: 'Vikram Singh', status: 'absent', scannedAt: '-' }
     ]
@@ -29,7 +29,7 @@ export const initialAttendanceData = {
     clubName: 'NSS Unit CMRTC',
     qrCodePayload: 'UNISPHERE_QR_CMRTC_NSS_CLEAN_2026',
     attendees: [
-      { rollNo: '237R1A05BA', name: 'Student Member', status: 'present', scannedAt: 'July 28, 2026 • 08:45 AM' },
+      { rollNo: '237R1A05BA', name: 'Srujanya Maringanti', status: 'present', scannedAt: 'July 28, 2026 • 08:45 AM' },
       { rollNo: '237R1A0530', name: 'Aditya Teja', status: 'present', scannedAt: 'July 28, 2026 • 08:50 AM' }
     ]
   }

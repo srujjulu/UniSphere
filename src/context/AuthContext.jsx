@@ -21,7 +21,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('cmrtc_auth_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed.rollNo === '237R1A05BA' || parsed.rollNumber === '237R1A05BA' || parsed.email === 'student@cmr.edu.in' || parsed.email === 'srujan@cmr.edu.in' || parsed.email === 'srujanya@cmr.edu.in') {
+          if (parsed.name === 'Srujan Maringanti' || parsed.name === 'Srujan Reddy' || parsed.name === 'Student Member') {
+            parsed.name = 'Srujanya Maringanti';
+            localStorage.setItem('cmrtc_auth_user', JSON.stringify(parsed));
+          }
+        }
+        return parsed;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -110,13 +120,53 @@ export const AuthProvider = ({ children }) => {
     }
 
     // 2. Client Fallback
-    const name = cleanEmail.split('@')[0].toUpperCase();
+    const rawPrefix = cleanEmail.split('@')[0];
+    
+    // Check if user was registered previously in local storage registry
+    let savedRegisteredUsers = {};
+    try {
+      savedRegisteredUsers = JSON.parse(localStorage.getItem('cmrtc_registered_users') || '{}');
+    } catch {}
+
+    const registeredProfile = savedRegisteredUsers[cleanEmail];
+
+    let displayName = registeredProfile?.name;
+    let rollNo = registeredProfile?.rollNumber || registeredProfile?.rollNo;
+    let branch = registeredProfile?.branch || 'Computer Science & Engineering (CSE)';
+    let academicYear = registeredProfile?.academicYear || '3rd Year • Semester 1';
+    let phone = registeredProfile?.phone || '+91 98765 43210';
+
+    if (!displayName) {
+      if (cleanEmail === 'student@cmr.edu.in' || cleanEmail === 'srujan@cmr.edu.in' || cleanEmail === 'srujanya@cmr.edu.in' || cleanEmail === '237r1a05ba@cmrtc.ac.in') {
+        displayName = 'Srujanya Maringanti';
+        rollNo = '237R1A05BA';
+      } else if (/^\d{2}[a-zA-Z0-9]+$/i.test(rawPrefix)) {
+        rollNo = rawPrefix.toUpperCase();
+        displayName = `Student (${rollNo})`;
+      } else {
+        // Format names like "rahul.sharma" or "john_doe" to "Rahul Sharma" / "John Doe"
+        displayName = rawPrefix
+          .split(/[._-]/)
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+          .join(' ');
+        rollNo = `237R1A${Math.abs(cleanEmail.split('').reduce((acc, char) => ((acc << 5) - acc) + char.charCodeAt(0), 0) % 9000 + 1000)}`;
+      }
+    }
+
+    if (!rollNo) {
+      rollNo = `237R1A${Math.abs(cleanEmail.split('').reduce((acc, char) => ((acc << 5) - acc) + char.charCodeAt(0), 0) % 9000 + 1000)}`;
+    }
+
     const userData = { 
       email: cleanEmail, 
-      name, 
-      rollNumber: cleanEmail.split('@')[0].toUpperCase(),
+      name: displayName, 
+      rollNumber: rollNo,
+      rollNo: rollNo,
+      branch: branch,
+      academicYear: academicYear,
+      phone: phone,
       role: finalRole,
-      assignedClub: assignedClub || 'codeholics',
+      assignedClub: assignedClub || registeredProfile?.assignedClub || 'codeholics',
       roleTitle: roleLabels[finalRole] || 'Student Member'
     };
     
@@ -134,7 +184,7 @@ export const AuthProvider = ({ children }) => {
     return { success: true, role: finalRole };
   };
 
-  const register = async (email, password, role = 'student', assignedClub = 'codeholics') => {
+  const register = async (email, password, role = 'student', assignedClub = 'codeholics', customName = '', customRoll = '') => {
     setLoading(true);
 
     if (!email || !password) {
@@ -153,7 +203,40 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
-    const name = cleanEmail.split('@')[0].toUpperCase();
+    const rawPrefix = cleanEmail.split('@')[0];
+    let name = customName?.trim();
+    if (!name) {
+      name = rawPrefix
+        .split(/[._-]/)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+        .join(' ');
+    }
+
+    let rollNo = customRoll?.trim();
+    if (!rollNo) {
+      if (/^\d{2}[a-zA-Z0-9]+$/i.test(rawPrefix)) {
+        rollNo = rawPrefix.toUpperCase();
+      } else {
+        rollNo = `237R1A${Math.abs(cleanEmail.split('').reduce((acc, char) => ((acc << 5) - acc) + char.charCodeAt(0), 0) % 9000 + 1000)}`;
+      }
+    }
+
+    // Save in registered users registry
+    try {
+      const savedRegistered = JSON.parse(localStorage.getItem('cmrtc_registered_users') || '{}');
+      savedRegistered[cleanEmail] = {
+        email: cleanEmail,
+        name,
+        rollNumber: rollNo,
+        rollNo,
+        branch: 'Computer Science & Engineering (CSE)',
+        academicYear: '3rd Year • Semester 1',
+        phone: '+91 98765 43210',
+        role,
+        assignedClub
+      };
+      localStorage.setItem('cmrtc_registered_users', JSON.stringify(savedRegistered));
+    } catch {}
 
     // 1. Try Backend API
     try {
@@ -169,6 +252,11 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('unisphere_jwt_token', response.token);
         const userData = {
           ...response.user,
+          name: response.user.name || name,
+          rollNumber: response.user.rollNumber || rollNo,
+          rollNo: response.user.rollNo || rollNo,
+          branch: response.user.branch || 'Computer Science & Engineering (CSE)',
+          academicYear: response.user.academicYear || '3rd Year • Semester 1',
           roleTitle: roleLabels[response.user.role] || 'Student Member'
         };
         setUser(userData);
@@ -189,7 +277,11 @@ export const AuthProvider = ({ children }) => {
     const userData = { 
       email: cleanEmail, 
       name, 
-      rollNumber: name,
+      rollNumber: rollNo,
+      rollNo: rollNo,
+      branch: 'Computer Science & Engineering (CSE)',
+      academicYear: '3rd Year • Semester 1',
+      phone: '+91 98765 43210',
       role,
       assignedClub: assignedClub || 'codeholics',
       roleTitle: roleLabels[role] || 'Student Member'
@@ -207,6 +299,30 @@ export const AuthProvider = ({ children }) => {
     
     setLoading(false);
     return { success: true, role };
+  };
+
+  const updateProfile = (updatedFields) => {
+    if (!user) return;
+    const updatedUser = {
+      ...user,
+      ...updatedFields,
+      rollNo: updatedFields.rollNumber || updatedFields.rollNo || user.rollNo || user.rollNumber,
+      rollNumber: updatedFields.rollNumber || updatedFields.rollNo || user.rollNumber || user.rollNo
+    };
+    setUser(updatedUser);
+    try {
+      localStorage.setItem('cmrtc_auth_user', JSON.stringify(updatedUser));
+      if (user.email) {
+        const savedRegistered = JSON.parse(localStorage.getItem('cmrtc_registered_users') || '{}');
+        savedRegistered[user.email] = {
+          ...(savedRegistered[user.email] || {}),
+          ...updatedUser
+        };
+        localStorage.setItem('cmrtc_registered_users', JSON.stringify(savedRegistered));
+      }
+      window.dispatchEvent(new Event('storage'));
+    } catch {}
+    return updatedUser;
   };
 
   const switchRole = (newRole) => {
@@ -263,6 +379,7 @@ export const AuthProvider = ({ children }) => {
       isCoordinator, 
       login, 
       register, 
+      updateProfile,
       switchRole,
       authenticateCoordinator, 
       revokeCoordinator, 

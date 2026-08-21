@@ -217,10 +217,10 @@ const EventCalendar = ({ onToast }) => {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs cursor-pointer transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs cursor-pointer transition-all border ${
                 activeCategory === cat
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
+                  ? 'bg-blue-600 border-blue-500 text-white shadow-md shadow-blue-600/25'
+                  : 'bg-slate-800/90 border-slate-700/80 text-slate-300 hover:bg-slate-700 hover:text-white'
               }`}
             >
               {cat}
@@ -232,14 +232,14 @@ const EventCalendar = ({ onToast }) => {
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <button
             onClick={resetToToday}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs cursor-pointer border border-slate-700"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs cursor-pointer border border-slate-700 transition-colors"
           >
             Today
           </button>
-          <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-2xl border border-slate-700">
+          <div className="flex items-center gap-1.5 bg-slate-800/90 px-3 py-1.5 rounded-2xl border border-slate-700">
             <button
               onClick={prevMonth}
-              className="p-1 rounded-lg hover:bg-slate-700 text-slate-300 cursor-pointer transition-colors"
+              className="p-1 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer transition-colors"
               title="Previous Month"
             >
               <ChevronLeft size={18} />
@@ -249,7 +249,7 @@ const EventCalendar = ({ onToast }) => {
             </span>
             <button
               onClick={nextMonth}
-              className="p-1 rounded-lg hover:bg-slate-700 text-slate-300 cursor-pointer transition-colors"
+              className="p-1 rounded-lg hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer transition-colors"
               title="Next Month"
             >
               <ChevronRight size={18} />
@@ -259,14 +259,14 @@ const EventCalendar = ({ onToast }) => {
       </div>
 
       {/* 4. Full Monthly Interactive Grid */}
-      <div className="rounded-[32px] bg-slate-900/80 border border-slate-800 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl overflow-x-auto">
+      <div className="rounded-[32px] bg-slate-900 border border-slate-800 backdrop-blur-2xl p-4 sm:p-6 shadow-2xl overflow-x-auto">
         {/* Days Header Row */}
         <div className="grid grid-cols-7 gap-2 min-w-[700px] mb-3 text-center">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, i) => (
             <div 
               key={d} 
               className={`py-2 text-xs font-black uppercase tracking-wider ${
-                i === 0 || i === 6 ? 'text-amber-400' : 'text-slate-400'
+                i === 0 || i === 6 ? 'text-amber-400' : 'text-slate-300'
               }`}
             >
               {d}
@@ -280,7 +280,7 @@ const EventCalendar = ({ onToast }) => {
           {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
             <div 
               key={`blank-${idx}`} 
-              className="min-h-[100px] sm:min-h-[120px] rounded-2xl bg-slate-950/30 border border-slate-800/30 p-2 opacity-30" 
+              className="min-h-[85px] sm:min-h-[96px] rounded-2xl bg-slate-950/40 border border-slate-800/40 p-2 opacity-30" 
             />
           ))}
 
@@ -297,10 +297,10 @@ const EventCalendar = ({ onToast }) => {
             return (
               <div
                 key={dateStr}
-                className={`min-h-[100px] sm:min-h-[125px] rounded-2xl p-2 sm:p-2.5 border transition-all flex flex-col justify-between group ${
+                className={`min-h-[85px] sm:min-h-[98px] rounded-2xl p-2 sm:p-2.5 border transition-all flex flex-col justify-between group ${
                   isToday 
-                    ? 'bg-blue-950/30 border-blue-500/50 shadow-md shadow-blue-500/10' 
-                    : 'bg-slate-950/60 border-slate-800/80 hover:border-slate-700'
+                    ? 'bg-blue-950/40 border-blue-500/60 shadow-md shadow-blue-500/10 ring-1 ring-blue-500/30' 
+                    : 'bg-slate-950/80 border-slate-800/90 hover:border-slate-700'
                 }`}
               >
                 {/* Date Number Header */}
@@ -309,7 +309,7 @@ const EventCalendar = ({ onToast }) => {
                     className={`text-xs font-bold font-mono px-2 py-0.5 rounded-lg ${
                       isToday 
                         ? 'bg-blue-600 text-white font-black' 
-                        : 'text-slate-300 group-hover:text-white'
+                        : 'text-slate-200 group-hover:text-white'
                     }`}
                   >
                     {dayNum}
@@ -322,7 +322,7 @@ const EventCalendar = ({ onToast }) => {
                 </div>
 
                 {/* Event Chips List */}
-                <div className="space-y-1 overflow-y-auto max-h-[85px] scrollbar-none">
+                <div className="space-y-1 overflow-y-auto max-h-[75px] scrollbar-none">
                   {dayEvents.map((evt) => {
                     const theme = clubColors[evt.clubId] || clubColors.codeholics;
                     const isRegistered = evt.registeredStudents?.includes(studentRoll);
@@ -331,12 +331,12 @@ const EventCalendar = ({ onToast }) => {
                       <div
                         key={evt.id}
                         onClick={(e) => handleEventClick(evt, e)}
-                        className={`p-1.5 rounded-xl ${theme.bg} text-white font-bold text-[10px] cursor-pointer shadow-sm hover:brightness-125 transition-all flex items-center justify-between gap-1`}
+                        className={`px-2 py-1 rounded-lg ${theme.bg} text-white font-bold text-[10px] sm:text-[11px] cursor-pointer shadow-xs hover:brightness-125 transition-all flex items-center justify-between gap-1`}
                         title={`${evt.title} (${evt.time})`}
                       >
                         <span className="truncate leading-tight font-extrabold">{evt.title}</span>
                         {isRegistered && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" title="Registered" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" title="Registered Pass Active" />
                         )}
                       </div>
                     );

@@ -45,7 +45,7 @@ const PasswordField = React.forwardRef(({
       {/* Label */}
       <label 
         htmlFor={name}
-        className="text-[11px] sm:text-[12px] font-bold tracking-[2px] text-slate-400 uppercase select-none"
+        className="text-[11px] sm:text-[12px] font-bold tracking-[1.5px] text-slate-700 uppercase select-none"
       >
         {label}
       </label>
@@ -55,7 +55,7 @@ const PasswordField = React.forwardRef(({
         {/* Animated Lock Icon */}
         <motion.div 
           animate={{ 
-            color: error ? '#FF4D4D' : isFocused ? '#3366FF' : '#94A3B8',
+            color: error ? '#EF4444' : isFocused ? '#2563EB' : '#94A3B8',
             scale: isFocused ? 1.05 : 1,
           }}
           transition={{ duration: 0.2 }}
@@ -77,13 +77,13 @@ const PasswordField = React.forwardRef(({
             if (props.onBlur) props.onBlur(e);
           }}
           className={`
-            w-full h-[50px] sm:h-[54px] pl-[46px] pr-12 rounded-[16px] bg-[#222839] text-white text-sm sm:text-base placeholder-white/50
-            border-2 transition-all duration-300 outline-none select-text
+            w-full h-[50px] sm:h-[52px] pl-[44px] pr-12 rounded-[14px] bg-slate-50 text-slate-900 text-sm sm:text-base placeholder-slate-400
+            border transition-all duration-200 outline-none select-text
             ${error 
-              ? 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]' 
+              ? 'border-red-500 bg-red-50/30 shadow-[0_0_10px_rgba(239,68,68,0.1)]' 
               : isFocused 
-                ? 'border-[#3366FF] shadow-[0_0_20px_rgba(51,102,255,0.25)]' 
-                : 'border-transparent hover:border-slate-600'
+                ? 'border-blue-600 bg-white ring-2 ring-blue-100' 
+                : 'border-slate-200 hover:border-slate-300'
             }
           `}
           aria-invalid={error ? "true" : "false"}

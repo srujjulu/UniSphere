@@ -1,16 +1,113 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Award, Users, Calendar, ShieldCheck, ArrowRight, Sparkles, Compass } from 'lucide-react';
+import { 
+  Users, 
+  Calendar, 
+  ShieldCheck, 
+  ArrowRight, 
+  Sparkles, 
+  Compass, 
+  UserCheck, 
+  Image as ImageIcon 
+} from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
+import { clubsApi, eventsApi, galleryApi } from '../../services/api';
+import { getStoredRequests } from '../../utils/mockRequests';
+import { initialCalendarEvents } from '../../utils/mockCalendarEvents';
+import { getStoredClubs } from '../../utils/mockClubs';
+import { clubMasterDrives } from '../../utils/mockGallery';
 
-const HeroSection = () => {
+const HeroSection = ({ onViewEvents }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const [stats, setStats] = useState({
+    clubs: 6,
+    events: 10,
+    requests: 40,
+    albums: 15
+  });
+
+  // Dynamic API Sync with Graceful Local Fallback
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchLiveStats = async () => {
+      let liveClubs = 6;
+      let liveEvents = 10;
+      let liveRequests = 40;
+      let liveAlbums = 15;
+
+      try {
+        const storedClubs = getStoredClubs();
+        if (storedClubs?.length) liveClubs = storedClubs.length;
+
+        const storedReqs = getStoredRequests();
+        if (storedReqs?.length) liveRequests = Math.max(40, storedReqs.length);
+
+        if (initialCalendarEvents?.length) {
+          liveEvents = Math.max(10, initialCalendarEvents.length);
+        }
+
+        const totalMasterAlbums = Object.values(clubMasterDrives || {}).reduce(
+          (acc, c) => acc + (c.totalAlbums || 0),
+          0
+        );
+        if (totalMasterAlbums) liveAlbums = Math.max(15, totalMasterAlbums);
+
+        // Attempt API queries if backend is reachable
+        try {
+          const clubRes = await clubsApi.getAll();
+          if (clubRes?.data?.length) liveClubs = clubRes.data.length;
+        } catch {
+          // Keep fallback
+        }
+
+        try {
+          const eventRes = await eventsApi.getAll();
+          if (eventRes?.data?.length) liveEvents = Math.max(10, eventRes.data.length);
+        } catch {
+          // Keep fallback
+        }
+
+        try {
+          const galleryRes = await galleryApi.getAll();
+          if (galleryRes?.data?.length) liveAlbums = Math.max(15, galleryRes.data.length);
+        } catch {
+          // Keep fallback
+        }
+
+        if (isMounted) {
+          setStats({
+            clubs: liveClubs,
+            events: liveEvents,
+            requests: liveRequests,
+            albums: liveAlbums
+          });
+        }
+      } catch (err) {
+        console.warn('Stats fetch fallback to default counts:', err);
+      }
+    };
+
+    fetchLiveStats();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleExploreClick = () => {
     const el = document.getElementById('explore-clubs');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleDashboardClick = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -40,7 +137,7 @@ const HeroSection = () => {
           Where Campus Life <span className="text-blue-600">Comes Alive</span>
         </h1>
         <p className="text-slate-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
-          Discover, collaborate, and lead across 6 official student organizations at CMRTC. From technical hackathons and cultural fests to community outreach and leadership drills.
+          Discover, join, and participate in campus clubs, events, and activities through one centralized platform.
         </p>
       </div>
 
@@ -54,49 +151,61 @@ const HeroSection = () => {
           <span>Explore Clubs</span>
         </button>
 
-        {user && (
+        <button
+          onClick={handleDashboardClick}
+          className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer active:scale-95 shadow-xs"
+        >
+          <span>Go to My Dashboard</span>
+          <ArrowRight size={16} />
+        </button>
+
+        {onViewEvents && (
           <button
-            onClick={() => navigate('/dashboard')}
-            className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer active:scale-95 shadow-xs"
+            onClick={onViewEvents}
+            className="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer active:scale-95 shadow-xs"
           >
-            <span>Go to My Dashboard</span>
-            <ArrowRight size={16} />
+            <Calendar size={16} className="text-blue-600" />
+            <span>View Events</span>
           </button>
         )}
       </div>
 
       {/* College Quick Highlights Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full pt-4">
+        {/* 6+ Student Clubs */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
           <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-2 border border-blue-100">
-            <Users size={16} />
+            <Compass size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">10,000+</p>
-          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Campus Students</p>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 border border-indigo-100">
-            <Sparkles size={16} />
-          </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">6 Premier</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{stats.clubs}+</p>
           <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Student Clubs</p>
         </div>
 
+        {/* 10+ Events */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
           <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2 border border-amber-100">
             <Calendar size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">50+ Annual</p>
-          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Events & Fests</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{stats.events}+</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Events</p>
         </div>
 
+        {/* 40+ Membership Requests */}
         <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
           <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 border border-emerald-100">
-            <Award size={16} />
+            <UserCheck size={16} />
           </div>
-          <p className="text-xl sm:text-2xl font-black text-emerald-600 font-mono">NAAC A+</p>
-          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Autonomous Grade</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{stats.requests}+</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Membership Requests</p>
+        </div>
+
+        {/* 15+ Photo Albums */}
+        <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-1 text-left transition-all hover:border-slate-300">
+          <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2 border border-purple-100">
+            <ImageIcon size={16} />
+          </div>
+          <p className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{stats.albums}+</p>
+          <p className="text-[11px] text-slate-500 font-semibold tracking-wide">Photo Albums</p>
         </div>
       </div>
     </motion.section>
@@ -104,4 +213,3 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
-

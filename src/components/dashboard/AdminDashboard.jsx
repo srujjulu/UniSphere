@@ -28,11 +28,17 @@ import {
   GraduationCap
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
-import { mockClubs } from '../../utils/mockClubs';
+import { mockClubs, getGlobalSystemConfig, saveGlobalSystemConfig } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
 import { getStoredCertificates } from '../../utils/mockCertificates';
 import { getStoredVolunteerRecords, editStudentVolunteerHours } from '../../utils/mockVolunteerHours';
+import { 
+  downloadSQLDatabaseDump, 
+  downloadJSONDatabaseSnapshot, 
+  downloadCertificatesAuditCSV,
+  triggerFileDownload 
+} from '../../utils/downloadManager';
 
 const initialUserList = [
   { id: 'u1', name: 'Ananya Sharma', email: 'ananya@cmr.edu.in', role: 'student', rollNo: '227R1A05A1', dept: 'CSE' },
@@ -101,6 +107,27 @@ const AdminDashboard = () => {
   const [newClubName, setNewClubName] = useState('');
   const [newClubCategory, setNewClubCategory] = useState('TECHNICAL');
 
+  // Global System Configuration State
+  const initialConfig = getGlobalSystemConfig();
+  const [portalName, setPortalName] = useState(initialConfig.portalName || 'UniSphere - CMRTC Official Student Clubs Portal');
+  const [emailDomain, setEmailDomain] = useState(initialConfig.emailDomain || '@cmr.edu.in');
+  const [academicYear, setAcademicYear] = useState(initialConfig.academicYear || '2026-2027');
+  const [recruitmentStatus, setRecruitmentStatus] = useState(initialConfig.recruitmentStatus || 'open');
+  const [maintenanceMode, setMaintenanceMode] = useState(initialConfig.maintenanceMode || 'live');
+  const [maxUploadLimit, setMaxUploadLimit] = useState(initialConfig.maxUploadLimit || '15');
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+
+  // Database Operations & Performance State
+  const [redisMemory, setRedisMemory] = useState('24.6 MB / 512 MB');
+  const [cacheHitRatio, setCacheHitRatio] = useState('99.1%');
+  const [dbLatency, setDbLatency] = useState('1.2ms');
+  const [tableStatus, setTableStatus] = useState('HEALTHY ✔');
+  const [schemaHealth, setSchemaHealth] = useState('8 Tables Indexed');
+  const [isFlushingRedis, setIsFlushingRedis] = useState(false);
+  const [isOptimizingTables, setIsOptimizingTables] = useState(false);
+  const [lastFlushedAt, setLastFlushedAt] = useState(null);
+  const [lastOptimizedAt, setLastOptimizedAt] = useState(null);
+
   const triggerToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(''), 3000);
@@ -168,7 +195,108 @@ const AdminDashboard = () => {
   };
 
   const handleBackupDatabase = () => {
-    triggerToast('Generated MySQL & Redis Database Backup (.sql / .json)! 💾');
+    triggerToast('Generating full MySQL database dump... 💾');
+    const res = downloadSQLDatabaseDump(users);
+    if (res.success) {
+      setTimeout(() => triggerToast('Database backup downloaded: unisphere-database-backup.sql 🎉'), 300);
+    }
+  };
+
+  const handleExportJSONSnapshot = () => {
+    triggerToast('Generating JSON database snapshot... 📦');
+    const res = downloadJSONDatabaseSnapshot(users);
+    if (res.success) {
+      setTimeout(() => triggerToast('JSON snapshot downloaded: unisphere-database-snapshot.json 🎉'), 300);
+    }
+  };
+
+  const handleExportCertificatesAudit = () => {
+    triggerToast('Generating Certificate Registry Audit CSV... 📊');
+    const res = downloadCertificatesAuditCSV();
+    if (res.success) {
+      setTimeout(() => triggerToast('Audit report downloaded: certificates-audit.csv 🎉'), 300);
+    }
+  };
+
+  const handleExportUsersCSV = () => {
+    try {
+      const headers = ['User ID', 'Full Name', 'Official Email', 'System Role', 'Roll / Employee No', 'Department / Cell'];
+      const lines = [headers.join(',')];
+      users.forEach(u => {
+        const escape = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+        lines.push([escape(u.id), escape(u.name), escape(u.email), escape(u.role), escape(u.rollNo), escape(u.dept)].join(','));
+      });
+      const csv = '\uFEFF' + lines.join('\r\n');
+      triggerFileDownload(csv, 'unisphere-users-directory.csv', 'text/csv;charset=utf-8;');
+      triggerToast('Downloaded Users Directory CSV: unisphere-users-directory.csv 🎉');
+    } catch (e) {
+      triggerToast('Error exporting users CSV');
+    }
+  };
+
+  const handleExportClubsCSV = () => {
+    try {
+      const headers = ['Club ID', 'Club Name', 'Category', 'Description', 'Recruitment Status', 'Members Count'];
+      const lines = [headers.join(',')];
+      clubs.forEach(c => {
+        const escape = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+        lines.push([escape(c.id), escape(c.name), escape(c.category), escape(c.subtitle || c.description), escape(c.recruitment || 'open'), escape(c.membersCount || 50)].join(','));
+      });
+      const csv = '\uFEFF' + lines.join('\r\n');
+      triggerFileDownload(csv, 'cmrtc-clubs-directory.csv', 'text/csv;charset=utf-8;');
+      triggerToast('Downloaded Clubs Directory CSV: cmrtc-clubs-directory.csv 🎉');
+    } catch (e) {
+      triggerToast('Error exporting clubs CSV');
+    }
+  };
+
+  const handleFlushRedisCache = () => {
+    setIsFlushingRedis(true);
+    triggerToast('Connecting to Redis in-memory cache... Purging temporary session keys 🧹');
+
+    setTimeout(() => {
+      try {
+        sessionStorage.clear();
+      } catch {}
+
+      setRedisMemory('0.2 MB / 512 MB');
+      setCacheHitRatio('100.0% (Clean)');
+      setDbLatency('0.6ms');
+      setLastFlushedAt(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      setIsFlushingRedis(false);
+      triggerToast('Flushed Redis in-memory cache successfully! Reclaimed 24.4 MB RAM 🧹⚡');
+    }, 700);
+  };
+
+  const handleOptimizeTableIndexes = () => {
+    setIsOptimizingTables(true);
+    triggerToast('Running MySQL InnoDB OPTIMIZE & ANALYZE on all table indexes... ⚙️');
+
+    setTimeout(() => {
+      setTableStatus('OPTIMIZED ⚡');
+      setSchemaHealth('8 Tables Defragmented • 100% Index Efficiency');
+      setDbLatency('0.4ms');
+      setLastOptimizedAt(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      setIsOptimizingTables(false);
+      triggerToast('Optimized and defragmented all MySQL table indexes! Latency down to 0.4ms ⚡');
+    }, 900);
+  };
+
+  const handleSaveSystemConfig = (e) => {
+    if (e) e.preventDefault();
+    setIsSavingSettings(true);
+    const updated = saveGlobalSystemConfig({
+      portalName,
+      emailDomain,
+      academicYear,
+      recruitmentStatus,
+      maintenanceMode,
+      maxUploadLimit
+    });
+    setTimeout(() => {
+      setIsSavingSettings(false);
+      triggerToast(`Saved global system configuration! Recruitment: ${recruitmentStatus.toUpperCase()} • Mode: ${maintenanceMode.toUpperCase()} ⚙️`);
+    }, 400);
   };
 
   const filteredUsers = users.filter(u => {
@@ -230,10 +358,19 @@ const AdminDashboard = () => {
         {/* Section: Manage All Clubs */}
         {activeSection === 'manage-all-clubs' && (
           <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-6">
-            <h3 className="text-xl font-black text-white flex items-center gap-2">
-              <Layers size={20} className="text-purple-400" />
-              <span>College Club Registry & Management</span>
-            </h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <h3 className="text-xl font-black text-white flex items-center gap-2">
+                <Layers size={20} className="text-purple-400" />
+                <span>College Club Registry & Management</span>
+              </h3>
+              <button
+                onClick={handleExportClubsCSV}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 font-extrabold text-xs cursor-pointer border border-emerald-500/30 flex items-center gap-1.5 shadow-sm active:scale-95 transition-all"
+              >
+                <Download size={13} />
+                <span>Export Clubs Directory CSV</span>
+              </button>
+            </div>
 
             {/* Create Club Form */}
             <form onSubmit={handleCreateClub} className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3">
@@ -388,20 +525,29 @@ const AdminDashboard = () => {
                 />
               </div>
 
-              <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
-                {['all', 'student', 'core', 'faculty', 'admin'].map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => setUserRoleFilter(r)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold capitalize cursor-pointer transition-colors ${
-                      userRoleFilter === r
-                        ? 'bg-purple-600 text-white shadow-md'
-                        : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
-                    }`}
-                  >
-                    {r}
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+                <div className="flex items-center gap-1.5">
+                  {['all', 'student', 'core', 'faculty', 'admin'].map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => setUserRoleFilter(r)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-extrabold capitalize cursor-pointer transition-colors ${
+                        userRoleFilter === r
+                          ? 'bg-purple-600 text-white shadow-md'
+                          : 'bg-slate-800 text-slate-400 hover:text-white border border-slate-700'
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={handleExportUsersCSV}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 font-extrabold text-xs cursor-pointer border border-purple-500/30 flex items-center gap-1.5 shadow-sm active:scale-95 transition-all whitespace-nowrap"
+                >
+                  <Download size={13} />
+                  <span>Export Users CSV</span>
+                </button>
               </div>
             </div>
 
@@ -671,8 +817,8 @@ const AdminDashboard = () => {
                 <p className="text-xs text-slate-400">View and audit all digital certificates issued by core coordinators and verified by faculty.</p>
               </div>
               <button
-                onClick={() => triggerToast('Exported Certificate Registry Audit Report CSV 📊')}
-                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs cursor-pointer shadow-md flex items-center gap-1.5"
+                onClick={handleExportCertificatesAudit}
+                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs cursor-pointer shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
               >
                 <Download size={14} />
                 <span>Export Audit CSV</span>
@@ -808,18 +954,23 @@ const AdminDashboard = () => {
                 </p>
               </div>
 
-              <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-extrabold text-[11px] border border-purple-500/30">
-                System Status: Operational 🟢
+              <span className={`px-3 py-1 rounded-full font-extrabold text-[11px] border transition-all ${
+                maintenanceMode === 'maintenance'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                  : 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+              }`}>
+                {maintenanceMode === 'maintenance' ? 'System Status: Maintenance Mode 🛠️' : 'System Status: Operational 🟢'}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800/60 p-6 rounded-2xl border border-slate-700">
+            <form onSubmit={handleSaveSystemConfig} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800/60 p-6 rounded-2xl border border-slate-700">
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-300 mb-1">Portal Name</label>
                   <input
                     type="text"
-                    defaultValue="UniSphere - CMRTC Official Student Clubs Portal"
+                    value={portalName}
+                    onChange={(e) => setPortalName(e.target.value)}
                     className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none focus:border-purple-500"
                   />
                 </div>
@@ -829,8 +980,8 @@ const AdminDashboard = () => {
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
-                      readOnly
-                      defaultValue="@cmr.edu.in"
+                      value={emailDomain}
+                      onChange={(e) => setEmailDomain(e.target.value)}
                       className="w-full h-10 px-3.5 rounded-xl bg-slate-900/80 border border-slate-700 font-mono text-xs font-bold text-purple-300"
                     />
                     <span className="px-2.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 text-xs font-extrabold border border-emerald-500/30 whitespace-nowrap">
@@ -841,9 +992,14 @@ const AdminDashboard = () => {
 
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-300 mb-1">Active Academic Year</label>
-                  <select defaultValue="2026-2027" className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none cursor-pointer">
+                  <select 
+                    value={academicYear} 
+                    onChange={(e) => setAcademicYear(e.target.value)}
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none cursor-pointer"
+                  >
                     <option value="2026-2027">Academic Year 2026 - 2027 (Current)</option>
                     <option value="2027-2028">Academic Year 2027 - 2028 (Upcoming)</option>
+                    <option value="2028-2029">Academic Year 2028 - 2029 (Future Planning)</option>
                   </select>
                 </div>
               </div>
@@ -851,7 +1007,13 @@ const AdminDashboard = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-300 mb-1">Campus Club Recruitment Window</label>
-                  <select defaultValue="open" className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-emerald-400 outline-none cursor-pointer">
+                  <select 
+                    value={recruitmentStatus} 
+                    onChange={(e) => setRecruitmentStatus(e.target.value)}
+                    className={`w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold outline-none cursor-pointer ${
+                      recruitmentStatus === 'open' ? 'text-emerald-400' : 'text-rose-400'
+                    }`}
+                  >
                     <option value="open">🟢 Open • Accepting Student Applications</option>
                     <option value="closed">🔴 Closed • Recruitment Paused</option>
                   </select>
@@ -859,7 +1021,13 @@ const AdminDashboard = () => {
 
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-300 mb-1">System Maintenance Mode</label>
-                  <select defaultValue="live" className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-blue-400 outline-none cursor-pointer">
+                  <select 
+                    value={maintenanceMode} 
+                    onChange={(e) => setMaintenanceMode(e.target.value)}
+                    className={`w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold outline-none cursor-pointer ${
+                      maintenanceMode === 'live' ? 'text-blue-400' : 'text-amber-400'
+                    }`}
+                  >
                     <option value="live">⚡ Live (Full Portal Access for Students & Faculty)</option>
                     <option value="maintenance">🛠️ Maintenance Mode (Admins Only)</option>
                   </select>
@@ -867,23 +1035,32 @@ const AdminDashboard = () => {
 
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-300 mb-1">Max Media Upload Limit</label>
-                  <select defaultValue="15" className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none cursor-pointer">
+                  <select 
+                    value={maxUploadLimit} 
+                    onChange={(e) => setMaxUploadLimit(e.target.value)}
+                    className="w-full h-10 px-3.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white outline-none cursor-pointer"
+                  >
                     <option value="10">10 MB (Standard Photo & Certificate Upload)</option>
                     <option value="15">15 MB (Recommended)</option>
                     <option value="25">25 MB (High Resolution Albums)</option>
+                    <option value="50">50 MB (Uncompressed Media)</option>
                   </select>
                 </div>
               </div>
 
               <div className="md:col-span-2 pt-4 border-t border-slate-700 flex justify-end">
                 <button
-                  onClick={() => triggerToast('Saved global system settings successfully! ⚙️')}
-                  className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs uppercase cursor-pointer shadow-lg active:scale-95 transition-all"
+                  type="submit"
+                  disabled={isSavingSettings}
+                  className={`px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs uppercase cursor-pointer shadow-lg active:scale-95 transition-all flex items-center gap-2 ${
+                    isSavingSettings ? 'opacity-80 cursor-wait' : ''
+                  }`}
                 >
-                  Save System Configuration
+                  <Save size={15} className={isSavingSettings ? 'animate-spin' : ''} />
+                  <span>{isSavingSettings ? 'Saving Configuration...' : 'Save System Configuration'}</span>
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
 
@@ -902,7 +1079,7 @@ const AdminDashboard = () => {
               </div>
 
               <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[11px] border border-emerald-500/30">
-                MySQL 8.0 • Connected (1.2ms) 🟢
+                MySQL 8.0 • Connected ({dbLatency}) 🟢
               </span>
             </div>
 
@@ -911,19 +1088,23 @@ const AdminDashboard = () => {
               <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
                 <p className="text-[10px] font-extrabold uppercase text-slate-400">Database Engine</p>
                 <p className="text-lg font-black text-white">MySQL 8.0 Enterprise</p>
-                <p className="text-[11px] text-emerald-400 font-bold">● Connection Active (Port 3306)</p>
+                <p className="text-[11px] text-emerald-400 font-bold">● Port 3306 • Latency: {dbLatency}</p>
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
                 <p className="text-[10px] font-extrabold uppercase text-slate-400">Redis Cache Memory</p>
-                <p className="text-lg font-black text-emerald-400 font-mono">24.6 MB / 512 MB</p>
-                <p className="text-[11px] text-slate-400">Cache Hit Ratio: 99.1%</p>
+                <p className="text-lg font-black text-emerald-400 font-mono">{redisMemory}</p>
+                <p className="text-[11px] text-slate-400">
+                  {lastFlushedAt ? `Flushed at ${lastFlushedAt}` : `Cache Hit Ratio: ${cacheHitRatio}`}
+                </p>
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
                 <p className="text-[10px] font-extrabold uppercase text-slate-400">Schema Health</p>
-                <p className="text-lg font-black text-purple-300">8 Tables Indexed</p>
-                <p className="text-[11px] text-emerald-400 font-bold">● Zero Corrupted Rows</p>
+                <p className="text-lg font-black text-purple-300">{schemaHealth}</p>
+                <p className="text-[11px] text-emerald-400 font-bold">
+                  {lastOptimizedAt ? `● Optimized at ${lastOptimizedAt}` : '● Zero Corrupted Rows'}
+                </p>
               </div>
             </div>
 
@@ -945,35 +1126,35 @@ const AdminDashboard = () => {
                     <td className="p-3.5 text-purple-300">{users.length} rows</td>
                     <td className="p-3.5 text-slate-400">InnoDB</td>
                     <td className="p-3.5 text-emerald-400">PRIMARY (id, email)</td>
-                    <td className="p-3.5 text-right text-emerald-400 font-bold">HEALTHY ✔</td>
+                    <td className="p-3.5 text-right text-emerald-400 font-bold">{tableStatus}</td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-bold text-white font-sans">clubs</td>
-                    <td className="p-3.5 text-purple-300">6 rows</td>
+                    <td className="p-3.5 text-purple-300">{clubs.length} rows</td>
                     <td className="p-3.5 text-slate-400">InnoDB</td>
                     <td className="p-3.5 text-emerald-400">PRIMARY (id)</td>
-                    <td className="p-3.5 text-right text-emerald-400 font-bold">HEALTHY ✔</td>
+                    <td className="p-3.5 text-right text-emerald-400 font-bold">{tableStatus}</td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-bold text-white font-sans">membership_requests</td>
                     <td className="p-3.5 text-purple-300">18 rows</td>
                     <td className="p-3.5 text-slate-400">InnoDB</td>
                     <td className="p-3.5 text-emerald-400">INDEX (clubId, rollNo)</td>
-                    <td className="p-3.5 text-right text-emerald-400 font-bold">HEALTHY ✔</td>
+                    <td className="p-3.5 text-right text-emerald-400 font-bold">{tableStatus}</td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-bold text-white font-sans">certificates</td>
                     <td className="p-3.5 text-purple-300">{allCertificates.length} rows</td>
                     <td className="p-3.5 text-slate-400">InnoDB</td>
                     <td className="p-3.5 text-emerald-400">INDEX (credentialId)</td>
-                    <td className="p-3.5 text-right text-emerald-400 font-bold">HEALTHY ✔</td>
+                    <td className="p-3.5 text-right text-emerald-400 font-bold">{tableStatus}</td>
                   </tr>
                   <tr>
                     <td className="p-3.5 font-bold text-white font-sans">volunteer_hours</td>
                     <td className="p-3.5 text-purple-300">84 rows</td>
                     <td className="p-3.5 text-slate-400">InnoDB</td>
                     <td className="p-3.5 text-emerald-400">INDEX (studentRoll)</td>
-                    <td className="p-3.5 text-right text-emerald-400 font-bold">HEALTHY ✔</td>
+                    <td className="p-3.5 text-right text-emerald-400 font-bold">{tableStatus}</td>
                   </tr>
                 </tbody>
               </table>
@@ -985,31 +1166,37 @@ const AdminDashboard = () => {
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={handleBackupDatabase}
-                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all"
                 >
                   <Database size={15} />
                   <span>Generate Full SQL Dump (.sql)</span>
                 </button>
                 <button
-                  onClick={() => triggerToast('Exported JSON Database Snapshot (.json)! 📦')}
-                  className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                  onClick={handleExportJSONSnapshot}
+                  className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all"
                 >
                   <Download size={15} />
                   <span>Export JSON Snapshot</span>
                 </button>
                 <button
-                  onClick={() => triggerToast('Flushed Redis temporary session cache! 🧹')}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-extrabold text-xs flex items-center gap-1.5 cursor-pointer border border-slate-700 active:scale-95"
+                  onClick={handleFlushRedisCache}
+                  disabled={isFlushingRedis}
+                  className={`px-4 py-2.5 rounded-xl text-slate-200 font-extrabold text-xs flex items-center gap-1.5 cursor-pointer border border-slate-700 active:scale-95 transition-all ${
+                    isFlushingRedis ? 'bg-slate-700 opacity-80 cursor-wait' : 'bg-slate-800 hover:bg-slate-700 hover:text-white'
+                  }`}
                 >
-                  <RefreshCw size={15} />
-                  <span>Flush Redis Cache</span>
+                  <RefreshCw size={15} className={isFlushingRedis ? 'animate-spin text-emerald-400' : ''} />
+                  <span>{isFlushingRedis ? 'Flushing Redis...' : 'Flush Redis Cache'}</span>
                 </button>
                 <button
-                  onClick={() => triggerToast('Optimized and defragmented all database tables! ⚡')}
-                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                  onClick={handleOptimizeTableIndexes}
+                  disabled={isOptimizingTables}
+                  className={`px-4 py-2.5 rounded-xl text-white font-extrabold text-xs flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95 transition-all ${
+                    isOptimizingTables ? 'bg-blue-700 opacity-80 cursor-wait' : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
                 >
-                  <Sparkles size={15} />
-                  <span>Optimize Table Indexes</span>
+                  <Sparkles size={15} className={isOptimizingTables ? 'animate-spin text-amber-300' : ''} />
+                  <span>{isOptimizingTables ? 'Optimizing Tables...' : 'Optimize Table Indexes'}</span>
                 </button>
               </div>
             </div>

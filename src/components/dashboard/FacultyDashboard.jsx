@@ -23,6 +23,12 @@ import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
 import { requestsApi } from '../../services/api';
+import { 
+  downloadQRAttendanceCSV, 
+  downloadQ2AttendanceSummaryPDF, 
+  downloadAnnualBudgetAuditPDF, 
+  downloadNAACAccreditationPDF 
+} from '../../utils/pdfGenerator';
 
 const pendingMajorEvents = [
   { id: 'fe1', title: 'Pegasus 2026 Annual Cultural Fest', club: 'AKRITI Club', budget: '₹1,50,000', venue: 'CMR Auditorium', status: 'pending' },
@@ -372,22 +378,66 @@ const FacultyDashboard = () => {
                 <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">
                   <h4 className="font-bold text-white text-sm">QR Code Attendance Report</h4>
                   <p className="text-xs text-slate-400">Verified QR scans & attendee timestamps</p>
-                  <button onClick={() => triggerToast('Downloaded Event QR Attendance Report CSV 📊')} className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer">Download CSV</button>
+                  <button 
+                    onClick={() => {
+                      triggerToast('Generating and downloading QR Attendance Report CSV... 📊');
+                      const res = downloadQRAttendanceCSV();
+                      if (res.success) {
+                        setTimeout(() => triggerToast('Report downloaded successfully: QR_Attendance_Report.csv 🎉'), 300);
+                      }
+                    }} 
+                    className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer active:scale-95 transition-all shadow-xs"
+                  >
+                    Download CSV
+                  </button>
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">
                   <h4 className="font-bold text-white text-sm">Q2 Attendance Summary</h4>
                   <p className="text-xs text-slate-400">Average participation: 88.4%</p>
-                  <button onClick={() => triggerToast('Downloaded Q2 Attendance Report PDF')} className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer">Download PDF</button>
+                  <button 
+                    onClick={() => {
+                      triggerToast('Generating and downloading Q2 Attendance Summary PDF... 📄');
+                      const res = downloadQ2AttendanceSummaryPDF();
+                      if (res.success) {
+                        setTimeout(() => triggerToast('Report downloaded successfully: Q2_Attendance_Summary.pdf 🎉'), 300);
+                      }
+                    }} 
+                    className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer active:scale-95 transition-all shadow-xs"
+                  >
+                    Download PDF
+                  </button>
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">
                   <h4 className="font-bold text-white text-sm">Annual Budget Audit</h4>
                   <p className="text-xs text-slate-400">Total expenditure: ₹4.2 Lakhs</p>
-                  <button onClick={() => triggerToast('Downloaded Annual Audit Report PDF')} className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer">Download PDF</button>
+                  <button 
+                    onClick={() => {
+                      triggerToast('Generating and downloading Annual Budget Audit PDF... 📄');
+                      const res = downloadAnnualBudgetAuditPDF();
+                      if (res.success) {
+                        setTimeout(() => triggerToast('Report downloaded successfully: Annual_Budget_Audit.pdf 🎉'), 300);
+                      }
+                    }} 
+                    className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer active:scale-95 transition-all shadow-xs"
+                  >
+                    Download PDF
+                  </button>
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">
                   <h4 className="font-bold text-white text-sm">NACC Accreditation Data</h4>
                   <p className="text-xs text-slate-400">Verified club certificates: 340</p>
-                  <button onClick={() => triggerToast('Downloaded NACC Report PDF')} className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer">Download PDF</button>
+                  <button 
+                    onClick={() => {
+                      triggerToast('Generating and downloading NAAC Accreditation Data PDF... 📄');
+                      const res = downloadNAACAccreditationPDF();
+                      if (res.success) {
+                        setTimeout(() => triggerToast('Report downloaded successfully: NAAC_Accreditation_Data.pdf 🎉'), 300);
+                      }
+                    }} 
+                    className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs cursor-pointer active:scale-95 transition-all shadow-xs"
+                  >
+                    Download PDF
+                  </button>
                 </div>
               </div>
             </div>

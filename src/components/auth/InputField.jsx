@@ -17,7 +17,7 @@ const InputField = React.forwardRef(({
       {/* Label */}
       <label 
         htmlFor={name}
-        className="text-[11px] sm:text-[12px] font-bold tracking-[1.5px] text-slate-600 uppercase select-none"
+        className="text-[11px] sm:text-[12px] font-bold tracking-[1.5px] text-slate-700 uppercase select-none"
       >
         {label}
       </label>
@@ -51,7 +51,7 @@ const InputField = React.forwardRef(({
             if (props.onBlur) props.onBlur(e);
           }}
           className={`
-            w-full h-[50px] sm:h-[52px] pl-[46px] pr-4 rounded-[16px] bg-slate-50 text-slate-900 text-sm sm:text-base placeholder-slate-400
+            w-full h-[50px] sm:h-[52px] pl-[44px] pr-4 rounded-[14px] bg-slate-50 text-slate-900 text-sm sm:text-base placeholder-slate-400
             border transition-all duration-200 outline-none select-text
             ${error 
               ? 'border-red-500 bg-red-50/30 shadow-[0_0_10px_rgba(239,68,68,0.1)]' 

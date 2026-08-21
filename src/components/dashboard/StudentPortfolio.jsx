@@ -24,26 +24,34 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { getApprovedClubsForStudent, getStoredRequests } from '../../utils/mockRequests';
 import { mockClubs } from '../../utils/mockClubs';
+import { getStudentCertificates } from '../../utils/mockCertificates';
+import { getStudentVolunteerRecord } from '../../utils/mockVolunteerHours';
+import { getStoredCalendarEvents } from '../../utils/mockCalendarEvents';
+import { downloadPortfolioPDF, downloadCertificatePDF } from '../../utils/pdfGenerator';
 
 const StudentPortfolio = ({ onToast }) => {
   const { user } = useAuth();
 
-  const studentRoll = user?.email ? user.email.split('@')[0].toUpperCase() : '237R1A05BA';
-  const studentName = user?.name || 'Srujan Maringanti';
-  const studentDepartment = 'Computer Science & Engineering (CSE)';
-  const academicYear = '3rd Year • Semester 1';
+  const studentRoll = user?.rollNumber || user?.rollNo || (user?.email ? user.email.split('@')[0].toUpperCase() : '237R1A05BA');
+  const studentName = user?.name || 'Student Member';
+  const studentDepartment = user?.branch || 'Computer Science & Engineering (CSE)';
+  const academicYear = user?.academicYear || '3rd Year • Semester 1';
 
-  // Get dynamic approved clubs
+  // Get dynamic approved clubs, certs, volunteer records, and registered events
   const approvedClubIds = getApprovedClubsForStudent(studentRoll);
   const joinedClubsList = mockClubs.filter(c => approvedClubIds.includes(c.id));
+  const studentCerts = getStudentCertificates(studentRoll, studentName);
+  const volunteerRec = getStudentVolunteerRecord(studentRoll, studentName, studentDepartment);
+  const allEvents = getStoredCalendarEvents();
+  const registeredEvents = allEvents.filter(e => e.registeredStudents?.includes(studentRoll));
 
   // Stat Counters
   const stats = [
     { id: 'clubs', label: 'Clubs Joined', value: `${joinedClubsList.length} Clubs`, icon: Users, color: 'from-blue-500 to-indigo-600', border: 'border-blue-500/30' },
-    { id: 'events-reg', label: 'Events Registered', value: '5 Events', icon: Calendar, color: 'from-purple-500 to-pink-600', border: 'border-purple-500/30' },
-    { id: 'events-att', label: 'Events Attended', value: '4 Attended', icon: CheckCircle2, color: 'from-emerald-500 to-teal-600', border: 'border-emerald-500/30' },
-    { id: 'vol-hours', label: 'Volunteer Hours', value: '32 Hours', icon: Clock, color: 'from-amber-500 to-orange-600', border: 'border-amber-500/30' },
-    { id: 'certs', label: 'Certificates Earned', value: '6 Verified', icon: Award, color: 'from-rose-500 to-red-600', border: 'border-rose-500/30' },
+    { id: 'events-reg', label: 'Events Registered', value: `${registeredEvents.length} Events`, icon: Calendar, color: 'from-purple-500 to-pink-600', border: 'border-purple-500/30' },
+    { id: 'events-att', label: 'Events Attended', value: `${Math.max(1, registeredEvents.length)} Attended`, icon: CheckCircle2, color: 'from-emerald-500 to-teal-600', border: 'border-emerald-500/30' },
+    { id: 'vol-hours', label: 'Volunteer Hours', value: `${volunteerRec.totalHours || 32} Hours`, icon: Clock, color: 'from-amber-500 to-orange-600', border: 'border-amber-500/30' },
+    { id: 'certs', label: 'Certificates Earned', value: `${studentCerts.length} Verified`, icon: Award, color: 'from-rose-500 to-red-600', border: 'border-rose-500/30' },
     { id: 'leadership', label: 'Leadership Roles', value: '2 Roles', icon: Medal, color: 'from-cyan-500 to-blue-600', border: 'border-cyan-500/30' }
   ];
 
@@ -138,21 +146,34 @@ const StudentPortfolio = ({ onToast }) => {
 
   // Certificates Earned List
   const certificates = [
-    { id: 'c1', title: 'CMR HackFest 2026 - 1st Runner Up Certificate', issuer: 'Codeholics Tech Club', date: 'Sept 2026', credentialId: 'CMRTC-2026-CS-091' },
-    { id: 'c2', title: 'Model United Nations Best Delegate Certification', issuer: 'The Lexis Club', date: 'Aug 2026', credentialId: 'CMRTC-2026-LX-044' },
-    { id: 'c3', title: 'National Service Scheme (NSS) Volunteer Honor', issuer: 'NSS CMRTC Unit & Red Cross', date: 'July 2026', credentialId: 'CMRTC-2026-NSS-118' },
-    { id: 'c4', title: 'React v19 & Web3 Bootcamp Completion', issuer: 'CMRTC Tech Society', date: 'June 2026', credentialId: 'CMRTC-2026-DEV-302' }
+    { id: 'c1', title: 'CMR HackFest 2026 - 1st Runner Up Certificate', eventName: 'CMR HackFest 2026', clubName: 'Codeholics Tech Club', issuer: 'Codeholics Tech Club', date: 'Sept 2026', issueDate: 'September 07, 2026', credentialId: 'CMRTC-2026-CODE-091' },
+    { id: 'c2', title: 'Model United Nations Best Delegate Certification', eventName: 'Model United Nations', clubName: 'The Lexis Club', issuer: 'The Lexis Club', date: 'Aug 2026', issueDate: 'August 30, 2026', credentialId: 'CMRTC-2026-LEX-044' },
+    { id: 'c3', title: 'National Service Scheme (NSS) Volunteer Honor', eventName: 'Swachh Bharat & Blood Donation', clubName: 'NSS Unit CMRTC', issuer: 'NSS CMRTC Unit & Red Cross', date: 'July 2026', issueDate: 'July 28, 2026', credentialId: 'CMRTC-2026-NSS-208' },
+    { id: 'c4', title: 'React v19 & Web3 Bootcamp Completion', eventName: 'Web3 & AI Workshop', clubName: 'Codeholics Tech Club', issuer: 'CMRTC Tech Society', date: 'June 2026', issueDate: 'June 18, 2026', credentialId: 'CMRTC-2026-DEV-302' }
   ];
 
   const handleDownloadPDF = () => {
     if (onToast) {
-      onToast(`📄 Generating Official Achievement Portfolio PDF for ${studentName}...`, 'success');
+      onToast(`📄 Generating Official Achievement Portfolio PDF for ${studentName}...`, 'info');
     }
-    setTimeout(() => {
-      if (onToast) {
-        onToast(`🎉 Portfolio PDF (CMRTC_${studentRoll}_Portfolio.pdf) downloaded!`, 'success');
-      }
-    }, 1500);
+    const result = downloadPortfolioPDF(user, stats, badges, timelineEvents, certificates);
+    if (result.success && onToast) {
+      setTimeout(() => {
+        onToast(`🎉 Portfolio PDF downloaded: ${result.filename}`, 'success');
+      }, 500);
+    }
+  };
+
+  const handleDownloadCert = (cert) => {
+    if (onToast) {
+      onToast(`📄 Generating Certificate PDF for ${cert.title}...`, 'info');
+    }
+    const result = downloadCertificatePDF(cert, user);
+    if (result.success && onToast) {
+      setTimeout(() => {
+        onToast(`🎉 Certificate downloaded: ${result.filename}`, 'success');
+      }, 500);
+    }
   };
 
   return (
@@ -233,9 +254,9 @@ const StudentPortfolio = ({ onToast }) => {
       </motion.div>
 
       {/* 2. Statistics Grid Cards */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-          <Sparkles size={20} className="text-blue-400" />
+      <div className="space-y-4 text-left">
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <Sparkles size={22} className="text-blue-600" />
           <span>Performance & Activity Metrics</span>
         </h3>
 
@@ -245,10 +266,10 @@ const StudentPortfolio = ({ onToast }) => {
             return (
               <div 
                 key={st.id}
-                className={`p-5 rounded-2xl bg-slate-900/60 border ${st.border} backdrop-blur-xl space-y-3 shadow-xl hover:border-slate-600 transition-all duration-300 transform hover:-translate-y-1`}
+                className={`p-5 rounded-2xl bg-slate-900 border ${st.border} backdrop-blur-xl space-y-3 shadow-xl hover:border-slate-700 transition-all duration-300 transform hover:-translate-y-1`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-extrabold text-slate-300 uppercase tracking-wider">
                     {st.label}
                   </span>
                   <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${st.color} text-white flex items-center justify-center font-bold shadow-md`}>
@@ -265,9 +286,9 @@ const StudentPortfolio = ({ onToast }) => {
       </div>
 
       {/* 3. Earned Badges Showcase */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-          <Medal size={20} className="text-amber-400" />
+      <div className="space-y-4 text-left">
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <Medal size={22} className="text-amber-500" />
           <span>Earned Achievement Badges</span>
         </h3>
 
@@ -277,16 +298,16 @@ const StudentPortfolio = ({ onToast }) => {
             return (
               <div 
                 key={badge.id}
-                className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl space-y-3 shadow-xl hover:border-slate-700 transition-all duration-200"
+                className="p-5 rounded-2xl bg-slate-900 border border-slate-800 backdrop-blur-xl space-y-3 shadow-xl hover:border-slate-700 transition-all duration-200"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${badge.badgeColor} ${badge.glowColor} shadow-md flex items-center gap-1.5`}>
                     <BadgeIcon size={14} />
                     <span>{badge.title}</span>
                   </span>
-                  <span className="text-[10px] text-slate-500 font-bold uppercase">{badge.category}</span>
+                  <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{badge.category}</span>
                 </div>
-                <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                <p className="text-xs sm:text-[13px] text-slate-200 font-medium leading-relaxed">
                   {badge.description}
                 </p>
               </div>
@@ -296,38 +317,38 @@ const StudentPortfolio = ({ onToast }) => {
       </div>
 
       {/* 4. Timeline of Attended Events */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-          <Calendar size={20} className="text-purple-400" />
+      <div className="space-y-4 text-left">
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <Calendar size={22} className="text-purple-600" />
           <span>Recent Attended Events Timeline</span>
         </h3>
 
-        <div className="p-6 sm:p-8 rounded-[28px] bg-slate-900/60 border border-slate-800 backdrop-blur-xl space-y-6 shadow-xl">
+        <div className="p-6 sm:p-8 rounded-[28px] bg-slate-900 border border-slate-800 backdrop-blur-xl space-y-6 shadow-xl">
           <div className="relative border-l-2 border-slate-800 ml-3 sm:ml-4 space-y-8 pl-6 sm:pl-8">
             {timelineEvents.map((evt) => (
               <div key={evt.id} className="relative group">
                 {/* Timeline Bullet Dot */}
                 <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-blue-500 border-4 border-slate-900 shadow-md group-hover:scale-125 transition-transform" />
 
-                <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 hover:border-blue-500/40 transition-all">
+                <div className="p-5 rounded-2xl bg-slate-800/90 border border-slate-700/80 space-y-2.5 hover:border-blue-500/50 transition-all shadow-md">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                    <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
                       {evt.club}
                     </span>
-                    <span className="text-xs font-mono font-semibold text-slate-400">
+                    <span className="text-xs sm:text-[13px] font-mono font-semibold text-slate-300">
                       📅 {evt.date}
                     </span>
                   </div>
 
-                  <h4 className="text-base font-extrabold text-white">
+                  <h4 className="text-base sm:text-lg font-extrabold text-white">
                     {evt.title}
                   </h4>
 
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                    <span className="text-xs font-bold text-slate-300">
-                      Role: <span className="text-blue-400">{evt.role}</span>
+                    <span className="text-xs sm:text-[13px] font-bold text-slate-200">
+                      Role: <span className="text-blue-400 font-semibold">{evt.role}</span>
                     </span>
-                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                    <span className="text-xs sm:text-[13px] font-bold text-emerald-300 bg-emerald-500/15 px-3 py-1 rounded-lg border border-emerald-500/30">
                       🏆 {evt.achievement}
                     </span>
                   </div>
@@ -339,32 +360,32 @@ const StudentPortfolio = ({ onToast }) => {
       </div>
 
       {/* 5. Verified Certificates Grid */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
-          <Award size={20} className="text-emerald-400" />
+      <div className="space-y-4 text-left">
+        <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <Award size={22} className="text-emerald-600" />
           <span>Verified Certificates & Honors</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {certificates.map((cert) => (
-            <div key={cert.id} className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3 flex flex-col justify-between">
-              <div className="space-y-1">
+            <div key={cert.id} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-3.5 flex flex-col justify-between shadow-xl hover:border-slate-700 transition-all">
+              <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold uppercase text-emerald-400 tracking-wider">Issued by {cert.issuer}</span>
-                  <span className="text-xs font-mono text-slate-400">{cert.date}</span>
+                  <span className="text-xs font-bold uppercase text-emerald-400 tracking-wider">Issued by {cert.issuer}</span>
+                  <span className="text-xs sm:text-[13px] font-mono font-semibold text-slate-300">{cert.date}</span>
                 </div>
-                <h4 className="text-base font-extrabold text-white">{cert.title}</h4>
-                <p className="text-[11px] font-mono text-slate-500">Credential ID: {cert.credentialId}</p>
+                <h4 className="text-base sm:text-lg font-extrabold text-white">{cert.title}</h4>
+                <p className="text-xs font-mono text-slate-300 font-medium">Credential ID: <span className="text-slate-200">{cert.credentialId}</span></p>
               </div>
 
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-                  <ShieldCheck size={14} />
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                  <ShieldCheck size={16} />
                   <span>Verified Authenticity</span>
                 </span>
                 <button
-                  onClick={() => handleDownloadPDF()}
-                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1"
+                  onClick={() => handleDownloadCert(cert)}
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs cursor-pointer flex items-center gap-1.5 border border-slate-700 transition-colors"
                 >
                   <Download size={14} />
                   <span>Download</span>

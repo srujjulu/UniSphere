@@ -35,7 +35,7 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full py-10 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:min-h-screen relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-200 lg:border-b-0 lg:border-r bg-white select-none"
+        className="w-full py-10 lg:py-0 shrink-0 lg:w-[50%] xl:w-[52%] lg:h-screen lg:sticky lg:top-0 relative flex flex-col justify-center items-center overflow-hidden border-b border-slate-200 lg:border-b-0 lg:border-r bg-white select-none"
       >
         {/* Subtle Ambient Glow */}
         <div 
@@ -46,7 +46,7 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         />
 
         {/* Branding Elements Passed from Page */}
-        <div className="relative z-10 w-full flex flex-col justify-center items-center px-6 sm:px-12 text-center max-w-xl">
+        <div className="relative z-10 w-full flex flex-col justify-center items-center px-6 sm:px-12 text-center max-w-2xl">
           {leftPanelContent({ logoStyle: { x: logoX, y: logoY }, headingStyle: { x: headingX, y: headingY } })}
         </div>
       </motion.div>
@@ -56,9 +56,9 @@ const AuthLayout = ({ children, leftPanelContent }) => {
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:min-h-screen relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto justify-center py-8 lg:py-12 bg-[#F8FAFC]"
+        className="w-full flex-1 lg:w-[50%] xl:w-[48%] lg:min-h-screen relative flex flex-col px-4 sm:px-8 md:px-12 lg:px-16 overflow-y-auto justify-center py-10 lg:py-12 bg-slate-50/60"
       >
-        <div className="w-full max-w-[440px] mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+        <div className="w-full max-w-[490px] mx-auto">
           {children}
         </div>
       </motion.div>

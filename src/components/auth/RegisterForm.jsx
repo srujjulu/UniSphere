@@ -89,7 +89,7 @@ const RegisterForm = ({ onSuccess }) => {
       });
     }
     
-    const result = await registerUser(data.email, data.password, data.role, data.assignedClub || 'codeholics');
+    const result = await registerUser(data.email, data.password, data.role, data.assignedClub || 'codeholics', data.name);
     
     if (result.success) {
       setSubmitStatus('success');
@@ -158,16 +158,16 @@ const RegisterForm = ({ onSuccess }) => {
 
       {/* Role Selection Dropdown */}
       <motion.div variants={itemVariants}>
-        <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
+        <label className="block text-[11px] sm:text-[12px] font-bold tracking-[1.5px] text-slate-700 uppercase mb-1.5 flex items-center justify-between">
           <span className="flex items-center gap-1.5">
-            <Shield size={14} className="text-[#3366FF]" />
+            <Shield size={14} className="text-blue-600" />
             <span>Select System Role *</span>
           </span>
         </label>
         <div className="relative">
           <select
             {...register('role')}
-            className="w-full h-12 pl-4 pr-10 rounded-xl bg-[#0F172A] border border-slate-700 text-white text-sm font-semibold outline-none focus:border-[#3366FF] transition-all appearance-none cursor-pointer"
+            className="w-full h-[50px] pl-4 pr-10 rounded-[14px] bg-slate-50 text-slate-900 border border-slate-200 text-sm font-semibold outline-none focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all appearance-none cursor-pointer"
           >
             <option value="student">🎓 Student Member</option>
             <option value="core">⚡ Club Core Team / Coordinator</option>
@@ -183,13 +183,13 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Conditional Club Assignment for Coordinators */}
       {selectedRole === 'core' && (
         <motion.div variants={itemVariants}>
-          <label className="block text-xs font-extrabold uppercase tracking-wider text-pink-400 mb-1.5 flex items-center gap-1.5">
+          <label className="block text-[11px] sm:text-[12px] font-bold tracking-[1.5px] text-rose-600 uppercase mb-1.5 flex items-center gap-1.5">
             <span>⚡ Which Campus Club Do You Coordinate? *</span>
           </label>
           <div className="relative">
             <select
               {...register('assignedClub')}
-              className="w-full h-12 pl-4 pr-10 rounded-xl bg-[#0F172A] border border-pink-500/50 text-white text-sm font-semibold outline-none focus:border-pink-500 transition-all appearance-none cursor-pointer"
+              className="w-full h-[50px] pl-4 pr-10 rounded-[14px] bg-slate-50 text-slate-900 border border-rose-300 text-sm font-semibold outline-none focus:bg-white focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 transition-all appearance-none cursor-pointer"
             >
               <option value="codeholics">Codeholics Tech Club</option>
               <option value="akriti">AKRITI Cultural Club</option>
@@ -198,7 +198,7 @@ const RegisterForm = ({ onSuccess }) => {
               <option value="ncc">NCC Cadet Corps</option>
               <option value="nss">NSS Service Scheme</option>
             </select>
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-rose-400">
               ▼
             </div>
           </div>

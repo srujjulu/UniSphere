@@ -56,7 +56,7 @@ export const initialNotifications = [
     id: 'notif-c1',
     role: 'core',
     title: 'New Membership Request 👤',
-    message: 'Student Srujan Maringanti (237R1A05BA) submitted membership application for Lexis Club.',
+    message: 'Student Srujanya Maringanti (237R1A05BA) submitted membership application for Lexis Club.',
     time: '15 mins ago',
     type: 'warning',
     category: 'New Membership Request',

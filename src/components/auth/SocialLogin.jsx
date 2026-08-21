@@ -54,20 +54,20 @@ const SocialLogin = () => {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="h-[1px] bg-slate-200 flex-1" />
-        <span className="text-[11px] font-bold tracking-[1.5px] text-slate-500 uppercase">Or continue with</span>
+        <span className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Or continue with</span>
         <div className="h-[1px] bg-slate-200 flex-1" />
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2.5">
         {providers.map((p) => (
           <motion.button
             key={p.name}
             type="button"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            className="h-[46px] sm:h-[48px] rounded-2xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center gap-2 border border-slate-200 hover:border-slate-300 cursor-pointer focus:outline-none text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+            className="h-[44px] rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center gap-2 border border-slate-200 hover:border-slate-300 cursor-pointer focus:outline-none text-xs font-semibold text-slate-700 hover:text-slate-900 transition-all shadow-xs"
           >
             {p.icon}
             <span className="hidden sm:inline">{p.name}</span>

@@ -148,64 +148,64 @@ const LoginForm = ({ onSuccess }) => {
       </motion.div>
 
       {/* Quick Demo Role Selector Pills */}
-      <motion.div variants={itemVariants} className="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2">
-        <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1">
-          <Sparkles size={12} className="text-amber-500" />
+      <motion.div variants={itemVariants} className="bg-slate-50/90 p-3 rounded-2xl border border-slate-200/80 space-y-2">
+        <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles size={13} className="text-amber-500" />
           <span>Quick Demo Logins:</span>
         </span>
         <div className="grid grid-cols-2 gap-1.5">
           <button
             type="button"
             onClick={() => handleQuickDemo('student@cmr.edu.in', 'Cmrtc#Student2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-2 rounded-xl bg-blue-50/80 hover:bg-blue-100/80 text-blue-700 border border-blue-200/80 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
-            <GraduationCap size={12} />
+            <GraduationCap size={13} />
             <span>Student Demo</span>
           </button>
           <button
             type="button"
             onClick={() => handleQuickDemo('core@cmr.edu.in', 'Cmrtc#Core2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-2 rounded-xl bg-rose-50/80 hover:bg-rose-100/80 text-rose-700 border border-rose-200/80 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
-            <UserCheck size={12} />
+            <UserCheck size={13} />
             <span>Core Team Demo</span>
           </button>
           <button
             type="button"
             onClick={() => handleQuickDemo('faculty@cmr.edu.in', 'Cmrtc#Faculty2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-2 rounded-xl bg-amber-50/80 hover:bg-amber-100/80 text-amber-700 border border-amber-200/80 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
-            <Shield size={12} />
+            <Shield size={13} />
             <span>Faculty Demo</span>
           </button>
           <button
             type="button"
             onClick={() => handleQuickDemo('admin@cmr.edu.in', 'Cmrtc#Admin2026!')}
-            className="px-2.5 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-2 rounded-xl bg-purple-50/80 hover:bg-purple-100/80 text-purple-700 border border-purple-200/80 text-[11px] font-bold transition-all text-left truncate flex items-center gap-1.5 cursor-pointer shadow-2xs"
           >
-            <Crown size={12} />
+            <Crown size={13} />
             <span>Admin Demo</span>
           </button>
         </div>
       </motion.div>
 
       {/* Remember me & Forgot Password */}
-      <motion.div variants={itemVariants} className="flex items-center justify-between select-none">
-        <label className="flex items-center gap-2.5 cursor-pointer group text-xs text-slate-600 hover:text-slate-900">
+      <motion.div variants={itemVariants} className="flex items-center justify-between select-none pt-0.5">
+        <label className="flex items-center gap-2 cursor-pointer group text-xs text-slate-600 hover:text-slate-900">
           <input 
             type="checkbox" 
             checked={rememberMe} 
             onChange={(e) => setRememberMe(e.target.checked)} 
-            className="rounded border-slate-300 text-blue-600" 
+            className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
           />
-          <span className="font-semibold">Remember Me</span>
+          <span className="font-semibold text-slate-700">Remember Me</span>
         </label>
 
         <a 
           href="#forgot" 
           onMouseEnter={() => setIsForgotHovered(true)}
           onMouseLeave={() => setIsForgotHovered(false)}
-          className="text-xs font-semibold text-slate-500 hover:text-blue-600 relative transition-colors duration-200 focus:outline-none"
+          className="text-xs font-bold text-blue-600 hover:text-blue-700 relative transition-colors duration-200 focus:outline-none"
         >
           Forgot Password?
           <span 
