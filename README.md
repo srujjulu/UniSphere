@@ -1,16 +1,48 @@
-# React + Vite
+# 🌐 UniSphere — Campus Club & Event Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+![React](https://img.shields.io/badge/React-19.x-blue?logo=react)
+![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8?logo=tailwind-css)
+![Node.js](https://img.shields.io/badge/Node.js-Express-green?logo=node.js)
+![License](https://img.shields.io/badge/License-MIT-purple)
 
-Currently, two official plugins are available:
+UniSphere is an all-in-one digital ecosystem built to streamline club operations, event planning, attendance tracking, volunteer hours certification, and multi-tiered university administrative oversight.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ⚡ Key Highlights
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 👥 **4-Tier Role-Based Dashboards**: Custom views for Students, Core Organizers, Faculty Advisors, and Campus Administrators.
+- 🎟️ **Event Hub & QR Check-ins**: Event registrations with interactive QR code pass generation and instant attendance scanning.
+- 📊 **Comprehensive Post-Event Reports**: Multi-branch attendance logging, budget auditing, outcome tracking, and single-click PDF export.
+- 📜 **Tamper-Proof Certificate Generator**: Digital PDF certificate generation with unique verification hashes.
+- 🤝 **Volunteer Hour Auditing**: Gamified student volunteer tracking with faculty approval and merit badges.
+- 🏢 **Club Dedicated Portals**: Custom sub-pages with team rosters, contact info, photo galleries, and member application pipelines.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 🚀 Quick Start
+
+### 1. Installation
+```bash
+# Clone the repository
+git clone https://github.com/srujjulu/UniSphere.git
+cd UniSphere
+
+# Install dependencies
+npm install
+```
+
+### 2. Run Frontend
+```bash
+npm run dev
+```
+
+### 3. Run Backend (Optional)
+```bash
+npm run server
+```
+
+---
+
+## 📖 Complete Documentation
+For full architectural details, API specifications, and workflow guides, check out [PROJECT_DOCUMENTATION.md](./PROJECT_DOCUMENTATION.md).
