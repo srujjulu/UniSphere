@@ -5,7 +5,6 @@ import AuthLayout from '../components/auth/AuthLayout';
 import AuthTabs from '../components/auth/AuthTabs';
 import LoginForm from '../components/auth/LoginForm';
 import RegisterForm from '../components/auth/RegisterForm';
-import SocialLogin from '../components/auth/SocialLogin';
 import ClubLogo from '../components/auth/ClubLogo';
 import { 
   CmrLogo, 
@@ -127,9 +126,9 @@ const LoginPage = () => {
             {activeTab === 'signin' ? (
               <motion.div
                 key="signin-form"
-                initial={{ opacity: 0, x: 15 }}
+                initial={{ opacity: 0, x: -15 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -15 }}
+                exit={{ opacity: 0, x: 15 }}
                 transition={{ duration: 0.2 }}
               >
                 <LoginForm onSuccess={() => navigate('/dashboard')} />
@@ -146,11 +145,6 @@ const LoginPage = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
-
-        {/* Social Logins */}
-        <motion.div variants={formItemVariants}>
-          <SocialLogin />
         </motion.div>
 
         {/* Bottom Switch Link */}

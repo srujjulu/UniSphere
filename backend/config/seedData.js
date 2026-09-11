@@ -431,7 +431,8 @@ export const seedDatabase = async (force = false) => {
     registrations: [],
     volunteerLogs: [],
     feedbacks: [],
-    notifications: []
+    notifications: [],
+    eventReports: []
   });
 
   console.log('✅ UniSphere database seeded successfully with CMRTC official clubs, accounts, photos, and events.');

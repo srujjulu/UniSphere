@@ -1,4 +1,6 @@
 import { jsPDF } from 'jspdf';
+import JSZip from 'jszip';
+import { generateOfficialEventReportPDF } from './pdfGenerator';
 import { getStoredRequests } from './mockRequests';
 import { getStoredClubs } from './mockClubs';
 import { getStoredCalendarEvents } from './mockCalendarEvents';
@@ -597,3 +599,279 @@ export const downloadClubFinancialStatementPDF = (clubId = 'codeholics', clubNam
     return { success: false, error: err.message };
   }
 };
+
+/**
+ * 13. Downloads a single uploaded report document file with valid generated content
+ */
+export const downloadReportFile = (file, report) => {
+  try {
+    const filename = file?.name || 'Event_Document.pdf';
+    const ext = filename.split('.').pop()?.toLowerCase();
+
+    if (ext === 'pdf') {
+      // If it's an official report or permission letter, generate formatted PDF
+      const doc = new jsPDF();
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 210, 25, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(255, 255, 255);
+      doc.text('CMR TECHNICAL CAMPUS • OFFICIAL EVENT DOCUMENT', 105, 14, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setTextColor(245, 158, 11);
+      doc.text(`DOCUMENT: ${filename}`, 105, 20, { align: 'center' });
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(11);
+      doc.text(report?.eventTitle || 'Campus Event', 14, 38);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(71, 85, 105);
+      doc.text(`Club: ${report?.clubName || 'CMRTC'} • Date: ${report?.eventDate || 'August 2026'}`, 14, 45);
+      doc.text(`Venue: ${report?.venue || 'Campus'} • Status: ${report?.status || 'Verified'}`, 14, 51);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text('DOCUMENT SUMMARY & VERIFICATION RECORD', 14, 62);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(51, 65, 85);
+      const sum = report?.summary || 'This document serves as an institutional record of event execution, coordinator approvals, and student participation audit compliance at CMR Technical Campus.';
+      const lines = doc.splitTextToSize(sum, 182);
+      doc.text(lines, 14, 69);
+
+      doc.save(filename);
+      return { success: true, filename };
+    }
+
+    if (ext === 'csv' || ext === 'xlsx' || ext === 'xls') {
+      let csv = `CMR TECHNICAL CAMPUS - ${report?.eventTitle || 'Event'} Attendance & Audit Log\n`;
+      csv += `Report ID,${report?.reportId || 'CMRTC-ER-2026'}\n`;
+      csv += `Club Name,${report?.clubName || 'CMRTC'}\n`;
+      csv += `Date,${report?.eventDate || 'August 2026'}\n`;
+      csv += `Total Participants,${report?.participantCount || 100}\n`;
+      csv += `Status,${report?.status || 'Verified'}\n\n`;
+      csv += `S.No,Roll Number,Student Name,Department,Year,Check-In Time,Status\n`;
+
+      const participants = [
+        ['1', '237R1A05BA', 'Srujanya Maringanti', 'CSE', '3rd Year', '09:12 AM', 'Present (QR Scanned)'],
+        ['2', '217R1A04B2', 'Rohan Verma', 'ECE', '4th Year', '09:15 AM', 'Present (QR Scanned)'],
+        ['3', '227R1A05A1', 'Ananya Sharma', 'CSE', '3rd Year', '09:20 AM', 'Present (QR Scanned)'],
+        ['4', '227R1A0588', 'Sai Krishna', 'CSE', '3rd Year', '09:22 AM', 'Present (QR Scanned)'],
+        ['5', '237R1A05C3', 'Kavya Teja', 'IT', '2nd Year', '09:28 AM', 'Present (QR Scanned)'],
+        ['6', '227R1A0412', 'Karthik Rao', 'ECE', '3rd Year', '09:30 AM', 'Present (QR Scanned)'],
+        ['7', '217R1A05A4', 'Pooja Hegde', 'CSE', '4th Year', '09:35 AM', 'Present (QR Scanned)']
+      ];
+
+      participants.forEach((p) => {
+        csv += p.join(',') + '\n';
+      });
+
+      return triggerFileDownload(csv, filename, 'text/csv;charset=utf-8;');
+    }
+
+    // Generic text/docx content
+    const textContent = `====================================================\nCMR TECHNICAL CAMPUS • UNISPHERE EVENT DOCUMENT\nDocument: ${filename}\nEvent: ${report?.eventTitle || 'Campus Event'}\nClub: ${report?.clubName || 'CMRTC'}\nDate: ${report?.eventDate || 'August 2026'}\nStatus: ${report?.status || 'Verified'}\n====================================================\n\n${report?.summary || ''}\n\nObjectives:\n${report?.objective || ''}\n\nKey Highlights:\n${report?.highlights || ''}\n`;
+    return triggerFileDownload(textContent, filename, 'text/plain;charset=utf-8;');
+  } catch (err) {
+    console.error('Error downloading report document:', err);
+    return { success: false, error: err.message };
+  }
+};
+
+/**
+ * 14. Real ZIP Package Downloader for Complete Event Report & Attachments
+ * Bundles: Official PDF Report, Attendance CSV, Budget Breakdown CSV, Highlights Text, and Attachments
+ */
+export const downloadReportZIPArchive = async (report) => {
+  try {
+    if (!report) throw new Error('Report data is required.');
+    const zip = new JSZip();
+    const folderName = `${cleanFileName(report.clubName)}_${cleanFileName(report.eventTitle)}`;
+    const folder = zip.folder(folderName);
+
+    // 1. Generate text overview file
+    const overviewContent = `========================================================================\n` +
+      `CMR TECHNICAL CAMPUS (UGC AUTONOMOUS) - UNISPHERE PORTAL\n` +
+      `OFFICIAL EVENT COMPLETION REPOSITORY ARCHIVE\n` +
+      `========================================================================\n\n` +
+      `REPORT ID:              ${report.reportId || report.id}\n` +
+      `EVENT TITLE:            ${report.eventTitle}\n` +
+      `ORGANIZING CLUB:        ${report.clubName}\n` +
+      `EVENT CATEGORY:         ${report.category} (${report.mode || 'Offline'})\n` +
+      `EVENT DATE & TIME:      ${report.eventDate} (${report.startTime} - ${report.endTime})\n` +
+      `CAMPUS VENUE:           ${report.venue}\n` +
+      `FACULTY COORDINATOR:    ${report.facultyCoordinator}\n` +
+      `CHIEF GUEST / SPEAKERS: ${report.chiefGuest || 'N/A'}\n` +
+      `TOTAL PARTICIPANTS:     ${report.participantCount}\n` +
+      `STUDENT VOLUNTEERS:     ${report.volunteerCount}\n` +
+      `VERIFICATION STATUS:    ${report.status}\n` +
+      `FACULTY REMARKS:        ${report.facultyComments || 'Verified and approved for NAAC accreditation records.'}\n\n` +
+      `------------------------------------------------------------------------\n` +
+      `1. EVENT OBJECTIVES:\n` +
+      `------------------------------------------------------------------------\n` +
+      `${report.objective || 'N/A'}\n\n` +
+      `------------------------------------------------------------------------\n` +
+      `2. EVENT SUMMARY & ACTIVITIES:\n` +
+      `------------------------------------------------------------------------\n` +
+      `${report.summary || 'N/A'}\n\n` +
+      `Activities Conducted:\n${report.activities || 'N/A'}\n\n` +
+      `------------------------------------------------------------------------\n` +
+      `3. KEY OUTCOMES & ACHIEVEMENTS:\n` +
+      `------------------------------------------------------------------------\n` +
+      `Outcomes:\n${report.outcome || 'N/A'}\n\n` +
+      `Highlights:\n${report.highlights || 'N/A'}\n\n` +
+      `Student Winners:\n${report.achievements || 'N/A'}\n\n` +
+      `Challenges & Suggestions:\n${report.challenges || 'None'} | ${report.suggestions || 'None'}\n\n` +
+      `========================================================================\n` +
+      `Digitally Certified by: ${report.reviewedBy || report.facultyCoordinator || 'Dean Student Affairs'}\n` +
+      `Generated on: ${new Date().toLocaleString('en-IN')}\n` +
+      `========================================================================\n`;
+
+    folder.file('01_Executive_Event_Summary.txt', overviewContent);
+
+    // 2. Attendance CSV
+    let attendanceCsv = `CMR TECHNICAL CAMPUS - ${report.eventTitle} Attendance Register\n`;
+    attendanceCsv += `Report ID,${report.reportId || report.id}\nClub,${report.clubName}\nDate,${report.eventDate}\nVenue,${report.venue}\nTotal Count,${report.participantCount}\n\n`;
+    attendanceCsv += `S.No,Roll Number,Student Name,Branch,Semester,Scan Timestamp,Verification Status\n`;
+    attendanceCsv += `1,237R1A05BA,Srujanya Maringanti,CSE,Sem 1,09:10:22 AM,Verified Entry\n`;
+    attendanceCsv += `2,217R1A04B2,Rohan Verma,ECE,Sem 1,09:14:45 AM,Verified Entry\n`;
+    attendanceCsv += `3,227R1A05A1,Ananya Sharma,CSE,Sem 1,09:18:12 AM,Verified Entry\n`;
+    attendanceCsv += `4,227R1A0588,Sai Krishna,CSE,Sem 1,09:21:05 AM,Verified Entry\n`;
+    attendanceCsv += `5,237R1A05C3,Kavya Teja,IT,Sem 1,09:25:30 AM,Verified Entry\n`;
+    attendanceCsv += `6,227R1A0412,Karthik Rao,ECE,Sem 1,09:28:18 AM,Verified Entry\n`;
+    attendanceCsv += `7,217R1A05A4,Pooja Hegde,CSE,Sem 1,09:32:40 AM,Verified Entry\n`;
+    folder.file('02_Verified_Attendance_Register.csv', attendanceCsv);
+
+    // 3. Budget & Expenditure CSV
+    let budgetCsv = `CMR TECHNICAL CAMPUS - ${report.eventTitle} Expenditure & Voucher Audit\n`;
+    budgetCsv += `Report ID,${report.reportId || report.id}\nClub,${report.clubName}\nAcademic Year,${report.academicYear || '2025-2026'}\n\n`;
+    budgetCsv += `Voucher ID,Category,Description,Vendor / Payee,Amount (INR),Payment Mode,Verification\n`;
+    budgetCsv += `VCH-01,Stage & Sound,Main Stage Audio & LED Backdrop,Sai Audio & Visuals,₹25000,Bank Transfer,Verified\n`;
+    budgetCsv += `VCH-02,Mementoes,Chief Guest Plaques & Medals,CMRTC Awards Cell,₹8500,Institutional Cheque,Verified\n`;
+    budgetCsv += `VCH-03,Refreshments,Participant Breakfast & Lunch,Campus Canteen Caterers,₹14500,Direct Debit,Verified\n`;
+    budgetCsv += `VCH-04,Prizes,Cash Award Winners Distribution,UniSphere Cash Prize Fund,₹45000,NEFT Transfer,Verified\n`;
+    budgetCsv += `VCH-05,Printing,Badges Lanyards and Certificates,Sri Balaji Stationers,₹6000,UPI Payment,Verified\n`;
+    folder.file('03_Financial_Vouchers_And_Budget.csv', budgetCsv);
+
+    // 4. Document Index and file metadata
+    let docsIndex = `CMRTC DIGITAL ATTACHMENT AUDIT MANIFEST\n`;
+    docsIndex += `Event: ${report.eventTitle}\n\n`;
+    if (report.files && report.files.length > 0) {
+      report.files.forEach((f, i) => {
+        docsIndex += `[File ${i + 1}] Category: ${f.category} | Name: ${f.name} | Size: ${f.size || 'Verified'} | Uploaded: ${f.uploadedAt || '2026-08-25'}\n`;
+        // Put simulated file inside folder
+        folder.file(`Attachment_${i + 1}_${cleanFileName(f.name)}.txt`, `Verified Institutional Document: ${f.name}\nCategory: ${f.category}\nBelongs to Event Report: ${report.reportId || report.id}\nAuthenticated by UniSphere Campus Portal.\n`);
+      });
+    } else {
+      docsIndex += `No additional loose attachments uploaded.\n`;
+    }
+    folder.file('04_Document_Audit_Manifest.txt', docsIndex);
+
+    // Generate ZIP Blob
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const zipFilename = `${cleanFileName(report.eventTitle)}_Complete_Event_Package.zip`;
+    triggerFileDownload(zipBlob, zipFilename, 'application/zip');
+    return { success: true, filename: zipFilename };
+  } catch (err) {
+    console.error('Error generating event report ZIP archive:', err);
+    return { success: false, error: err.message };
+  }
+};
+
+/**
+ * 15. Exports a comprehensive CSV summary of all Event Reports for Administration Audit
+ */
+export const downloadEventReportsSummaryCSV = (reports = []) => {
+  try {
+    let csv = `CMR TECHNICAL CAMPUS - ALL EVENT REPORTS AUDIT REPOSITORY\n`;
+    csv += `Generated On,${new Date().toISOString()}\n`;
+    csv += `Total Reports,${reports.length}\n\n`;
+    csv += `Report ID,Event Title,Club Name,Category,Event Date,Venue,Mode,Participants,Volunteers,Status,Faculty Coordinator,Submitted By,Reviewed By,Faculty Remarks\n`;
+
+    reports.forEach(r => {
+      const row = [
+        `"${r.reportId || r.id}"`,
+        `"${(r.eventTitle || '').replace(/"/g, '""')}"`,
+        `"${r.clubName || ''}"`,
+        `"${r.category || ''}"`,
+        `"${r.eventDate || ''}"`,
+        `"${(r.venue || '').replace(/"/g, '""')}"`,
+        `"${r.mode || 'Offline'}"`,
+        r.participantCount || 0,
+        r.volunteerCount || 0,
+        `"${r.status || 'Submitted'}"`,
+        `"${r.facultyCoordinator || ''}"`,
+        `"${(r.submittedBy || '').replace(/"/g, '""')}"`,
+        `"${(r.reviewedBy || '').replace(/"/g, '""')}"`,
+        `"${(r.facultyComments || '').replace(/"/g, '""')}"`
+      ];
+      csv += row.join(',') + '\n';
+    });
+
+    return triggerFileDownload(csv, 'CMRTC_Event_Reports_Central_Summary.csv', 'text/csv;charset=utf-8;');
+  } catch (err) {
+    console.error('Error exporting Event Reports Summary CSV:', err);
+    return { success: false, error: err.message };
+  }
+};
+
+/**
+ * 12. FACULTY & INSTITUTIONAL ATTENDANCE: Branch-Wise Event Attendance CSV Generator
+ * Filename: [Event_Name]_[Branch]_Attendance.csv
+ * Opens seamlessly in Excel with UTF-8 BOM.
+ */
+export const downloadBranchAttendanceCSV = (event, branchName = 'CSE', records = []) => {
+  try {
+    const branchRecords = branchName === 'ALL' || branchName === 'ALL BRANCHES'
+      ? records
+      : records.filter(r => r.branch === branchName);
+
+    const eventTitle = event.title || event.eventTitle || 'Campus_Event';
+    const clubName = event.clubName || 'Student Club';
+    const eventDate = event.date || event.eventDate || '2026-08-25';
+
+    // UTF-8 BOM so Excel opens Indian student names & symbols cleanly
+    let csv = '\uFEFF';
+    csv += `CMR TECHNICAL CAMPUS - OFFICIAL EVENT ATTENDANCE SHEET\n`;
+    csv += `Event Name,"${eventTitle.replace(/"/g, '""')}"\n`;
+    csv += `Organizing Club,"${clubName.replace(/"/g, '""')}"\n`;
+    csv += `Event Date,${eventDate}\n`;
+    csv += `Branch / Department,"${branchName}"\n`;
+    csv += `Total Attended,${branchRecords.length}\n`;
+    csv += `Generated On,${new Date().toISOString()}\n\n`;
+
+    // CSV Headers
+    csv += `S.No,Student Name,Roll Number,Branch,Section,Event Name,Club Name,Event Date,Check-in Time,Attendance Status,Verification\n`;
+
+    branchRecords.forEach((student, idx) => {
+      const row = [
+        idx + 1,
+        `"${(student.studentName || student.name || '').replace(/"/g, '""')}"`,
+        `"${student.rollNumber || student.roll || ''}"`,
+        `"${student.branch || branchName}"`,
+        `"${student.section || 'A'}"`,
+        `"${eventTitle.replace(/"/g, '""')}"`,
+        `"${clubName.replace(/"/g, '""')}"`,
+        `"${eventDate}"`,
+        `"${student.checkInTime || '09:30 AM'}"`,
+        `"${student.status || 'Present / Verified (QR Check-in)'}"`,
+        `"${student.verifiedBy || 'Faculty Coordinator (CMRTC)'}"`
+      ];
+      csv += row.join(',') + '\n';
+    });
+
+    const safeTitle = cleanFileName(eventTitle);
+    const safeBranch = cleanFileName(branchName);
+    const filename = `${safeTitle}_${safeBranch}_Attendance.csv`;
+
+    return triggerFileDownload(csv, filename, 'text/csv;charset=utf-8;');
+  } catch (err) {
+    console.error('Error downloading Branch Attendance CSV:', err);
+    return { success: false, error: err.message };
+  }
+};
+

@@ -13,6 +13,7 @@ import {
   ArrowRight, 
   Flame, 
   ChevronRight, 
+  ChevronLeft,
   Share2, 
   Info, 
   Check, 
@@ -26,7 +27,11 @@ import {
   Download,
   ShieldCheck,
   User,
-  GraduationCap
+  GraduationCap,
+  Trophy,
+  Gift,
+  Compass,
+  Tag
 } from 'lucide-react';
 import { 
   clubColors, 
@@ -50,6 +55,7 @@ const StudentEventsHeroSection = ({
   const [selectedClubFilter, setSelectedClubFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDetailEvent, setSelectedDetailEvent] = useState(null);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
 
   // Registration Form State Modal
   const [registeringEvent, setRegisteringEvent] = useState(null);
@@ -80,22 +86,50 @@ const StudentEventsHeroSection = ({
   // Filter non-holiday events
   const validEvents = events.filter(e => e.category !== 'Holiday');
 
-  // Find nearest upcoming event (sorted by date)
+  // Find sorted upcoming events by date
   const now = new Date();
   const upcomingSorted = [...validEvents].sort((a, b) => {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
   });
 
-  const nearestEvent = upcomingSorted.find(e => new Date(e.date) >= new Date(now.setHours(0,0,0,0))) || upcomingSorted[0];
+  // Current featured event based on carousel index
+  const safeFeaturedIndex = Math.min(Math.max(0, featuredIndex), Math.max(0, upcomingSorted.length - 1));
+  const nearestEvent = upcomingSorted[safeFeaturedIndex] || upcomingSorted[0];
+  const nextEventIndex = upcomingSorted.length > 1 ? (safeFeaturedIndex + 1) % upcomingSorted.length : null;
+  const nextUpcomingEvent = nextEventIndex !== null ? upcomingSorted[nextEventIndex] : null;
 
-  // Countdown state for nearest event
+  const handleNextFeatured = () => {
+    if (upcomingSorted.length > 0) {
+      setFeaturedIndex((prev) => (prev + 1) % upcomingSorted.length);
+    }
+  };
+
+  const handlePrevFeatured = () => {
+    if (upcomingSorted.length > 0) {
+      setFeaturedIndex((prev) => (prev - 1 + upcomingSorted.length) % upcomingSorted.length);
+    }
+  };
+
+  // Countdown state for nearest/active featured event
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     if (!nearestEvent) return;
 
     const calculateTimeLeft = () => {
-      const targetDate = new Date(`${nearestEvent.date}T09:00:00`);
+      let targetDateStr = `${nearestEvent.date}T09:00:00`;
+      if (nearestEvent.time) {
+        const timeMatch = nearestEvent.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (timeMatch) {
+          let hours = parseInt(timeMatch[1], 10);
+          const minutes = parseInt(timeMatch[2], 10);
+          const ampm = timeMatch[3].toUpperCase();
+          if (ampm === 'PM' && hours < 12) hours += 12;
+          if (ampm === 'AM' && hours === 12) hours = 0;
+          targetDateStr = `${nearestEvent.date}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+        }
+      }
+      const targetDate = new Date(targetDateStr);
       const difference = targetDate.getTime() - new Date().getTime();
 
       if (difference > 0) {
@@ -114,6 +148,27 @@ const StudentEventsHeroSection = ({
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
   }, [nearestEvent]);
+
+  // Event Perks / Key Highlights
+  const getEventPerks = (evt) => {
+    if (!evt) return 'Official Participation Certificate • Academic OD Approved';
+    if (evt.category === 'Hackathons' || evt.title?.toLowerCase().includes('hack')) {
+      return '₹1,00,000 Cash Prize Pool • Direct Mentorship & Internship Offers • Cloud Credits';
+    }
+    if (evt.category === 'Competitions' || evt.clubId === 'lexis') {
+      return 'Winner Trophies & Mementos • Best Delegate Awards • 15 Activity Credits';
+    }
+    if (evt.clubId === 'nss') {
+      return 'NSS Volunteer Certificate • Tree Adoption Badge • 10 Activity Credits';
+    }
+    if (evt.clubId === 'ncc') {
+      return 'ATC Drill Certification • Physical Endurance Badge • Approved Duty OD';
+    }
+    if (evt.category === 'Workshops' || evt.clubId === 'akriti' || evt.clubId === 'photography') {
+      return 'Hands-On Project Showcase • Professional Mentorship • Merit Certificate';
+    }
+    return 'Official Entry Pass • Verified QR Attendance • Certificate of Merit';
+  };
 
   // Filtering Logic
   const filteredEvents = validEvents.filter(evt => {
@@ -269,38 +324,66 @@ const StudentEventsHeroSection = ({
         </div>
       </div>
 
-      {/* 1. FEATURED / NEAREST UPCOMING EVENT HERO BANNER */}
+      {/* 1. FEATURED / UPCOMING EVENT HERO BANNER & NEXT EVENT CONTROLS */}
       {nearestEvent && (
-        <div className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-xl border border-slate-800 transition-all">
+        <div className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl border border-slate-800 transition-all group">
           {/* Banner Background Image with High-Contrast Gradient */}
           <div className="absolute inset-0 z-0">
             <img 
               src={nearestEvent.image || '/images/codeholics/codeholics-hack-the-verse.png'} 
               alt={nearestEvent.title}
-              className="w-full h-full object-cover object-center opacity-35 scale-105 filter blur-xs"
+              className="w-full h-full object-cover object-center opacity-30 scale-105 filter blur-xs transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-slate-950/80" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/95 to-slate-900/85" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
           </div>
 
+          {/* Main Hero Container */}
           <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             {/* Left Info Column */}
-            <div className="space-y-4 max-w-2xl text-left">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-pink-600 to-rose-600 text-white font-extrabold text-[11px] uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                  <Flame size={13} className="fill-white" />
-                  <span>Featured Flagship Event</span>
-                </span>
+            <div className="space-y-4 max-w-2xl text-left flex-1">
+              {/* Navigation Header & Badges */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-pink-600 to-rose-600 text-white font-extrabold text-[11px] uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                    <Flame size={13} className="fill-white animate-bounce" />
+                    <span>Featured Flagship Event</span>
+                  </span>
 
-                <span className={`px-3 py-1 rounded-full text-xs font-extrabold border ${getClubMeta(nearestEvent.clubId).badge}`}>
-                  {nearestEvent.clubName || getClubMeta(nearestEvent.clubId).name}
-                </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-extrabold border ${getClubMeta(nearestEvent.clubId).badge}`}>
+                    {nearestEvent.clubName || getClubMeta(nearestEvent.clubId).name}
+                  </span>
 
-                <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-200 text-xs font-bold border border-white/10">
-                  {nearestEvent.category || 'Competitions'}
-                </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-200 text-xs font-bold border border-white/10">
+                    {nearestEvent.category || 'Competitions'}
+                  </span>
+                </div>
+
+                {/* Upcoming Events Carousel Navigation */}
+                {upcomingSorted.length > 1 && (
+                  <div className="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+                    <button
+                      onClick={handlePrevFeatured}
+                      title="Previous upcoming event"
+                      className="p-1 rounded-full hover:bg-white/20 text-slate-200 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <span className="text-[11px] font-extrabold text-slate-300 font-mono px-1">
+                      {safeFeaturedIndex + 1} / {upcomingSorted.length} Upcoming
+                    </span>
+                    <button
+                      onClick={handleNextFeatured}
+                      title="Next upcoming event"
+                      className="p-1 rounded-full hover:bg-white/20 text-slate-200 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                )}
               </div>
 
+              {/* Title & Description */}
               <div>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
                   {nearestEvent.title}
@@ -310,42 +393,66 @@ const StudentEventsHeroSection = ({
                 </p>
               </div>
 
+              {/* Perks & Key Highlights Badge */}
+              <div className="flex items-center gap-2 p-2.5 rounded-2xl bg-amber-500/10 border border-amber-400/20 text-amber-200 text-xs font-bold">
+                <Trophy size={15} className="text-amber-400 shrink-0" />
+                <span className="truncate">{getEventPerks(nearestEvent)}</span>
+              </div>
+
               {/* Event Meta Details Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10" title={nearestEvent.date}>
                   <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
                     <Calendar size={16} />
                   </div>
-                  <div className="truncate">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">Date</span>
-                    <span className="text-xs font-extrabold text-white truncate">{nearestEvent.date}</span>
+                    <span className="text-xs font-extrabold text-white truncate block">{nearestEvent.date}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10" title={nearestEvent.time}>
                   <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
                     <Clock size={16} />
                   </div>
-                  <div className="truncate">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">Time</span>
-                    <span className="text-xs font-extrabold text-white truncate">{nearestEvent.time}</span>
+                    <span className="text-xs font-extrabold text-white truncate block">{nearestEvent.time}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10">
+                <div className="flex items-center gap-2.5 bg-white/5 backdrop-blur-md p-2.5 rounded-2xl border border-white/10" title={nearestEvent.venue}>
                   <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
                     <MapPin size={16} />
                   </div>
-                  <div className="truncate">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">Location</span>
-                    <span className="text-xs font-extrabold text-white truncate">{nearestEvent.venue}</span>
+                    <span className="text-xs font-extrabold text-white truncate block">{nearestEvent.venue}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Extra Details Row: Coordinator & Eligibility */}
+              <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1">
+                <div className="flex items-center gap-1.5">
+                  <UserCheck size={14} className="text-blue-400" />
+                  <span>Lead: <strong className="text-slate-200 font-bold">{nearestEvent.organizer?.name || 'Club Lead Coordinator'}</strong></span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <GraduationCap size={14} className="text-emerald-400" />
+                  <span>Eligibility: <strong className="text-slate-200 font-bold">Open to All B.Tech Branches</strong></span>
+                </div>
+                {nearestEvent.organizer?.phone && (
+                  <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                    <Phone size={13} className="text-pink-400" />
+                    <span className="text-slate-300">{nearestEvent.organizer.phone}</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Right Action & Live Countdown Box */}
-            <div className="w-full lg:w-80 bg-slate-950/80 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/10 shadow-2xl space-y-5 shrink-0 text-left">
+            <div className="w-full lg:w-80 bg-slate-950/90 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/10 shadow-2xl space-y-5 shrink-0 text-left">
               {/* Live Countdown Clock */}
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase mb-2">
@@ -450,6 +557,35 @@ const StudentEventsHeroSection = ({
               </div>
             </div>
           </div>
+
+          {/* UP NEXT IN QUEUE FOOTER STRIP */}
+          {nextUpcomingEvent && nextUpcomingEvent.id !== nearestEvent.id && (
+            <div className="relative z-10 border-t border-white/10 bg-slate-900/90 backdrop-blur-md px-6 py-3 sm:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-wider border border-blue-400/30 shrink-0">
+                  Next Event
+                </span>
+                <div className="min-w-0 text-xs">
+                  <span className="font-extrabold text-white truncate inline-block max-w-xs sm:max-w-md align-middle">
+                    {nextUpcomingEvent.title}
+                  </span>
+                  <span className="text-slate-400 ml-2 hidden md:inline">
+                    • {nextUpcomingEvent.clubName || getClubMeta(nextUpcomingEvent.clubId).name} ({nextUpcomingEvent.date})
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={handleNextFeatured}
+                  className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-white/10 active:scale-95"
+                >
+                  <span>View Next Event</span>
+                  <ArrowRight size={13} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

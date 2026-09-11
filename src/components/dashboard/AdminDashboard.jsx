@@ -28,6 +28,8 @@ import {
   GraduationCap
 } from 'lucide-react';
 import RoleSidebar from '../layout/RoleSidebar';
+import { useAuth } from '../../context/AuthContext';
+import EventReportsManager from './EventReportsManager';
 import { mockClubs, getGlobalSystemConfig, saveGlobalSystemConfig } from '../../utils/mockClubs';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
@@ -85,6 +87,7 @@ const availableFacultyPool = [
 ];
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('manage-all-clubs');
   const [users, setUsers] = useState(initialUserList);
   const [clubs, setClubs] = useState(mockClubs);
@@ -806,14 +809,21 @@ const AdminDashboard = () => {
         )}
 
         {/* Section: Reports & All Certificates Registry */}
-        {activeSection === 'reports' && (
-          <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-black text-white flex items-center gap-2">
-                  <Award size={20} className="text-amber-400" />
-                  <span>College-Wide Uploaded Certificates Registry ({allCertificates.length})</span>
-                </h3>
+        {(activeSection === 'reports' || activeSection === 'event-reports') && (
+          <div className="space-y-6">
+            <EventReportsManager 
+              role="admin" 
+              user={user} 
+              onToast={triggerToast} 
+            />
+
+            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-black text-white flex items-center gap-2">
+                    <Award size={20} className="text-amber-400" />
+                    <span>College-Wide Uploaded Certificates Registry ({allCertificates.length})</span>
+                  </h3>
                 <p className="text-xs text-slate-400">View and audit all digital certificates issued by core coordinators and verified by faculty.</p>
               </div>
               <button
@@ -894,7 +904,8 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
         {/* Section: Analytics */}
         {activeSection === 'view-analytics' && (

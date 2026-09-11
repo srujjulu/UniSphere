@@ -17,7 +17,7 @@ export const initialCalendarEvents = [
     category: 'Hackathons',
     date: '2026-08-25',
     time: '09:00 AM (36-Hours Non-Stop Coding Sprint)',
-    venue: 'Tech Innovation Center & CS Labs 1-4, Block 2',
+    venue: 'Room No: 21, Block B (Tech Innovation Center & CS Labs)',
     seats: '280/300 Hackers',
     maxCapacity: 300,
     initialRegisteredCount: 280,
@@ -39,7 +39,7 @@ export const initialCalendarEvents = [
     category: 'Hackathons',
     date: '2026-09-08',
     time: '10:00 AM - 06:00 PM (1-Day Sprint)',
-    venue: 'AI Research Studio, Lab 301',
+    venue: 'Room No: 301, Block B (AI Research Studio Lab)',
     seats: '90/120 Developers',
     maxCapacity: 120,
     initialRegisteredCount: 90,
@@ -61,7 +61,7 @@ export const initialCalendarEvents = [
     category: 'Workshops',
     date: '2026-08-26',
     time: '06:30 AM - 12:30 PM',
-    venue: 'CMRTC Parade Grounds & Obstacle Course',
+    venue: 'Parade Grounds & Obstacle Track, Block D',
     seats: '75/100 Cadets',
     maxCapacity: 100,
     initialRegisteredCount: 75,
@@ -83,7 +83,7 @@ export const initialCalendarEvents = [
     category: 'Competitions',
     date: '2026-08-28',
     time: '09:00 AM - 01:00 PM',
-    venue: 'Campus Eco Park & Surrounding Mandal',
+    venue: 'Room No: G-12, Block A (Assembly) & Eco Park',
     seats: '180/200 Volunteers',
     maxCapacity: 200,
     initialRegisteredCount: 180,
@@ -105,7 +105,7 @@ export const initialCalendarEvents = [
     category: 'Competitions',
     date: '2026-08-30',
     time: '10:00 AM - 05:00 PM',
-    venue: 'Main Conference Hall (Block 3)',
+    venue: 'Room No: 305, Block B (Main Conference Hall)',
     seats: '110/120 Delegates',
     maxCapacity: 120,
     initialRegisteredCount: 110,
@@ -127,7 +127,7 @@ export const initialCalendarEvents = [
     category: 'Workshops',
     date: '2026-09-12',
     time: '02:00 PM - 06:00 PM',
-    venue: 'Dance Studio Room 204',
+    venue: 'Room No: 204, Block A (Dance & Cultural Studio)',
     seats: '85/100 Dance Cadets',
     maxCapacity: 100,
     initialRegisteredCount: 85,
@@ -149,7 +149,7 @@ export const initialCalendarEvents = [
     category: 'Competitions',
     date: '2026-09-16',
     time: '01:30 PM - 05:30 PM',
-    venue: 'English Dept Amphitheatre',
+    venue: 'Room No: 108, Block C (Amphitheatre)',
     seats: '60/80 Writers',
     maxCapacity: 80,
     initialRegisteredCount: 60,
@@ -171,7 +171,7 @@ export const initialCalendarEvents = [
     category: 'Workshops',
     date: '2026-09-18',
     time: '10:30 AM - 03:30 PM',
-    venue: 'Media Studio 102',
+    venue: 'Room No: 102, Block B (Media & Photography Studio Lab)',
     seats: '45/50 Creators',
     maxCapacity: 50,
     initialRegisteredCount: 45,
@@ -193,7 +193,7 @@ export const initialCalendarEvents = [
     category: 'Competitions',
     date: '2026-09-22',
     time: '09:00 AM - 04:00 PM',
-    venue: 'College Gymnasium Hall',
+    venue: 'Room No: 01, Sports Complex (Gymnasium Hall)',
     seats: '350/400 Donors',
     maxCapacity: 400,
     initialRegisteredCount: 350,
@@ -215,7 +215,7 @@ export const initialCalendarEvents = [
     category: 'Competitions',
     date: '2026-09-26',
     time: '05:00 PM - 09:30 PM',
-    venue: 'CMRTC Open Air Theatre (OAT)',
+    venue: 'Open Air Theatre (OAT), Central Quadrangle Block',
     seats: '420/500 Passes',
     maxCapacity: 500,
     initialRegisteredCount: 420,
@@ -237,7 +237,7 @@ export const initialCalendarEvents = [
     category: 'Workshops',
     date: '2026-10-01',
     time: '02:00 PM - 05:30 PM',
-    venue: 'Seminar Hall 2',
+    venue: 'Room No: 202, Block B (Seminar Hall 2)',
     seats: '140/150 Coders',
     maxCapacity: 150,
     initialRegisteredCount: 140,
@@ -259,7 +259,7 @@ export const initialCalendarEvents = [
     category: 'Workshops',
     date: '2026-10-08',
     time: '07:00 AM - 11:30 AM',
-    venue: 'Campus Green Belt & Quadrangle',
+    venue: 'Room No: 101, Block A (Briefing) & Campus Green Belt',
     seats: '35/40 Photographers',
     maxCapacity: 40,
     initialRegisteredCount: 35,
@@ -277,30 +277,39 @@ export const initialCalendarEvents = [
 
 export const getStoredCalendarEvents = () => {
   if (typeof window === 'undefined') return initialCalendarEvents;
-  const stored = localStorage.getItem('cmrtc_calendar_events_data_v4');
+  const stored = localStorage.getItem('cmrtc_calendar_events_data_v5') || localStorage.getItem('cmrtc_calendar_events_data_v4');
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Merge missing initial events so all clubs and hackathons are always populated
-        const existingIds = new Set(parsed.map(p => p.id));
+        // Sync fresh venues & fields from initialCalendarEvents while preserving registered students
+        const initialMap = new Map(initialCalendarEvents.map(init => [init.id, init]));
+        const updatedList = parsed.map(p => {
+          const init = initialMap.get(p.id);
+          if (init) {
+            return {
+              ...init,
+              ...p,
+              venue: init.venue || p.venue, // always ensure clean Room No & Block venue
+              registeredStudents: p.registeredStudents || init.registeredStudents || [],
+              initialRegisteredCount: p.initialRegisteredCount ?? init.initialRegisteredCount
+            };
+          }
+          return p;
+        });
+
+        const existingIds = new Set(updatedList.map(p => p.id));
         const missing = initialCalendarEvents.filter(init => !existingIds.has(init.id));
-        if (missing.length > 0) {
-          const merged = [...parsed, ...missing];
-          localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(merged));
-          return merged;
-        }
-        return parsed;
+        const finalMerged = [...updatedList, ...missing];
+        localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(finalMerged));
+        return finalMerged;
       }
     } catch {
       return initialCalendarEvents;
     }
   }
 
-  localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(initialCalendarEvents));
-  localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(initialCalendarEvents));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(initialCalendarEvents));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(initialCalendarEvents));
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(initialCalendarEvents));
   return initialCalendarEvents;
 };
 
@@ -340,10 +349,9 @@ export const saveCalendarEvent = (newEvent) => {
     organizer: newEvent.organizer || { name: 'Club Coordinator', email: 'clubs@cmr.edu.in', phone: '+91 98765 43210' }
   };
   const updated = [eventObj, ...current];
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(updated));
   return updated;
 };
 
@@ -353,10 +361,9 @@ export const updateCalendarEventStatus = (eventId, newStatus) => {
   const updated = current.map(evt => 
     evt.id === eventId ? { ...evt, status: newStatus } : evt
   );
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(updated));
   return updated;
 };
 
@@ -378,10 +385,9 @@ export const registerStudentForEvent = (eventId, studentRoll) => {
     }
     return evt;
   });
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(updated));
   return updated;
 };
 
@@ -401,10 +407,9 @@ export const cancelStudentEventRegistration = (eventId, studentRoll) => {
     }
     return evt;
   });
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(updated));
   return updated;
 };
 
@@ -425,9 +430,8 @@ export const toggleStudentEventRegistration = (eventId, studentRoll) => {
     }
     return evt;
   });
+  localStorage.setItem('cmrtc_calendar_events_data_v5', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v4', JSON.stringify(updated));
   localStorage.setItem('cmrtc_calendar_events_data_v3', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data_v2', JSON.stringify(updated));
-  localStorage.setItem('cmrtc_calendar_events_data', JSON.stringify(updated));
   return updated;
 };

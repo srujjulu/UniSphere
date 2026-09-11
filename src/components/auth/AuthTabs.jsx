@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const AuthTabs = ({ activeTab, onChange }) => {
   const tabs = [
     { id: 'signin', label: 'Sign In' },
-    { id: 'register', label: 'New Account' }
+    { id: 'register', label: 'Create Account' }
   ];
 
   const handleKeyDown = (e, tabId) => {

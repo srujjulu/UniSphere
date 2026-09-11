@@ -18,7 +18,8 @@ import {
 import RoleSidebar from '../layout/RoleSidebar';
 import DhondiFooter from '../layout/DhondiFooter';
 import InfluencerSheetModal from './InfluencerSheetModal';
-import EventCalendar from './EventCalendar';
+import { useAuth } from '../../context/AuthContext';
+import EventReportsManager from './EventReportsManager';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
@@ -36,6 +37,7 @@ const pendingMajorEvents = [
 ];
 
 const FacultyDashboard = () => {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('approve-events');
   const [eventApprovals, setEventApprovals] = useState(pendingMajorEvents);
   const [memberRequests, setMemberRequests] = useState(getStoredRequests);
@@ -366,13 +368,20 @@ const FacultyDashboard = () => {
           </div>
         )}
 
-        {/* Section: View Reports + Influencer Roster */}
-        {activeSection === 'view-reports' && (
+        {/* Section: View Reports + Event Reports + Influencer Roster */}
+        {(activeSection === 'view-reports' || activeSection === 'event-reports') && (
           <div className="space-y-6">
+            <EventReportsManager 
+              role="faculty" 
+              facultyUser={user} 
+              user={user} 
+              onToast={triggerToast} 
+            />
+
             <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
               <h3 className="text-xl font-black text-white flex items-center gap-2">
                 <FileText size={20} className="text-amber-400" />
-                <span>Campus Activity & Audit Reports</span>
+                <span>Institutional Activity & Audit Reports</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">

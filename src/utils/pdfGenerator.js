@@ -1213,3 +1213,484 @@ export const downloadNAACAccreditationPDF = () => {
     return { success: false, error: error.message };
   }
 };
+
+/**
+ * 12. Generates and downloads the Official Institutional Event Report PDF
+ */
+export const generateOfficialEventReportPDF = (report) => {
+  try {
+    if (!report) throw new Error('Report data is required.');
+
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const w = 210;
+    const h = 297;
+    let y = 14;
+
+    // Outer Decorative Border
+    doc.setDrawColor(30, 41, 59); // Slate-800
+    doc.setLineWidth(0.6);
+    doc.rect(10, 10, w - 20, h - 20);
+
+    doc.setDrawColor(203, 213, 225); // Slate-300
+    doc.setLineWidth(0.2);
+    doc.rect(12, 12, w - 24, h - 24);
+
+    // Header Background
+    doc.setFillColor(15, 23, 42); // Slate-900
+    doc.rect(12, 12, w - 24, 28, 'F');
+
+    // Header Top Accent Line
+    doc.setFillColor(59, 130, 246); // Blue-500
+    doc.rect(12, 12, w - 24, 2, 'F');
+
+    // Institution Branding
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(255, 255, 255);
+    doc.text('CMR TECHNICAL CAMPUS', w / 2, 21, { align: 'center' });
+
+    doc.setFontSize(7.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(148, 163, 184);
+    doc.text('UGC Autonomous • Approved by AICTE, New Delhi • Accredited by NAAC A+', w / 2, 26, { align: 'center' });
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(245, 158, 11); // Amber-400
+    doc.text('UNISPHERE CAMPUS PORTAL • OFFICIAL EVENT COMPLETION REPORT', w / 2, 33, { align: 'center' });
+
+    y = 45;
+
+    // Report Meta Summary Box
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.roundedRect(14, y, w - 28, 22, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(71, 85, 105);
+    doc.text('REPORT ID:', 18, y + 6);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42);
+    doc.text(report.reportId || report.id || 'CMRTC-ER-2026', 42, y + 6);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(71, 85, 105);
+    doc.text('ACADEMIC YEAR:', 110, y + 6);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    doc.text(report.academicYear || '2025-2026', 145, y + 6);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(71, 85, 105);
+    doc.text('SUBMITTED ON:', 18, y + 13);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    const subDate = report.submittedAt ? new Date(report.submittedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'August 2026';
+    doc.text(subDate, 48, y + 13);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(71, 85, 105);
+    doc.text('STATUS:', 110, y + 13);
+    
+    // Status Badge Stamp
+    const isVerified = report.status === 'Verified / Approved';
+    doc.setFillColor(isVerified ? 16 : 245, isVerified ? 185 : 158, isVerified ? 129 : 11);
+    doc.roundedRect(130, y + 9.5, 55, 6, 1.5, 1.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(255, 255, 255);
+    doc.text((report.status || 'Submitted').toUpperCase(), 157.5, y + 14, { align: 'center' });
+
+    y += 26;
+
+    // SECTION: EVENT ESSENTIALS
+    doc.setFillColor(241, 245, 249);
+    doc.rect(14, y, w - 28, 6, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('1. EVENT INFORMATION', 17, y + 4.5);
+
+    y += 9;
+
+    const eventDetails = [
+      ['Event Title:', report.eventTitle || 'Campus Event'],
+      ['Organizing Club:', report.clubName || 'CMRTC Club'],
+      ['Event Category:', `${report.category || 'General'} • Mode: ${report.mode || 'Offline'}`],
+      ['Date & Timings:', `${report.eventDate || 'N/A'} (${report.startTime || '09:00 AM'} - ${report.endTime || '05:00 PM'})`],
+      ['Campus Venue:', report.venue || 'CMRTC Main Campus'],
+      ['Faculty Coordinator:', report.facultyCoordinator || 'Assigned Faculty'],
+      ['Chief Guest / Speaker:', report.chiefGuest || 'Industry Mentors & Faculty'],
+      ['Participation Metrics:', `${report.participantCount || 0} Registered Attendees • ${report.volunteerCount || 0} Student Volunteers`]
+    ];
+
+    eventDetails.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text(label, 18, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      const splitVal = doc.splitTextToSize(String(value), 125);
+      doc.text(splitVal, 62, y);
+      y += (splitVal.length * 4.2);
+    });
+
+    y += 2;
+
+    // SECTION 2: EXECUTIVE SUMMARY & OBJECTIVE
+    doc.setFillColor(241, 245, 249);
+    doc.rect(14, y, w - 28, 6, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('2. OBJECTIVES & SUMMARY', 17, y + 4.5);
+
+    y += 9;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Event Objective:', 18, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    const objLines = doc.splitTextToSize(report.objective || 'N/A', w - 36);
+    doc.text(objLines, 18, y + 4);
+    y += (objLines.length * 3.8) + 6;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Brief Description / Summary:', 18, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 23, 42);
+    const sumLines = doc.splitTextToSize(report.summary || 'N/A', w - 36);
+    doc.text(sumLines, 18, y + 4);
+    y += (sumLines.length * 3.8) + 6;
+
+    // SECTION 3: KEY OUTCOMES & HIGHLIGHTS
+    doc.setFillColor(241, 245, 249);
+    doc.rect(14, y, w - 28, 6, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('3. OUTCOMES, HIGHLIGHTS & ACHIEVEMENTS', 17, y + 4.5);
+
+    y += 9;
+
+    if (report.outcome) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text('Event Outcome:', 18, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      const outLines = doc.splitTextToSize(report.outcome, w - 36);
+      doc.text(outLines, 18, y + 4);
+      y += (outLines.length * 3.8) + 5;
+    }
+
+    if (report.achievements) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text('Winners & Student Honors:', 18, y);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(15, 23, 42);
+      const achLines = doc.splitTextToSize(report.achievements, w - 36);
+      doc.text(achLines, 18, y + 4);
+      y += (achLines.length * 3.8) + 5;
+    }
+
+    // SECTION 4: DOCUMENTS & MEDIA ATTACHMENTS
+    doc.setFillColor(241, 245, 249);
+    doc.rect(14, y, w - 28, 6, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('4. VERIFIED DIGITAL DOCUMENTS & AUDIT RECORDS', 17, y + 4.5);
+
+    y += 8;
+
+    const files = report.files && report.files.length > 0 ? report.files : [
+      { name: 'Official Event Report PDF', size: '2.4 MB' },
+      { name: 'Verified Attendance Sheet XLSX', size: '184 KB' },
+      { name: 'Event Photos Gallery', size: '3.8 MB' }
+    ];
+
+    files.slice(0, 4).forEach((file, idx) => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text(`[✓] Document ${idx + 1}: ${file.name} (${file.size || 'Verified'})`, 18, y);
+      y += 4.5;
+    });
+
+    y += 3;
+
+    // SECTION 5: FACULTY REVIEW REMARKS & SIGN OFF
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(14, y, w - 28, 18, 1.5, 1.5, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('FACULTY COORDINATOR REVIEW REMARKS:', 18, y + 5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.2);
+    doc.setTextColor(51, 65, 85);
+    const comm = report.facultyComments || 'All event metrics, digital attendance logs, and financial vouchers have been reviewed and approved for NAAC accreditation records.';
+    const commLines = doc.splitTextToSize(comm, w - 40);
+    doc.text(commLines, 18, y + 9.5);
+
+    y += 28;
+
+    // Signatures
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text(report.submittedBy ? report.submittedBy.split('(')[0].trim() : 'Student Coordinator', 18, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Lead Student Organizer', 18, y + 3.5);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text(report.reviewedBy || report.facultyCoordinator || 'Dr. Suresh Kumar', w / 2, y, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Faculty Club Coordinator', w / 2, y + 3.5, { align: 'center' });
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Dr. M. J. Sharma', w - 18, y, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Principal & Dean Student Affairs', w - 18, y + 3.5, { align: 'right' });
+
+    const safeTitle = cleanFileName(report.eventTitle || 'Event_Report');
+    const filename = `${safeTitle}_Official_Report.pdf`;
+    doc.save(filename);
+    return { success: true, filename };
+  } catch (err) {
+    console.error('Error generating Official Event Report PDF:', err);
+    return { success: false, error: err.message };
+  }
+};
+
+/**
+ * 12. FACULTY & INSTITUTIONAL ATTENDANCE: Branch-Wise Event Attendance PDF Generator
+ * Filename: [Event_Name]_[Branch]_Attendance.pdf
+ */
+export const generateBranchAttendancePDF = (event, branchName = 'CSE', records = []) => {
+  try {
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const w = doc.internal.pageSize.getWidth();
+    const h = doc.internal.pageSize.getHeight();
+
+    const branchRecords = branchName === 'ALL' || branchName === 'ALL BRANCHES'
+      ? records
+      : records.filter(r => r.branch === branchName);
+
+    const eventTitle = event.title || event.eventTitle || 'CMRTC Flagship Campus Event';
+    const clubName = event.clubName || 'Student Clubs';
+    const eventDate = event.date || event.eventDate || '2026-08-25';
+    const venue = event.venue || 'Room No: 21, Block B (Tech Innovation Center)';
+
+    // Institutional Header
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, w, 28, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(255, 255, 255);
+    doc.text('CMR TECHNICAL CAMPUS', w / 2, 11, { align: 'center' });
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(191, 219, 254);
+    doc.text('UGC Autonomous • NBA & NAAC A+ Accredited • Kandlakoya, Hyderabad', w / 2, 17, { align: 'center' });
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(251, 191, 36);
+    doc.text(`OFFICIAL BRANCH-WISE EVENT ATTENDANCE SHEET — ${branchName.toUpperCase()}`, w / 2, 23.5, { align: 'center' });
+
+    // Meta Box
+    let y = 34;
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(203, 213, 225);
+    doc.roundedRect(14, y, w - 28, 28, 2, 2, 'FD');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Event Title:', 18, y + 6);
+    doc.setFont('helvetica', 'normal');
+    doc.text(eventTitle, 40, y + 6);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Organizing Club:', 18, y + 12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(clubName, 46, y + 12);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Event Date:', 18, y + 18);
+    doc.setFont('helvetica', 'normal');
+    doc.text(eventDate, 38, y + 18);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Target Branch:', w / 2 + 10, y + 6);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(2, 132, 199);
+    doc.text(branchName, w / 2 + 35, y + 6);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42);
+    doc.text('Total Attended:', w / 2 + 10, y + 12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(16, 185, 129);
+    doc.text(`${branchRecords.length} Students`, w / 2 + 37, y + 12);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(15, 23, 42);
+    doc.text('Generated On:', w / 2 + 10, y + 18);
+    doc.setFont('helvetica', 'normal');
+    doc.text(new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }), w / 2 + 36, y + 18);
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Venue:', 18, y + 24);
+    doc.setFont('helvetica', 'normal');
+    doc.text(venue, 32, y + 24);
+
+    // Table Header
+    y = 68;
+    doc.setFillColor(30, 41, 59); // slate-800
+    doc.rect(14, y, w - 28, 7.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(255, 255, 255);
+    doc.text('S.No', 18, y + 5);
+    doc.text('Roll Number', 32, y + 5);
+    doc.text('Student Full Name', 65, y + 5);
+    doc.text('Branch', 115, y + 5);
+    doc.text('Sec', 135, y + 5);
+    doc.text('Check-in Time', 148, y + 5);
+    doc.text('Attendance Status', 172, y + 5);
+
+    // Table Rows
+    y += 8;
+    doc.setFontSize(7.5);
+
+    branchRecords.forEach((student, idx) => {
+      if (y > h - 25) {
+        doc.addPage();
+        y = 20;
+        // Sub-page Header
+        doc.setFillColor(30, 41, 59);
+        doc.rect(14, y, w - 28, 7.5, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(255, 255, 255);
+        doc.text('S.No', 18, y + 5);
+        doc.text('Roll Number', 32, y + 5);
+        doc.text('Student Full Name', 65, y + 5);
+        doc.text('Branch', 115, y + 5);
+        doc.text('Sec', 135, y + 5);
+        doc.text('Check-in Time', 148, y + 5);
+        doc.text('Attendance Status', 172, y + 5);
+        y += 8;
+        doc.setFontSize(7.5);
+      }
+
+      if (idx % 2 === 0) {
+        doc.setFillColor(248, 250, 252);
+        doc.rect(14, y - 0.5, w - 28, 6.5, 'F');
+      }
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      doc.text(String(idx + 1).padStart(2, '0'), 18, y + 4);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text(student.rollNumber || student.roll || '237R1A0501', 32, y + 4);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(30, 41, 59);
+      doc.text(student.studentName || student.name || 'Student Name', 65, y + 4);
+
+      doc.text(student.branch || branchName, 115, y + 4);
+      doc.text(student.section || 'A', 135, y + 4);
+      doc.text(student.checkInTime || '09:30 AM', 148, y + 4);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(16, 185, 129);
+      doc.text('VERIFIED (QR)', 172, y + 4);
+
+      y += 6.5;
+    });
+
+    // Signature Footer at the end
+    if (y > h - 30) {
+      doc.addPage();
+      y = 30;
+    } else {
+      y += 12;
+    }
+
+    doc.setDrawColor(203, 213, 225);
+    doc.line(14, y, w - 14, y);
+    y += 8;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Student Coordinator', 18, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Attendance Scanner Lead', 18, y + 3.5);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Faculty Coordinator', w / 2, y, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Institutional In-Charge', w / 2, y + 3.5, { align: 'center' });
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Head of Department / Dean', w - 18, y, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Academic Verification Stamp', w - 18, y + 3.5, { align: 'right' });
+
+    const safeTitle = cleanFileName(eventTitle);
+    const safeBranch = cleanFileName(branchName);
+    const filename = `${safeTitle}_${safeBranch}_Attendance.pdf`;
+    doc.save(filename);
+    return { success: true, filename };
+  } catch (err) {
+    console.error('Error generating Branch Attendance PDF:', err);
+    return { success: false, error: err.message };
+  }
+};

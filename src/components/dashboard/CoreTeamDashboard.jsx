@@ -38,6 +38,7 @@ import ClubPhotoGalleryModal from './ClubPhotoGalleryModal';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import EventCalendar from './EventCalendar';
 import EventQRGeneratorModal from './EventQRGeneratorModal';
+import EventReportsManager from './EventReportsManager';
 import { useAuth } from '../../context/AuthContext';
 import { mockClubs, getClubSettings, saveClubSettings, getStoredClubs } from '../../utils/mockClubs';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
@@ -2042,13 +2043,22 @@ const CoreTeamDashboard = () => {
           </div>
         )}
 
-        {/* Section: View Reports */}
-        {activeSection === 'view-reports' && (
-          <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
-            <h3 className="text-xl font-black text-white flex items-center gap-2">
-              <FileText size={20} className="text-emerald-400" />
-              <span>Club Activity & Audit Reports</span>
-            </h3>
+        {/* Section: View Reports / Event Reports */}
+        {(activeSection === 'view-reports' || activeSection === 'event-reports') && (
+          <div className="space-y-6">
+            <EventReportsManager 
+              role="core" 
+              selectedClubId={selectedClubId} 
+              activeClub={activeClub} 
+              user={user} 
+              onToast={triggerToast} 
+            />
+
+            <div className="bg-slate-900/60 p-6 rounded-3xl border border-slate-800 space-y-4">
+              <h3 className="text-xl font-black text-white flex items-center gap-2">
+                <FileText size={20} className="text-emerald-400" />
+                <span>Monthly Club Activity & Audit Reports</span>
+              </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700 space-y-2">
@@ -2198,7 +2208,8 @@ const CoreTeamDashboard = () => {
               </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
         {/* Club Photo Gallery Modal */}
         <ClubPhotoGalleryModal

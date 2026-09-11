@@ -9,7 +9,7 @@ const defaultBloodEvents = [
     title: 'Mega Campus Blood Donation Camp 2026',
     subtitle: 'Annual Blood Donation in Partnership with Red Cross',
     dates: 'August 14, 2026 (09:00 AM - 04:00 PM)',
-    venue: 'CMRTC Indoor Sports Hall & Health Center',
+    venue: 'Room No: 01, Sports Complex (Indoor Sports Hall & Health Center)',
     bank: 'Red Cross & Gandhi Hospital Blood Bank',
     status: 'Donor Registrations Open',
     badgeBg: 'bg-red-500/10 text-red-600 border border-red-200'
@@ -19,7 +19,7 @@ const defaultBloodEvents = [
     title: 'Swachh Bharat & Village Health Camp',
     subtitle: 'Free Health Checkups & Sanitation Drive',
     dates: 'August 20, 2026',
-    venue: 'Adopted Village (Kandlakoya & Surroundings)',
+    venue: 'Room No: G-05, Block A (Briefing) • Adopted Village Mandal',
     bank: 'NSS Medical Volunteer Squad',
     status: 'Volunteers Open',
     badgeBg: 'bg-emerald-500/10 text-emerald-600 border border-emerald-200'
@@ -29,7 +29,7 @@ const defaultBloodEvents = [
     title: 'Emergency On-Call Blood Network',
     subtitle: '24x7 Emergency Blood Donor Registry for Hospitals',
     dates: 'Active 365 Days',
-    venue: 'Emergency Hospital Dispatch Network',
+    venue: 'Room No: G-08, Health Center Block (Emergency Cell)',
     bank: 'Hyderabad Red Cross Emergency Cell',
     status: '24x7 Active Network',
     badgeBg: 'bg-rose-500/10 text-rose-600 border border-rose-200'

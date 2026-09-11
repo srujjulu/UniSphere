@@ -9,7 +9,7 @@ const defaultDrillEvents = [
     title: 'Independence Day Ceremonial Parade 2026',
     subtitle: 'Ceremonial Guard of Honour & Battalion March Past',
     dates: 'August 15, 2026 (Reporting 06:00 AM)',
-    venue: 'CMRTC Main Parade Ground',
+    venue: 'CMRTC Main Parade Ground, Block D Area',
     drillType: 'Guard of Honour & March Past',
     status: 'Cadet Reporting Open',
     badgeBg: 'bg-blue-500/10 text-blue-600 border border-blue-200'
@@ -19,7 +19,7 @@ const defaultDrillEvents = [
     title: 'Republic Day Camp (RDC) Selections',
     subtitle: 'Rigorous Physical Fitness & Drill Drill-Down',
     dates: 'September 10-12, 2026',
-    venue: '1(T) Bn NCC Battalion Grounds',
+    venue: '1(T) Bn NCC Battalion Grounds, Sector B',
     drillType: 'Obstacle Course & Drill Rigor',
     status: 'Selections Open',
     badgeBg: 'bg-emerald-500/10 text-emerald-600 border border-emerald-200'
@@ -29,7 +29,7 @@ const defaultDrillEvents = [
     title: 'Weapons Training & Firing Simulator',
     subtitle: '.22 Rifle Strip-Down, Assembly & Firing Practice',
     dates: 'October 05, 2026',
-    venue: 'NCC Firing Range Lab',
+    venue: 'Room No: 104, Block D (NCC Firing Range Lab)',
     drillType: 'Weapons Assembly & Firing',
     status: 'Enrolment Open',
     badgeBg: 'bg-amber-500/10 text-amber-600 border border-amber-200'

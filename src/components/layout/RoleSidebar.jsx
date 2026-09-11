@@ -65,7 +65,7 @@ const menuByRole = {
     { id: 'manage-sponsors', label: 'Manage Sponsors', icon: Award },
     { id: 'manage-budget', label: 'Manage Budget', icon: DollarSign },
     { id: 'core-team', label: 'Core Team Roster', icon: Users },
-    { id: 'view-reports', label: 'View Reports', icon: FileText },
+    { id: 'view-reports', label: 'Event Reports', icon: FileText },
     { id: 'club-settings', label: 'Club Settings', icon: Settings },
   ],
   faculty: [
@@ -73,7 +73,7 @@ const menuByRole = {
     { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'approve-events', label: 'Approve Major Events', icon: CheckSquare },
     { id: 'monitor-members', label: 'Monitor Members', icon: Users },
-    { id: 'view-reports', label: 'View Reports', icon: FileText },
+    { id: 'view-reports', label: 'Event Reports', icon: FileText },
     { id: 'view-announcements', label: 'View Announcements', icon: Bell },
     { id: 'monitor-budgets', label: 'Monitor Budgets', icon: DollarSign },
   ],
@@ -84,7 +84,7 @@ const menuByRole = {
     { id: 'manage-roles', label: 'Manage Roles', icon: ShieldCheck },
     { id: 'manage-faculty', label: 'Faculty Coordinators', icon: Shield },
     { id: 'view-analytics', label: 'View Analytics', icon: BarChart3 },
-    { id: 'reports', label: 'Reports', icon: FileText },
+    { id: 'reports', label: 'Event Reports', icon: FileText },
     { id: 'system-settings', label: 'System Settings', icon: Settings },
     { id: 'database-management', label: 'Database Management', icon: Database },
   ]

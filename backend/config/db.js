@@ -25,7 +25,8 @@ const defaultSchema = {
   albums: [],
   volunteerLogs: [],
   feedbacks: [],
-  notifications: []
+  notifications: [],
+  eventReports: []
 };
 
 // Load database from file into memory

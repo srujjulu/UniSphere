@@ -9,7 +9,7 @@ const defaultPhotoEvents = [
     title: 'Insta-Walk Photowalk 2026',
     subtitle: 'Guided Outdoor Street Photography',
     dates: 'November 10, 2026',
-    location: 'Old City & Charminar, Hyderabad',
+    location: 'Room No: 101, Block A (Reporting) • Old City Photowalk',
     gearReq: 'DSLR, Mirrorless or Smartphone',
     status: 'Registration Open',
     badgeBg: 'bg-purple-500/10 text-purple-600 border border-purple-200'
@@ -19,7 +19,7 @@ const defaultPhotoEvents = [
     title: 'Short Film Gala 2026',
     subtitle: 'Annual Campus Film Screenings & Awards',
     dates: 'September 12, 2026',
-    location: 'CMRTC Main Auditorium',
+    location: 'Room No: 201, Block B (CMRTC Main Auditorium)',
     gearReq: 'Short Film Submission (1-10 mins)',
     status: 'Registration Open',
     badgeBg: 'bg-purple-500/10 text-purple-600 border border-purple-200'
@@ -29,7 +29,7 @@ const defaultPhotoEvents = [
     title: 'Lighting & Lightroom Masterclass',
     subtitle: 'Studio Lighting & Color Grading Workshop',
     dates: 'December 02, 2026',
-    location: 'F9 Media Studio Lab',
+    location: 'Room No: 102, Block B (F9 Media Studio Lab)',
     gearReq: 'Laptop with Adobe Lightroom / Photoshop',
     status: 'Coming Soon',
     badgeBg: 'bg-indigo-500/10 text-indigo-600 border border-indigo-200'
