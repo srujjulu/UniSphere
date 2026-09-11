@@ -20,6 +20,7 @@ import DhondiFooter from '../layout/DhondiFooter';
 import InfluencerSheetModal from './InfluencerSheetModal';
 import { useAuth } from '../../context/AuthContext';
 import EventReportsManager from './EventReportsManager';
+import FacultyReportsAndAttendance from './FacultyReportsAndAttendance';
 import { getStoredRequests, updateRequestStatus } from '../../utils/mockRequests';
 import { getStoredCertificates, verifyCertificate, revokeCertificate } from '../../utils/mockCertificates';
 import { getAllFeedbackSummaries } from '../../utils/mockEventFeedback';
@@ -366,6 +367,14 @@ const FacultyDashboard = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Section: Dedicated Event Reports & Attendance Module */}
+        {activeSection === 'event-reports-attendance' && (
+          <FacultyReportsAndAttendance 
+            user={user} 
+            onToast={triggerToast} 
+          />
         )}
 
         {/* Section: View Reports + Event Reports + Influencer Roster */}

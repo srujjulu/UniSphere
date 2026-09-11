@@ -35,7 +35,8 @@ import {
   Pin,
   PinOff,
   KeyRound,
-  MessageSquare
+  MessageSquare,
+  FolderCheck
 } from 'lucide-react';
 import { useAuth, roleLabels } from '../../context/AuthContext';
 import GlobalSearchModal from './GlobalSearchModal';
@@ -73,7 +74,8 @@ const menuByRole = {
     { id: 'event-calendar', label: 'Event Calendar', icon: Calendar },
     { id: 'approve-events', label: 'Approve Major Events', icon: CheckSquare },
     { id: 'monitor-members', label: 'Monitor Members', icon: Users },
-    { id: 'view-reports', label: 'Event Reports', icon: FileText },
+    { id: 'event-reports-attendance', label: '📁 Event Reports & Attendance', icon: FolderCheck },
+    { id: 'view-reports', label: 'View Reports', icon: FileText },
     { id: 'view-announcements', label: 'View Announcements', icon: Bell },
     { id: 'monitor-budgets', label: 'Monitor Budgets', icon: DollarSign },
   ],
