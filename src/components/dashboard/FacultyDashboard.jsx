@@ -105,7 +105,7 @@ const FacultyDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans select-none overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex font-sans select-none overflow-x-hidden">
       {/* Role Sidebar */}
       <RoleSidebar activeSection={activeSection} setActiveSection={setActiveSection} currentRole="faculty" />
 
