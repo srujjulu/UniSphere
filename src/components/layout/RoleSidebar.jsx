@@ -156,20 +156,20 @@ const RoleSidebar = ({
 
       {/* Sidebar Drawer */}
       <aside className={`
-        fixed lg:sticky top-0 left-0 h-screen ${isPinned ? 'w-64' : 'w-20'} bg-slate-900 border-r border-slate-800 p-4 flex flex-col justify-between z-50 transition-all duration-200 select-none shadow-xl shrink-0
+        fixed lg:sticky top-0 left-0 h-screen ${isPinned ? 'w-64' : 'w-20'} bg-white border-r border-slate-200 p-4 flex flex-col justify-between z-50 transition-all duration-200 select-none shadow-xs shrink-0
         ${isOpenMobile ? 'translate-x-0 !w-64' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="space-y-4">
           {/* Top Pin / Collapse Bar */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="w-8 h-8 rounded-lg bg-slate-800 p-1 flex items-center justify-center border border-slate-700 shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-slate-100 p-1 flex items-center justify-center border border-slate-200 shrink-0">
                 <img src="/tc.jpeg" alt="CMRTC" className="w-full h-full object-contain" />
               </div>
               {isPinned && (
                 <div className="truncate text-left leading-tight">
-                  <h3 className="text-xs font-black text-white truncate">CMRTC Portal</h3>
-                  <span className="text-[10px] font-semibold text-slate-400">{roleLabels[effectiveRole]}</span>
+                  <h3 className="text-xs font-black text-slate-900 truncate">CMRTC Portal</h3>
+                  <span className="text-[10px] font-semibold text-slate-500">{roleLabels[effectiveRole]}</span>
                 </div>
               )}
             </div>
@@ -177,7 +177,7 @@ const RoleSidebar = ({
             <button
               onClick={() => setIsPinned(!isPinned)}
               title={isPinned ? "Unpin sidebar" : "Pin sidebar"}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors hidden lg:flex items-center justify-center cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors hidden lg:flex items-center justify-center cursor-pointer"
             >
               {isPinned ? <Pin size={14} className="text-slate-400 rotate-45" /> : <PinOff size={14} className="text-slate-400" />}
             </button>
@@ -186,7 +186,7 @@ const RoleSidebar = ({
           {/* Quick Search trigger */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="w-full px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-slate-200 text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
+            className="w-full px-3 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-800 text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
           >
             <Search size={14} className="text-slate-400" />
             {isPinned && <span className="truncate">Search modules...</span>}
@@ -194,17 +194,17 @@ const RoleSidebar = ({
 
           {/* User Quick Info */}
           {isPinned && (
-            <div className="p-2.5 rounded-xl border border-slate-700/80 bg-slate-800/90 text-[11px] font-bold flex items-center justify-between text-slate-200">
+            <div className={`p-2.5 rounded-xl border text-[11px] font-bold flex items-center justify-between ${roleBadgeColors[effectiveRole]}`}>
               <span className="flex items-center gap-1.5 truncate">
-                <RoleIcon size={14} className="text-amber-400" />
-                <span className="truncate">{user?.name || 'Faculty Coordinator'}</span>
+                <RoleIcon size={14} />
+                <span className="truncate">{user?.name || 'Student Member'}</span>
               </span>
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online" />
             </div>
           )}
 
           {/* Navigation Menu List */}
-          <nav className="space-y-0.5 overflow-y-auto max-h-[52vh] pr-0.5 custom-scrollbar">
+          <nav className="space-y-0.5 overflow-y-auto max-h-[52vh] pr-0.5">
             {menuItems.map((item) => {
               const IconComp = item.icon;
               const isActive = activeSection === item.id;
@@ -216,15 +216,15 @@ const RoleSidebar = ({
                   className={`
                     w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between transition-all duration-150 cursor-pointer
                     ${isActive 
-                      ? 'bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30 shadow-xs' 
-                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/70 border border-transparent'}
+                      ? 'bg-blue-50 text-blue-700 font-bold border border-blue-200/60 shadow-xs' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'}
                   `}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <IconComp size={16} className={isActive ? 'text-amber-400' : 'text-slate-400'} />
+                    <IconComp size={16} className={isActive ? 'text-blue-600' : 'text-slate-400'} />
                     {isPinned && <span className="truncate">{item.label}</span>}
                   </div>
-                  {isActive && isPinned && <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
+                  {isActive && isPinned && <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />}
                 </button>
               );
             })}
@@ -232,11 +232,11 @@ const RoleSidebar = ({
         </div>
 
         {/* Bottom Profile & Logout Action Controls */}
-        <div className="pt-3 border-t border-slate-800 space-y-1">
+        <div className="pt-3 border-t border-slate-100 space-y-1">
           <button
             onClick={() => handleSelect('my-profile')}
             title="Profile"
-            className="w-full px-3 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+            className="w-full px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2.5 transition-colors cursor-pointer"
           >
             <User size={16} className="text-slate-400" />
             {isPinned && <span className="truncate">Profile</span>}
@@ -248,9 +248,9 @@ const RoleSidebar = ({
               navigate('/login');
             }}
             title="Sign Out"
-            className="w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 flex items-center gap-2.5 transition-colors cursor-pointer"
+            className="w-full px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer"
           >
-            <LogOut size={16} className="text-rose-400" />
+            <LogOut size={16} className="text-rose-500" />
             {isPinned && <span className="truncate">Logout</span>}
           </button>
         </div>

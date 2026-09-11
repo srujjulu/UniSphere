@@ -222,10 +222,10 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
   return (
     <div className="space-y-6 text-left">
       {/* Module Banner Header */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-slate-900/90 p-6 rounded-3xl border border-slate-800 shadow-xl">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 bg-gradient-to-r from-blue-950/60 via-slate-900/80 to-slate-900 p-6 rounded-[28px] border border-blue-500/20 backdrop-blur-xl shadow-xl">
         <div className="space-y-1.5 max-w-2xl">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-[11px] uppercase tracking-wider border border-amber-500/30 flex items-center gap-1.5">
+            <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 font-extrabold text-[11px] uppercase tracking-wider border border-blue-500/30 flex items-center gap-1.5">
               <FolderCheck size={14} />
               <span>Faculty Academic & Administrative Audit Module</span>
             </span>
@@ -246,7 +246,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
         <div className="flex items-center gap-2.5 flex-wrap self-start lg:self-center">
           <button
             onClick={handleExportAllAttendance}
-            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/20 transition-all active:scale-95"
           >
             <FileSpreadsheet size={15} />
             <span>Download All Attendance</span>
@@ -254,7 +254,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
 
           <button
             onClick={handleExportInstitutionalPDF}
-            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-blue-600/20 transition-all active:scale-95"
           >
             <Download size={15} />
             <span>Download PDF</span>
@@ -270,10 +270,10 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
         </div>
       </div>
 
-      {/* TOP STATS CARDS (4 KPIs) */}
+      {/* TOP STATS CARDS (4 KPIs Required) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 1. Total Events */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 hover:border-slate-700 transition-all shadow-sm">
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 relative overflow-hidden group hover:border-blue-500/40 transition-all shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">Total Events</span>
             <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
@@ -284,11 +284,11 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
             <span className="text-3xl font-black text-white">{stats.totalEvents}</span>
             <span className="text-xs text-blue-400 font-bold">Organized</span>
           </div>
-          <p className="text-[11px] text-slate-400">Across all academic semesters</p>
+          <p className="text-[11px] text-slate-500">Across all academic semesters</p>
         </div>
 
         {/* 2. Reports Available */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 hover:border-slate-700 transition-all shadow-sm">
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 relative overflow-hidden group hover:border-amber-500/40 transition-all shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">Reports Available</span>
             <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
@@ -299,11 +299,11 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
             <span className="text-3xl font-black text-amber-400">{stats.reportsAvailable}</span>
             <span className="text-xs text-slate-400 font-bold">/ {stats.totalEvents} Events</span>
           </div>
-          <p className="text-[11px] text-slate-400">{stats.verifiedReports} officially approved & verified</p>
+          <p className="text-[11px] text-slate-500">{stats.verifiedReports} officially approved & verified</p>
         </div>
 
         {/* 3. Total Attendance */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 hover:border-slate-700 transition-all shadow-sm">
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 relative overflow-hidden group hover:border-emerald-500/40 transition-all shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">Total Attendance</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
@@ -314,11 +314,11 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
             <span className="text-3xl font-black text-emerald-400">{stats.totalAttendance.toLocaleString()}</span>
             <span className="text-xs text-emerald-400 font-bold">Students</span>
           </div>
-          <p className="text-[11px] text-slate-400">100% verified via QR check-ins</p>
+          <p className="text-[11px] text-slate-500">100% verified via QR check-ins</p>
         </div>
 
         {/* 4. Total Clubs */}
-        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 hover:border-slate-700 transition-all shadow-sm">
+        <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1 relative overflow-hidden group hover:border-purple-500/40 transition-all shadow-md">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider">Total Clubs</span>
             <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20">
@@ -329,12 +329,12 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
             <span className="text-3xl font-black text-purple-400">{stats.totalClubs}</span>
             <span className="text-xs text-purple-400 font-bold">Monitored</span>
           </div>
-          <p className="text-[11px] text-slate-400">Tech, Cultural, NCC, NSS & Sports</p>
+          <p className="text-[11px] text-slate-500">Tech, Cultural, NCC, NSS & Sports</p>
         </div>
       </div>
 
       {/* WORKING FILTERS BAR */}
-      <div className="bg-slate-900/80 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-sm">
+      <div className="bg-slate-900/80 p-5 rounded-3xl border border-slate-800 space-y-4 shadow-lg">
         <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Filter size={16} className="text-amber-400" />
@@ -432,9 +432,9 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
         </div>
 
         {/* Filter 6: Branch Selector Pills */}
-        <div className="pt-2 border-t border-slate-800 space-y-2">
+        <div className="pt-2 border-t border-slate-800/60 space-y-2">
           <label className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">
-            <GraduationCap size={12} className="text-amber-400" />
+            <GraduationCap size={12} className="text-blue-400" />
             <span>Filter by Target Department / Branch:</span>
           </label>
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scrollbar text-xs">
@@ -456,11 +456,11 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
       </div>
 
       {/* EVENTS TABLE & CARDS SECTION */}
-      <div className="bg-slate-900/80 rounded-3xl border border-slate-800 overflow-hidden shadow-sm space-y-4 p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+      <div className="bg-slate-900/80 rounded-3xl border border-slate-800 overflow-hidden shadow-xl space-y-4 p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-lg font-black text-white flex items-center gap-2">
-              <FolderCheck size={18} className="text-amber-400" />
+              <FolderCheck size={18} className="text-blue-400" />
               <span>Campus Events, Reports & Attendance Register</span>
             </h3>
             <p className="text-xs text-slate-400">
@@ -498,7 +498,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
             </p>
             <button
               onClick={handleResetFilters}
-              className="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs cursor-pointer hover:bg-amber-400 transition-colors shadow-sm"
+              className="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs cursor-pointer hover:bg-blue-700 transition-colors"
             >
               Clear All Filters
             </button>
@@ -526,7 +526,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
                     <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         {/* Club Badge */}
-                        <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                        <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">
                           {event.clubName}
                         </span>
 
@@ -547,7 +547,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
                       </div>
 
                       {/* Event Name */}
-                      <h4 className="text-lg font-black text-white leading-snug hover:text-amber-400 transition-colors">
+                      <h4 className="text-lg font-black text-white leading-snug hover:text-blue-400 transition-colors">
                         {event.title}
                       </h4>
 
@@ -610,7 +610,7 @@ const FacultyReportsAndAttendance = ({ user, onToast = () => {} }) => {
                     </div>
                   </div>
 
-                  {/* Actions Bar */}
+                  {/* Actions Bar (All 4 requested actions) */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
                     <div className="flex items-center gap-2 flex-wrap">
                       {/* Action 1: View Event Report */}
